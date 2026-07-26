@@ -1,0 +1,2 @@
+CREATE POLICY "progress own insert" ON public.lesson_progress FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid() AND public.is_enrolled(auth.uid()));
+CREATE POLICY "progress own update" ON public.lesson_progress FOR UPDATE TO authenticated USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
