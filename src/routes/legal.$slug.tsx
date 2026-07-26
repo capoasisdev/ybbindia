@@ -68,7 +68,7 @@ function LegalNotFound() {
         </p>
         <Link
           to="/support"
-          className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground"
+          className="mt-8 inline-flex rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground"
         >
           Contact support
         </Link>
