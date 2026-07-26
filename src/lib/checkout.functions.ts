@@ -20,6 +20,7 @@ export type CheckoutSummary = {
   fullName: string | null;
   email: string | null;
   mobile: string | null;
+  testMode: boolean;
 };
 
 export const getCheckoutSummary = createServerFn({ method: "GET" })
@@ -59,6 +60,7 @@ export const getCheckoutSummary = createServerFn({ method: "GET" })
       fullName: profile?.full_name ?? null,
       email: profile?.email ?? null,
       mobile: profile?.mobile ?? null,
+      testMode: Boolean(readSetting(settings, "payments_test_mode")),
     };
   });
 
@@ -210,6 +212,97 @@ export const confirmEnrolmentPayment = createServerFn({ method: "POST" })
       method: payment.method ?? null,
       amountPaise: payment.amount,
       rawEvent: payment,
+    });
+
+    return { status: "paid" };
+  });
+
+/**
+ * TEST MODE ONLY. Fulfils an enrolment without contacting Razorpay so the rest
+ * of the platform (course access, assignments, exam, certificate) can be tested
+ * end to end. Refuses to run unless the `payments_test_mode` setting is true,
+ * so flipping that setting off at go-live disables this endpoint entirely.
+ */
+export const simulateEnrolmentPayment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ status: "paid" }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const {
+      loadSettings,
+      getPrimaryCourse,
+      priceFor,
+      hasActiveEnrolment,
+      markOrderPaid,
+    } = await import("./checkout.server");
+    const { readSetting } = await import("@/domain/settings");
+
+    const settings = await loadSettings(supabaseAdmin);
+    if (!readSetting(settings, "payments_test_mode")) {
+      throw new Error("Test payments are disabled.");
+    }
+
+    if (await hasActiveEnrolment(supabaseAdmin, context.userId)) {
+      throw new Error("You already have an active enrolment.");
+    }
+
+    const course = await getPrimaryCourse(supabaseAdmin);
+
+    const { data: profile } = await context.supabase
+      .from("learner_profiles")
+      .select(
+        "full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, gst_number, state",
+      )
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    const buyerState = profile?.billing_state ?? profile?.state ?? null;
+    const price = priceFor(settings, buyerState);
+    const currency = String(readSetting(settings, "currency"));
+    const stamp = Date.now().toString(36);
+
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .insert({
+        user_id: context.userId,
+        course_id: course?.id ?? null,
+        status: "pending",
+        base_amount_paise: price.baseAmountPaise,
+        discount_amount_paise: price.discountAmountPaise,
+        gst_rate_percent: price.gstRatePercent,
+        cgst_paise: price.cgstPaise,
+        sgst_paise: price.sgstPaise,
+        igst_paise: price.igstPaise,
+        total_amount_paise: price.totalAmountPaise,
+        currency,
+        gateway: "razorpay",
+        gateway_order_id: `test_order_${stamp}`,
+        billing_snapshot: {
+          full_name: profile?.full_name ?? null,
+          email: profile?.email ?? null,
+          mobile: profile?.mobile ?? null,
+          address: profile?.billing_address ?? null,
+          city: profile?.billing_city ?? null,
+          state: buyerState,
+          pincode: profile?.billing_pincode ?? null,
+          gst_number: profile?.gst_number ?? null,
+          test_mode: true,
+        } as never,
+      })
+      .select("id")
+      .single();
+
+    if (error || !order) {
+      console.error("Test order insert failed", error);
+      throw new Error("Could not create the test order.");
+    }
+
+    await markOrderPaid(supabaseAdmin, {
+      orderId: order.id,
+      gatewayPaymentId: `test_pay_${stamp}`,
+      gatewaySignature: null,
+      method: "test",
+      amountPaise: price.totalAmountPaise,
+      rawEvent: { simulated: true, at: new Date().toISOString() },
     });
 
     return { status: "paid" };
