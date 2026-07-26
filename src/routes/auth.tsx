@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { BadgeCheck, FileCheck2, Loader2, PlayCircle, ShieldCheck } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -57,22 +57,76 @@ function AuthPage() {
       <aside className="relative hidden overflow-hidden bg-sidebar p-12 text-sidebar-foreground lg:flex lg:flex-col lg:justify-between">
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-32 bottom-0 size-[30rem] rounded-full bg-accent/15 blur-3xl"
+          className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_30%_20%,black,transparent_75%)]"
         />
-        <Wordmark tone="light" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-40 -top-32 size-[34rem] rounded-full bg-sidebar-primary/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 bottom-[-8rem] size-[30rem] rounded-full bg-accent/15 blur-3xl"
+        />
+
+        <div className="relative">
+          <Wordmark tone="light" />
+        </div>
+
         <div className="relative max-w-md">
-          <h1 className="font-display text-4xl font-semibold leading-tight">
-            Your pathway to the ABB credential.
+          <span className="inline-flex items-center gap-2 rounded-full border border-sidebar-border/70 bg-sidebar-accent/50 px-3.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-sidebar-primary">
+            <ShieldCheck className="size-3.5" />
+            Authorised Business Broker
+          </span>
+
+          <h1 className="mt-7 font-display text-[2.6rem] font-semibold leading-[1.08]">
+            Your pathway to
+            <span className="block text-sidebar-primary">the ABB credential.</span>
           </h1>
           <p className="mt-5 text-sm leading-relaxed text-sidebar-foreground/70">
             Sign in to continue your lessons, submit assignments, take the certification
             examination and download your certificate.
           </p>
+
+          <ul className="mt-9 space-y-4">
+            {[
+              { icon: PlayCircle, label: "Structured video modules", hint: "Learn at your own pace" },
+              { icon: FileCheck2, label: "Reviewer-graded assignments", hint: "Practical, assessed work" },
+              { icon: BadgeCheck, label: "Verifiable ABB certificate", hint: "Unique ID anyone can check" },
+            ].map((item) => (
+              <li key={item.label} className="flex items-start gap-3.5">
+                <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl border border-sidebar-border/70 bg-sidebar-accent/50 text-sidebar-primary">
+                  <item.icon className="size-4" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium">{item.label}</span>
+                  <span className="block text-xs text-sidebar-foreground/55">{item.hint}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <p className="relative text-xs text-sidebar-foreground/50">
-          © {new Date().getFullYear()} Yoova Business Broking
-        </p>
+
+        <div className="relative">
+          <dl className="grid max-w-sm grid-cols-3 gap-4 border-t border-sidebar-border/70 pt-6">
+            {[
+              { k: "Modules", v: "11" },
+              { k: "Access", v: "365d" },
+              { k: "Pass mark", v: "70%" },
+            ].map((s) => (
+              <div key={s.k}>
+                <dt className="text-[0.65rem] uppercase tracking-[0.14em] text-sidebar-foreground/50">
+                  {s.k}
+                </dt>
+                <dd className="mt-1 font-display text-xl font-semibold">{s.v}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-6 text-xs text-sidebar-foreground/45">
+            © {new Date().getFullYear()} Yoova Business Broking
+          </p>
+        </div>
       </aside>
+
 
       <main className="flex items-center justify-center px-5 py-14">
         <div className="w-full max-w-md">
