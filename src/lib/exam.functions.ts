@@ -1,236 +1,29 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { readBool, readNumber, type SettingsMap } from "@/domain/settings";
+import { buildOverview, loadEnrolment, loadPaper, shuffle } from "./exam.server";
+import type { ExamOverview, ExamPaper, ExamQuestion, ExamResult } from "./exam.types";
 
-export type ExamQuestion = {
-  id: string;
-  prompt: string;
-  options: { id: string; text: string }[];
-  marks: number;
-};
-
-export type ExamAttemptSummary = {
-  id: string;
-  attemptNumber: number;
-  status: string;
-  scorePercent: number | null;
-  isPassed: boolean | null;
-  endedAt: string | null;
-  startedAt: string;
-};
-
-export type ExamOverview = {
-  enrolled: boolean;
-  config: {
-    questionCount: number;
-    durationMinutes: number;
-    passPercent: number;
-    maxAttempts: number;
-    waitHours: number;
-  };
-  eligibility: {
-    canStart: boolean;
-    reasons: string[];
-    lessonsCompleted: number;
-    lessonsTotal: number;
-    assignmentsApproved: number;
-    assignmentsTotal: number;
-    attemptsUsed: number;
-    nextAttemptAt: string | null;
-  };
-  activeAttempt: { id: string; expiresAt: string } | null;
-  attempts: ExamAttemptSummary[];
-  passed: boolean;
-};
-
-async function loadSettings(supabase: any): Promise<SettingsMap> {
-  const { data } = await supabase.from("settings").select("key, value");
-  const map: SettingsMap = {};
-  for (const row of data ?? []) map[row.key] = row.value;
-  return map;
-}
-
-async function loadEnrolment(supabase: any, userId: string) {
-  const { data } = await supabase
-    .from("enrolments")
-    .select("id, course_id")
-    .eq("user_id", userId)
-    .eq("is_active", true)
-    .order("enrolled_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  return data;
-}
+export type {
+  ExamAttemptSummary,
+  ExamOverview,
+  ExamPaper,
+  ExamQuestion,
+  ExamResult,
+} from "./exam.types";
 
 /** Exam rules, eligibility checks and the learner's attempt history. */
 export const getExamOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<ExamOverview> => {
-    const { supabase, userId } = context;
-    const settings = await loadSettings(supabase);
-
-    const config = {
-      questionCount: readNumber(settings, "exam_question_count"),
-      durationMinutes: readNumber(settings, "exam_duration_minutes"),
-      passPercent: readNumber(settings, "exam_pass_percent"),
-      maxAttempts: readNumber(settings, "exam_max_attempts"),
-      waitHours: readNumber(settings, "exam_wait_hours"),
-    };
-
-    const enrolment = await loadEnrolment(supabase, userId);
-    if (!enrolment) {
-      return {
-        enrolled: false,
-        config,
-        eligibility: {
-          canStart: false,
-          reasons: ["You are not enrolled in the programme."],
-          lessonsCompleted: 0,
-          lessonsTotal: 0,
-          assignmentsApproved: 0,
-          assignmentsTotal: 0,
-          attemptsUsed: 0,
-          nextAttemptAt: null,
-        },
-        activeAttempt: null,
-        attempts: [],
-        passed: false,
-      };
-    }
-
-    const { data: modules } = await supabase
-      .from("modules")
-      .select("id")
-      .eq("course_id", enrolment.course_id)
-      .eq("is_published", true);
-    const moduleIds = (modules ?? []).map((m: any) => m.id);
-
-    let lessonsTotal = 0;
-    let lessonIds: string[] = [];
-    if (moduleIds.length > 0) {
-      const { data: lessons } = await supabase
-        .from("lessons")
-        .select("id")
-        .in("module_id", moduleIds)
-        .eq("is_published", true);
-      lessonIds = (lessons ?? []).map((l: any) => l.id);
-      lessonsTotal = lessonIds.length;
-    }
-
-    const [progressRes, assignmentsRes, submissionsRes, attemptsRes] = await Promise.all([
-      lessonIds.length
-        ? supabase
-            .from("lesson_progress")
-            .select("lesson_id")
-            .eq("user_id", userId)
-            .eq("is_complete", true)
-            .in("lesson_id", lessonIds)
-        : Promise.resolve({ data: [] }),
-      supabase
-        .from("assignments")
-        .select("id")
-        .eq("course_id", enrolment.course_id)
-        .eq("is_published", true)
-        .eq("is_compulsory", true),
-      supabase.from("submissions").select("assignment_id, status").eq("user_id", userId),
-      supabase
-        .from("exam_attempts")
-        .select("id, attempt_number, status, score_percent, is_passed, ended_at, started_at, expires_at")
-        .eq("user_id", userId)
-        .order("attempt_number", { ascending: false }),
-    ]);
-
-    const lessonsCompleted = (progressRes.data ?? []).length;
-    const compulsory = assignmentsRes.data ?? [];
-    const approvedIds = new Set(
-      (submissionsRes.data ?? [])
-        .filter((s: any) => s.status === "approved")
-        .map((s: any) => s.assignment_id),
-    );
-    const assignmentsApproved = compulsory.filter((a: any) => approvedIds.has(a.id)).length;
-
-    const attemptRows = attemptsRes.data ?? [];
-    const now = Date.now();
-    const active = attemptRows.find(
-      (a: any) => a.status === "in_progress" && new Date(a.expires_at).getTime() > now,
-    );
-    const finished = attemptRows.filter((a: any) => a.status !== "in_progress");
-    const passed = finished.some((a: any) => a.is_passed);
-
-    const lastEnded = finished
-      .map((a: any) => (a.ended_at ? new Date(a.ended_at).getTime() : 0))
-      .sort((a: number, b: number) => b - a)[0];
-    const nextAttemptAt =
-      lastEnded && !passed
-        ? new Date(lastEnded + config.waitHours * 3600_000).toISOString()
-        : null;
-
-    const reasons: string[] = [];
-    if (readBool(settings, "exam_require_all_lessons") && lessonsCompleted < lessonsTotal) {
-      reasons.push(`Complete all ${lessonsTotal} lessons (${lessonsCompleted} done).`);
-    }
-    if (readBool(settings, "exam_require_assignments") && assignmentsApproved < compulsory.length) {
-      reasons.push(
-        `All ${compulsory.length} compulsory assignments must be approved (${assignmentsApproved} approved).`,
-      );
-    }
-    if (passed) reasons.push("You have already passed the examination.");
-    if (finished.length >= config.maxAttempts && !passed) {
-      reasons.push("You have used all available attempts — contact support.");
-    }
-    if (nextAttemptAt && new Date(nextAttemptAt).getTime() > now) {
-      reasons.push(`Cooling-off period ends ${new Date(nextAttemptAt).toLocaleString("en-IN")}.`);
-    }
-
-    return {
-      enrolled: true,
-      config,
-      eligibility: {
-        canStart: reasons.length === 0,
-        reasons,
-        lessonsCompleted,
-        lessonsTotal,
-        assignmentsApproved,
-        assignmentsTotal: compulsory.length,
-        attemptsUsed: finished.length,
-        nextAttemptAt,
-      },
-      activeAttempt: active ? { id: active.id, expiresAt: active.expires_at } : null,
-      attempts: attemptRows.map((a: any) => ({
-        id: a.id,
-        attemptNumber: a.attempt_number,
-        status: a.status,
-        scorePercent: a.score_percent === null ? null : Number(a.score_percent),
-        isPassed: a.is_passed,
-        endedAt: a.ended_at,
-        startedAt: a.started_at,
-      })),
-      passed,
-    };
-  });
-
-export type ExamPaper = {
-  attemptId: string;
-  expiresAt: string;
-  questions: ExamQuestion[];
-  answers: Record<string, string>;
-};
-
-function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
+  .handler(async ({ context }): Promise<ExamOverview> =>
+    buildOverview(context.supabase, context.userId),
+  );
 
 /** Starts a timed attempt with a randomised question snapshot. */
 export const startExamAttempt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<ExamPaper> => {
     const { supabase, userId } = context;
-    const overview = await getExamOverview();
+    const overview = await buildOverview(supabase, userId);
     if (overview.activeAttempt) {
       return await loadPaper(supabase, userId, overview.activeAttempt.id);
     }
@@ -251,13 +44,14 @@ export const startExamAttempt = createServerFn({ method: "POST" })
     const pool = bank ?? [];
     if (pool.length === 0) throw new Error("The question bank is empty");
 
-    const selected = shuffle(pool).slice(0, overview.config.questionCount);
-    const snapshot = selected.map((q: any) => ({
-      id: q.id,
-      prompt: q.prompt,
-      options: shuffle((q.options as any[]) ?? []),
-      marks: q.marks ?? 1,
-    }));
+    const snapshot: ExamQuestion[] = shuffle(pool)
+      .slice(0, overview.config.questionCount)
+      .map((q: any) => ({
+        id: q.id,
+        prompt: q.prompt,
+        options: shuffle((q.options as any[]) ?? []),
+        marks: q.marks ?? 1,
+      }));
 
     const expiresAt = new Date(Date.now() + overview.config.durationMinutes * 60_000).toISOString();
 
@@ -275,32 +69,12 @@ export const startExamAttempt = createServerFn({ method: "POST" })
         question_snapshot: snapshot,
         answers: {},
       })
-      .select("id, expires_at, question_snapshot, answers")
+      .select("id, expires_at")
       .single();
     if (error) throw new Error(error.message);
 
-    return {
-      attemptId: inserted.id,
-      expiresAt: inserted.expires_at,
-      questions: snapshot,
-      answers: {},
-    };
+    return { attemptId: inserted.id, expiresAt: inserted.expires_at, questions: snapshot, answers: {} };
   });
-
-async function loadPaper(supabase: any, userId: string, attemptId: string): Promise<ExamPaper> {
-  const { data } = await supabase
-    .from("exam_attempts")
-    .select("id, user_id, expires_at, question_snapshot, answers, status")
-    .eq("id", attemptId)
-    .maybeSingle();
-  if (!data || data.user_id !== userId) throw new Error("Attempt not found");
-  return {
-    attemptId: data.id,
-    expiresAt: data.expires_at,
-    questions: (data.question_snapshot as ExamQuestion[]) ?? [],
-    answers: (data.answers as Record<string, string>) ?? {},
-  };
-}
 
 /** Reloads an in-progress attempt (resume after refresh). */
 export const resumeExamAttempt = createServerFn({ method: "POST" })
@@ -315,24 +89,15 @@ export const saveExamAnswers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { attemptId: string; answers: Record<string, string> }) => input)
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const { error } = await supabase
+    const { error } = await context.supabase
       .from("exam_attempts")
       .update({ answers: data.answers })
       .eq("id", data.attemptId)
-      .eq("user_id", userId)
+      .eq("user_id", context.userId)
       .eq("status", "in_progress");
     if (error) throw new Error(error.message);
     return { ok: true };
   });
-
-export type ExamResult = {
-  scorePercent: number;
-  score: number;
-  totalMarks: number;
-  isPassed: boolean;
-  passPercent: number;
-};
 
 /** Grades and closes an attempt. Safe to call on timeout. */
 export const submitExamAttempt = createServerFn({ method: "POST" })
@@ -345,7 +110,9 @@ export const submitExamAttempt = createServerFn({ method: "POST" })
 
     const { data: attempt } = await supabase
       .from("exam_attempts")
-      .select("id, user_id, status, question_snapshot, pass_percent, score, total_marks, score_percent, is_passed")
+      .select(
+        "id, user_id, status, question_snapshot, pass_percent, score, total_marks, score_percent, is_passed",
+      )
       .eq("id", data.attemptId)
       .maybeSingle();
     if (!attempt || attempt.user_id !== userId) throw new Error("Attempt not found");
@@ -360,14 +127,15 @@ export const submitExamAttempt = createServerFn({ method: "POST" })
       };
     }
 
-    const snapshot = (attempt.question_snapshot as ExamQuestion[]) ?? [];
-    const questionIds = snapshot.map((q) => q.id);
-
+    const snapshot = (attempt.question_snapshot as unknown as ExamQuestion[]) ?? [];
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: keys } = await supabaseAdmin
       .from("questions")
       .select("id, correct_option_ids, marks")
-      .in("id", questionIds);
+      .in(
+        "id",
+        snapshot.map((q) => q.id),
+      );
 
     const keyById = new Map((keys ?? []).map((k: any) => [k.id, k]));
     let score = 0;
@@ -387,7 +155,7 @@ export const submitExamAttempt = createServerFn({ method: "POST" })
       .from("exam_attempts")
       .update({
         answers: data.answers,
-        status: data.timedOut ? "expired" : "submitted",
+        status: data.timedOut ? "auto_submitted" : "submitted",
         ended_at: new Date().toISOString(),
         score,
         total_marks: totalMarks,
