@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import type { SettingsMap } from "@/domain/settings";
+import type { SettingsMap, SettingValue } from "@/domain/settings";
 
 function serverPublicClient() {
   const url = process.env.SUPABASE_URL!;
@@ -35,7 +35,7 @@ export const getPublicSettings = createServerFn({ method: "GET" }).handler(async
   }
 
   const map: SettingsMap = {};
-  for (const row of data ?? []) map[row.key] = row.value;
+  for (const row of data ?? []) map[row.key] = row.value as SettingValue;
   return map;
 });
 

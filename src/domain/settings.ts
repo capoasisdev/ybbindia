@@ -5,7 +5,9 @@
  * fallback if a key has not yet been written to the database.
  */
 
-export type SettingsMap = Record<string, unknown>;
+export type SettingValue = string | number | boolean | null | SettingValue[] | { [key: string]: SettingValue };
+
+export type SettingsMap = Record<string, SettingValue>;
 
 export const SETTING_DEFAULTS = {
   course_price_paise: 1_500_000,
