@@ -57,3 +57,18 @@ async function loadEnrolment(supabase: any, userId: string) {
     .maybeSingle();
   return data;
 }
+
+export type ExamPaper = {
+  attemptId: string;
+  expiresAt: string;
+  questions: ExamQuestion[];
+  answers: Record<string, string>;
+};
+
+export type ExamResult = {
+  scorePercent: number;
+  score: number;
+  totalMarks: number;
+  isPassed: boolean;
+  passPercent: number;
+};
