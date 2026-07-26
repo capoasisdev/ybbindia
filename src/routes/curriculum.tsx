@@ -87,7 +87,7 @@ function CurriculumPage() {
             Get immediate access to every module, the workbook library and the certification
             pathway.
           </p>
-          <Button size="lg" variant="secondary" asChild className="mt-7 rounded-full px-7">
+          <Button size="lg" variant="secondary" asChild className="mt-7 rounded-lg px-7">
             <Link to="/enrol">
               Enrol now
               <ArrowRight className="size-4" />

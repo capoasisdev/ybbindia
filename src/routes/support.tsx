@@ -87,7 +87,7 @@ function SupportPage() {
             {supportEmail && (
               <a
                 href={`mailto:${supportEmail}`}
-                className="inline-flex items-center rounded-full border border-input bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-secondary"
+                className="inline-flex items-center rounded-lg border border-input bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-secondary"
               >
                 Email {supportEmail}
               </a>
