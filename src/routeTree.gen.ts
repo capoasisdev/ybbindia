@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as EnrolRouteImport } from './routes/enrol'
 import { Route as CurriculumRouteImport } from './routes/curriculum'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -33,6 +34,11 @@ const VerifyRoute = VerifyRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnrolRoute = EnrolRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/enrol': typeof EnrolRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/enrol': typeof EnrolRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/enrol': typeof EnrolRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/curriculum'
     | '/enrol'
+    | '/forgot-password'
     | '/support'
     | '/verify'
     | '/assignments'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/curriculum'
     | '/enrol'
+    | '/forgot-password'
     | '/support'
     | '/verify'
     | '/assignments'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/curriculum'
     | '/enrol'
+    | '/forgot-password'
     | '/support'
     | '/verify'
     | '/_authenticated/assignments'
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CurriculumRoute: typeof CurriculumRoute
   EnrolRoute: typeof EnrolRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   SupportRoute: typeof SupportRoute
   VerifyRoute: typeof VerifyRoute
   LegalSlugRoute: typeof LegalSlugRoute
@@ -229,6 +242,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/enrol': {
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CurriculumRoute: CurriculumRoute,
   EnrolRoute: EnrolRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   SupportRoute: SupportRoute,
   VerifyRoute: VerifyRoute,
   LegalSlugRoute: LegalSlugRoute,
