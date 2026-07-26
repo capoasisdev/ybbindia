@@ -20,6 +20,8 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/learn", label: "Lessons", icon: BookOpen },
+  { to: "/resources", label: "Resources", icon: FolderOpen },
+
   { to: "/assignments", label: "Assignments", icon: FileCheck2 },
   { to: "/exam", label: "Examination", icon: GraduationCap },
   { to: "/certificate", label: "Certificate", icon: ScrollText },
