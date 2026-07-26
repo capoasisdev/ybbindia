@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { FlaskConical, Loader2, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { formatPaiseExact } from "@/domain/money";
@@ -11,6 +11,7 @@ import {
   getCheckoutSummary,
   createEnrolmentOrder,
   confirmEnrolmentPayment,
+  simulateEnrolmentPayment,
 } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/_authenticated/checkout")({
@@ -53,12 +54,26 @@ function CheckoutPage() {
   const fetchSummary = useServerFn(getCheckoutSummary);
   const createOrder = useServerFn(createEnrolmentOrder);
   const confirmPayment = useServerFn(confirmEnrolmentPayment);
+  const simulatePayment = useServerFn(simulateEnrolmentPayment);
   const [busy, setBusy] = useState(false);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["checkout-summary"],
     queryFn: () => fetchSummary(),
   });
+
+  async function handleSimulate() {
+    setBusy(true);
+    try {
+      await simulatePayment();
+      toast.success("Test payment recorded. You're enrolled!");
+      navigate({ to: "/dashboard" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Test payment failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function handlePay() {
     setBusy(true);
@@ -161,6 +176,29 @@ function CheckoutPage() {
                 {busy ? <Loader2 className="size-4 animate-spin" /> : null}
                 {busy ? "Opening secure payment…" : "Pay securely with Razorpay"}
               </Button>
+
+              {summary.testMode ? (
+                <div className="mt-6 rounded-xl border border-dashed border-warning/60 bg-warning/5 p-5">
+                  <div className="flex items-start gap-2">
+                    <FlaskConical className="mt-0.5 size-4 shrink-0 text-warning" />
+                    <div>
+                      <p className="text-sm font-medium">Test mode is on</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Simulate a successful payment to activate a real enrolment, invoice and
+                        365-day access — with no money moving. Turn test mode off before launch.
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="mt-4 w-full"
+                    onClick={handleSimulate}
+                    disabled={busy}
+                  >
+                    Simulate successful payment
+                  </Button>
+                </div>
+              ) : null}
 
               <p className="mt-6 flex items-start gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
