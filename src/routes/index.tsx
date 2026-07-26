@@ -110,7 +110,7 @@ function ProgrammePage() {
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button size="lg" asChild className="rounded-full px-7">
+              <Button size="lg" asChild className="rounded-lg px-7">
                 <Link to="/enrol">
                   Enrol now
                   <ArrowRight className="size-4" />
@@ -120,7 +120,7 @@ function ProgrammePage() {
                 size="lg"
                 variant="outline"
                 asChild
-                className="rounded-full border-sidebar-border bg-transparent px-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                className="rounded-lg border-sidebar-border bg-transparent px-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
                 <Link to="/curriculum">Explore the curriculum</Link>
               </Button>
@@ -179,7 +179,7 @@ function ProgrammePage() {
                 ))}
               </ul>
 
-              <Button size="lg" asChild className="mt-8 w-full rounded-full">
+              <Button size="lg" asChild className="mt-8 w-full rounded-lg">
                 <Link to="/enrol">Start enrolment</Link>
               </Button>
               <p className="mt-3 text-center text-xs text-sidebar-foreground/55">
@@ -242,7 +242,7 @@ function ProgrammePage() {
                   <p className="mt-4 text-muted-foreground">{outline.course.subtitle}</p>
                 )}
               </div>
-              <Button variant="outline" asChild className="rounded-full">
+              <Button variant="outline" asChild className="rounded-lg">
                 <Link to="/curriculum">
                   Full curriculum
                   <ArrowRight className="size-4" />
@@ -310,7 +310,7 @@ function ProgrammePage() {
               Enrol today for {formatPaise(pricePaise)} plus {gstRate}% GST and get {accessDays}{" "}
               days of access to the complete programme.
             </p>
-            <Button size="lg" variant="secondary" asChild className="mt-8 rounded-full px-7">
+            <Button size="lg" variant="secondary" asChild className="mt-8 rounded-lg px-7">
               <Link to="/enrol">
                 Enrol now
                 <ArrowRight className="size-4" />

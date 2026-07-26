@@ -73,10 +73,11 @@ function AuthPage() {
         </div>
 
         <div className="relative max-w-md">
-          <span className="inline-flex items-center gap-2 rounded-full border border-sidebar-border/70 bg-sidebar-accent/50 px-3.5 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-sidebar-primary">
+          <span className="inline-flex items-center gap-2.5 border-l-2 border-sidebar-primary pl-3 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-sidebar-primary">
             <ShieldCheck className="size-3.5" />
             Authorised Business Broker
           </span>
+
 
           <h1 className="mt-7 font-display text-[2.6rem] font-semibold leading-[1.08]">
             Your pathway to

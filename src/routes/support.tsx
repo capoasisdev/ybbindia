@@ -80,14 +80,14 @@ function SupportPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to="/dashboard"
-              className="inline-flex items-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="inline-flex items-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Go to dashboard
             </Link>
             {supportEmail && (
               <a
                 href={`mailto:${supportEmail}`}
-                className="inline-flex items-center rounded-full border border-input bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-secondary"
+                className="inline-flex items-center rounded-lg border border-input bg-background px-6 py-3 text-sm font-medium transition-colors hover:bg-secondary"
               >
                 Email {supportEmail}
               </a>

@@ -131,7 +131,7 @@ function DashboardPage() {
               Complete your enrolment to unlock all modules, assignments, the certification
               examination and your ABB certificate.
             </p>
-            <Button asChild className="mt-7 rounded-full px-7">
+            <Button asChild className="mt-7 rounded-lg px-7">
               <Link to="/enrol">
                 Enrol now
                 <ArrowRight className="size-4" />

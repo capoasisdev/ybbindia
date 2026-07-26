@@ -106,7 +106,7 @@ function EnrolPage() {
 
             <div className="mt-7">
               {loading ? null : user ? (
-                <Button size="lg" className="w-full rounded-full" asChild>
+                <Button size="lg" className="w-full rounded-lg" asChild>
                   <Link to="/checkout">
                     Continue to checkout
                     <ArrowRight className="size-4" />
@@ -114,12 +114,12 @@ function EnrolPage() {
                 </Button>
               ) : (
                 <div className="space-y-3">
-                  <Button size="lg" className="w-full rounded-full" asChild>
+                  <Button size="lg" className="w-full rounded-lg" asChild>
                     <Link to="/auth" search={{ mode: "signup", redirect: "/checkout" }}>
                       Create account to continue
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="w-full rounded-full" asChild>
+                  <Button size="lg" variant="outline" className="w-full rounded-lg" asChild>
                     <Link to="/auth" search={{ mode: "signin", redirect: "/checkout" }}>
                       I already have an account
                     </Link>
