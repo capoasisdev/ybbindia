@@ -47,7 +47,7 @@ function LegalPage() {
           })}
         </p>
         <div className="mt-10 space-y-5 text-sm leading-relaxed text-foreground/90">
-          {doc.body.split(/\n{2,}/).map((paragraph, index) => (
+          {String(doc.body).split(/\n{2,}/).map((paragraph: string, index: number) => (
             <p key={index} className="whitespace-pre-line">
               {paragraph}
             </p>

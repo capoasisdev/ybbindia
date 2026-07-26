@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as CurriculumRouteImport } from './routes/curriculum'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalSlugRoute = LegalSlugRouteImport.update({
+  id: '/legal/$slug',
+  path: '/legal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/curriculum': typeof CurriculumRoute
   '/verify': typeof VerifyRoute
+  '/legal/$slug': typeof LegalSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/curriculum': typeof CurriculumRoute
   '/verify': typeof VerifyRoute
+  '/legal/$slug': typeof LegalSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/curriculum': typeof CurriculumRoute
   '/verify': typeof VerifyRoute
+  '/legal/$slug': typeof LegalSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/curriculum' | '/verify'
+  fullPaths: '/' | '/curriculum' | '/verify' | '/legal/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/curriculum' | '/verify'
-  id: '__root__' | '/' | '/curriculum' | '/verify'
+  to: '/' | '/curriculum' | '/verify' | '/legal/$slug'
+  id: '__root__' | '/' | '/curriculum' | '/verify' | '/legal/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CurriculumRoute: typeof CurriculumRoute
   VerifyRoute: typeof VerifyRoute
+  LegalSlugRoute: typeof LegalSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/$slug': {
+      id: '/legal/$slug'
+      path: '/legal/$slug'
+      fullPath: '/legal/$slug'
+      preLoaderRoute: typeof LegalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CurriculumRoute: CurriculumRoute,
   VerifyRoute: VerifyRoute,
+  LegalSlugRoute: LegalSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
