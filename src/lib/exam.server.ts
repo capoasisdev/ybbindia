@@ -189,3 +189,4 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
       })),
       passed,
     };
+}
