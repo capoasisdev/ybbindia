@@ -366,6 +366,7 @@ export type Database = {
       }
       exam_attempts: {
         Row: {
+          answers: Json
           attempt_number: number
           cancelled_reason: string | null
           course_id: string
@@ -385,6 +386,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          answers?: Json
           attempt_number: number
           cancelled_reason?: string | null
           course_id: string
@@ -404,6 +406,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          answers?: Json
           attempt_number?: number
           cancelled_reason?: string | null
           course_id?: string
