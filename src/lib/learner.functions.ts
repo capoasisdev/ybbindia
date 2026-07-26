@@ -82,7 +82,7 @@ export const getLearnerOverview = createServerFn({ method: "GET" })
         .from("lesson_progress")
         .select("id", { count: "exact", head: true })
         .eq("user_id", userId)
-        .eq("is_completed", true);
+        .eq("is_complete", true);
       lessonsCompleted = completedCount ?? 0;
     }
 
