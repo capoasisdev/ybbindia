@@ -24,6 +24,7 @@ import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedLearnRouteImport } from './routes/_authenticated/learn'
 import { Route as AuthenticatedExamRouteImport } from './routes/_authenticated/exam'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedCertificateRouteImport } from './routes/_authenticated/certificate'
 import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenticated/assignments'
 
@@ -101,6 +102,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCertificateRoute =
   AuthenticatedCertificateRouteImport.update({
     id: '/certificate',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/certificate': typeof AuthenticatedCertificateRoute
+  '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exam': typeof AuthenticatedExamRoute
   '/learn': typeof AuthenticatedLearnRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/certificate': typeof AuthenticatedCertificateRoute
+  '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exam': typeof AuthenticatedExamRoute
   '/learn': typeof AuthenticatedLearnRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/verify': typeof VerifyRoute
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
   '/_authenticated/certificate': typeof AuthenticatedCertificateRoute
+  '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exam': typeof AuthenticatedExamRoute
   '/_authenticated/learn': typeof AuthenticatedLearnRoute
@@ -183,6 +192,7 @@ export interface FileRouteTypes {
     | '/verify'
     | '/assignments'
     | '/certificate'
+    | '/checkout'
     | '/dashboard'
     | '/exam'
     | '/learn'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/verify'
     | '/assignments'
     | '/certificate'
+    | '/checkout'
     | '/dashboard'
     | '/exam'
     | '/learn'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/verify'
     | '/_authenticated/assignments'
     | '/_authenticated/certificate'
+    | '/_authenticated/checkout'
     | '/_authenticated/dashboard'
     | '/_authenticated/exam'
     | '/_authenticated/learn'
@@ -348,6 +360,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/checkout': {
+      id: '/_authenticated/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/certificate': {
       id: '/_authenticated/certificate'
       path: '/certificate'
@@ -368,6 +387,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAssignmentsRoute: typeof AuthenticatedAssignmentsRoute
   AuthenticatedCertificateRoute: typeof AuthenticatedCertificateRoute
+  AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamRoute: typeof AuthenticatedExamRoute
   AuthenticatedLearnRoute: typeof AuthenticatedLearnRoute
@@ -378,6 +398,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAssignmentsRoute: AuthenticatedAssignmentsRoute,
   AuthenticatedCertificateRoute: AuthenticatedCertificateRoute,
+  AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamRoute: AuthenticatedExamRoute,
   AuthenticatedLearnRoute: AuthenticatedLearnRoute,
