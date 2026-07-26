@@ -8,8 +8,8 @@ import {
   GraduationCap,
   PlayCircle,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
+
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { getPublicCourseOutline, getPublicSettings } from "@/lib/public.functions";
@@ -99,11 +99,8 @@ function ProgrammePage() {
         />
         <div className="container-page relative grid gap-14 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:py-28">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-sidebar-border bg-sidebar-accent px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-sidebar-primary">
-              <Sparkles className="size-3.5" />
-              Yoova Business Broking
-            </span>
-            <h1 className="mt-6 text-4xl font-semibold leading-[1.05] text-sidebar-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-semibold leading-[1.05] text-sidebar-foreground sm:text-5xl lg:text-6xl">
+
               Become an Authorised Business Broker.
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sidebar-foreground/75 sm:text-lg">
