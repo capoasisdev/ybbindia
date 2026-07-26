@@ -3,6 +3,8 @@ import { useState, type ReactNode } from "react";
 import {
   BookOpen,
   FileCheck2,
+  FolderOpen,
+
   GraduationCap,
   LayoutDashboard,
   LifeBuoy,
