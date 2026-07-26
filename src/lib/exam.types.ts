@@ -39,24 +39,6 @@ export type ExamOverview = {
   passed: boolean;
 };
 
-async function loadSettings(supabase: any): Promise<SettingsMap> {
-  const { data } = await supabase.from("settings").select("key, value");
-  const map: SettingsMap = {};
-  for (const row of data ?? []) map[row.key] = row.value;
-  return map;
-}
-
-async function loadEnrolment(supabase: any, userId: string) {
-  const { data } = await supabase
-    .from("enrolments")
-    .select("id, course_id")
-    .eq("user_id", userId)
-    .eq("is_active", true)
-    .order("enrolled_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  return data;
-}
 
 export type ExamPaper = {
   attemptId: string;
