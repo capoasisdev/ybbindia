@@ -1274,6 +1274,10 @@ export type Database = {
           id: string
           is_latest: boolean
           learner_note: string | null
+          reviewed_at: string | null
+          reviewer_feedback: string | null
+          reviewer_id: string | null
+          score: number | null
           status: Database["public"]["Enums"]["submission_status"]
           storage_path: string
           submitted_at: string
@@ -1287,6 +1291,10 @@ export type Database = {
           id?: string
           is_latest?: boolean
           learner_note?: string | null
+          reviewed_at?: string | null
+          reviewer_feedback?: string | null
+          reviewer_id?: string | null
+          score?: number | null
           status?: Database["public"]["Enums"]["submission_status"]
           storage_path: string
           submitted_at?: string
@@ -1300,6 +1308,10 @@ export type Database = {
           id?: string
           is_latest?: boolean
           learner_note?: string | null
+          reviewed_at?: string | null
+          reviewer_feedback?: string | null
+          reviewer_id?: string | null
+          score?: number | null
           status?: Database["public"]["Enums"]["submission_status"]
           storage_path?: string
           submitted_at?: string
