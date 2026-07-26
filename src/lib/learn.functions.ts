@@ -277,7 +277,7 @@ export const saveLessonProgress = createServerFn({ method: "POST" })
 
     const { data: existing } = await supabase
       .from("lesson_progress")
-      .select("id, watch_percent, watched_seconds, is_complete")
+      .select("id, watch_percent, watched_seconds, is_complete, completed_at")
       .eq("user_id", userId)
       .eq("lesson_id", data.lessonId)
       .maybeSingle();
@@ -305,7 +305,7 @@ export const saveLessonProgress = createServerFn({ method: "POST" })
       watch_percent: watchPercent,
       last_position_seconds: Math.max(0, Math.round(data.lastPositionSeconds)),
       is_complete: isComplete,
-      completed_at: isComplete ? new Date().toISOString() : null,
+      completed_at: isComplete ? (existing?.completed_at ?? new Date().toISOString()) : null,
       last_activity_at: new Date().toISOString(),
     };
 
