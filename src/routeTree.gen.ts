@@ -21,12 +21,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedLearnRouteImport } from './routes/_authenticated/learn'
 import { Route as AuthenticatedExamRouteImport } from './routes/_authenticated/exam'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
 import { Route as AuthenticatedCertificateRouteImport } from './routes/_authenticated/certificate'
 import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenticated/assignments'
+import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn/index'
+import { Route as AuthenticatedLearnLessonIdRouteImport } from './routes/_authenticated/learn/$lessonId'
 import { Route as ApiPublicWebhooksRazorpayRouteImport } from './routes/api/public/webhooks/razorpay'
 
 const VerifyRoute = VerifyRouteImport.update({
@@ -88,11 +89,6 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedLearnRoute = AuthenticatedLearnRouteImport.update({
-  id: '/learn',
-  path: '/learn',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedExamRoute = AuthenticatedExamRouteImport.update({
   id: '/exam',
   path: '/exam',
@@ -120,6 +116,17 @@ const AuthenticatedAssignmentsRoute =
     path: '/assignments',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedLearnIndexRoute = AuthenticatedLearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLearnLessonIdRoute =
+  AuthenticatedLearnLessonIdRouteImport.update({
+    id: '/learn/$lessonId',
+    path: '/learn/$lessonId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicWebhooksRazorpayRoute =
   ApiPublicWebhooksRazorpayRouteImport.update({
     id: '/api/public/webhooks/razorpay',
@@ -141,10 +148,11 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exam': typeof AuthenticatedExamRoute
-  '/learn': typeof AuthenticatedLearnRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
+  '/learn/': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
 }
 export interface FileRoutesByTo {
@@ -161,10 +169,11 @@ export interface FileRoutesByTo {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exam': typeof AuthenticatedExamRoute
-  '/learn': typeof AuthenticatedLearnRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
+  '/learn': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
 }
 export interface FileRoutesById {
@@ -183,10 +192,11 @@ export interface FileRoutesById {
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exam': typeof AuthenticatedExamRoute
-  '/_authenticated/learn': typeof AuthenticatedLearnRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/_authenticated/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
+  '/_authenticated/learn/': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
 }
 export interface FileRouteTypes {
@@ -205,10 +215,11 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/exam'
-    | '/learn'
     | '/profile'
     | '/tickets'
     | '/legal/$slug'
+    | '/learn/$lessonId'
+    | '/learn/'
     | '/api/public/webhooks/razorpay'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -225,10 +236,11 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/exam'
-    | '/learn'
     | '/profile'
     | '/tickets'
     | '/legal/$slug'
+    | '/learn/$lessonId'
+    | '/learn'
     | '/api/public/webhooks/razorpay'
   id:
     | '__root__'
@@ -246,10 +258,11 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout'
     | '/_authenticated/dashboard'
     | '/_authenticated/exam'
-    | '/_authenticated/learn'
     | '/_authenticated/profile'
     | '/_authenticated/tickets'
     | '/legal/$slug'
+    | '/_authenticated/learn/$lessonId'
+    | '/_authenticated/learn/'
     | '/api/public/webhooks/razorpay'
   fileRoutesById: FileRoutesById
 }
@@ -353,13 +366,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/learn': {
-      id: '/_authenticated/learn'
-      path: '/learn'
-      fullPath: '/learn'
-      preLoaderRoute: typeof AuthenticatedLearnRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/exam': {
       id: '/_authenticated/exam'
       path: '/exam'
@@ -395,6 +401,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAssignmentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/learn/': {
+      id: '/_authenticated/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof AuthenticatedLearnIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/learn/$lessonId': {
+      id: '/_authenticated/learn/$lessonId'
+      path: '/learn/$lessonId'
+      fullPath: '/learn/$lessonId'
+      preLoaderRoute: typeof AuthenticatedLearnLessonIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/webhooks/razorpay': {
       id: '/api/public/webhooks/razorpay'
       path: '/api/public/webhooks/razorpay'
@@ -411,9 +431,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamRoute: typeof AuthenticatedExamRoute
-  AuthenticatedLearnRoute: typeof AuthenticatedLearnRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
+  AuthenticatedLearnLessonIdRoute: typeof AuthenticatedLearnLessonIdRoute
+  AuthenticatedLearnIndexRoute: typeof AuthenticatedLearnIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -422,9 +443,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamRoute: AuthenticatedExamRoute,
-  AuthenticatedLearnRoute: AuthenticatedLearnRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
+  AuthenticatedLearnLessonIdRoute: AuthenticatedLearnLessonIdRoute,
+  AuthenticatedLearnIndexRoute: AuthenticatedLearnIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
