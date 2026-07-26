@@ -120,7 +120,7 @@ function ProgrammePage() {
                 size="lg"
                 variant="outline"
                 asChild
-                className="rounded-full border-sidebar-border bg-transparent px-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                className="rounded-lg border-sidebar-border bg-transparent px-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
                 <Link to="/curriculum">Explore the curriculum</Link>
               </Button>
