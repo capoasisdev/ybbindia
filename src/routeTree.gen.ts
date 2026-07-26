@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as EnrolRouteImport } from './routes/enrol'
 import { Route as CurriculumRouteImport } from './routes/curriculum'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -32,6 +33,11 @@ const VerifyRoute = VerifyRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnrolRoute = EnrolRouteImport.update({
+  id: '/enrol',
+  path: '/enrol',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CurriculumRoute = CurriculumRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
+  '/enrol': typeof EnrolRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
+  '/enrol': typeof EnrolRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
+  '/enrol': typeof EnrolRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
@@ -149,6 +158,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/curriculum'
+    | '/enrol'
     | '/support'
     | '/verify'
     | '/assignments'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/curriculum'
+    | '/enrol'
     | '/support'
     | '/verify'
     | '/assignments'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/curriculum'
+    | '/enrol'
     | '/support'
     | '/verify'
     | '/_authenticated/assignments'
@@ -197,6 +209,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CurriculumRoute: typeof CurriculumRoute
+  EnrolRoute: typeof EnrolRoute
   SupportRoute: typeof SupportRoute
   VerifyRoute: typeof VerifyRoute
   LegalSlugRoute: typeof LegalSlugRoute
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/enrol': {
+      id: '/enrol'
+      path: '/enrol'
+      fullPath: '/enrol'
+      preLoaderRoute: typeof EnrolRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/curriculum': {
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CurriculumRoute: CurriculumRoute,
+  EnrolRoute: EnrolRoute,
   SupportRoute: SupportRoute,
   VerifyRoute: VerifyRoute,
   LegalSlugRoute: LegalSlugRoute,
