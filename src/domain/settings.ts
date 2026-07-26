@@ -39,6 +39,11 @@ export const SETTING_DEFAULTS = {
   certificate_validity_note: "This certificate does not expire.",
   programme_name: "ABB Certification Programme",
   support_email: "",
+  /**
+   * When true, the checkout exposes a "Simulate successful payment" path that
+   * fulfils the order without contacting Razorpay. Must be false at go-live.
+   */
+  payments_test_mode: true,
 } as const;
 
 export type SettingKey = keyof typeof SETTING_DEFAULTS;
