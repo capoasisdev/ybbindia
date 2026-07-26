@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyRouteImport } from './routes/verify'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as CurriculumRouteImport } from './routes/curriculum'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 
@@ -30,6 +31,11 @@ const CurriculumRoute = CurriculumRouteImport.update({
   path: '/curriculum',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const LegalSlugRoute = LegalSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/curriculum': typeof CurriculumRoute
   '/support': typeof SupportRoute
   '/verify': typeof VerifyRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/curriculum' | '/support' | '/verify' | '/legal/$slug'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/curriculum'
+    | '/support'
+    | '/verify'
+    | '/legal/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/curriculum' | '/support' | '/verify' | '/legal/$slug'
-  id: '__root__' | '/' | '/curriculum' | '/support' | '/verify' | '/legal/$slug'
+  to: '/' | '/auth' | '/curriculum' | '/support' | '/verify' | '/legal/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/curriculum'
+    | '/support'
+    | '/verify'
+    | '/legal/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   CurriculumRoute: typeof CurriculumRoute
   SupportRoute: typeof SupportRoute
   VerifyRoute: typeof VerifyRoute
@@ -102,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CurriculumRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   CurriculumRoute: CurriculumRoute,
   SupportRoute: SupportRoute,
   VerifyRoute: VerifyRoute,
