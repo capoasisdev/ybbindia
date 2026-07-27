@@ -133,7 +133,7 @@ function DashboardPage() {
             </p>
             <Button asChild className="mt-7 rounded-lg px-7">
               <Link to="/enrol">
-                Enrol now
+                Enroll now
                 <ArrowRight className="size-4" />
               </Link>
             </Button>

@@ -47,7 +47,7 @@ export function SiteHeader() {
                 <Link to="/auth">Sign in</Link>
               </Button>
               <Button asChild>
-                <Link to="/enrol">Enrol now</Link>
+                <Link to="/enrol">Enroll now</Link>
               </Button>
             </>
           )}
@@ -86,7 +86,7 @@ export function SiteHeader() {
                   <Link to="/auth">Sign in</Link>
                 </Button>
                 <Button asChild onClick={() => setOpen(false)}>
-                  <Link to="/enrol">Enrol now</Link>
+                  <Link to="/enrol">Enroll now</Link>
                 </Button>
               </>
             )}

@@ -332,12 +332,12 @@ function ProgrammePage() {
               Ready to earn the ABB credential?
             </h2>
             <p className="mt-4 text-primary-foreground/75">
-              Enrol today for {formatPaise(pricePaise)} plus {gstRate}% GST and get {accessDays}{" "}
+              Enroll today for {formatPaise(pricePaise)} plus {gstRate}% GST and get {accessDays}{" "}
               days of access to the complete programme.
             </p>
             <Button size="lg" variant="secondary" asChild className="mt-8 rounded-lg px-7">
               <Link to="/enrol">
-                Enrol now
+                Enroll now
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
