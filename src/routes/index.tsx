@@ -118,7 +118,7 @@ function ProgrammePage() {
                 <span className="relative z-10">Authorised Business Broker</span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-1 z-0 h-2.5 bg-accent/25"
+                  className="hero-underline absolute inset-x-0 bottom-1 z-0 h-2.5 bg-accent/25"
                 />
               </span>
               .
@@ -157,7 +157,11 @@ function ProgrammePage() {
                 { label: "Access", value: `${accessDays} days` },
                 { label: "Pass mark", value: `${passPercent}%` },
               ].map((stat, i) => (
-                <div key={stat.label} className={i === 0 ? "pr-6" : "px-6"}>
+                <div
+                  key={stat.label}
+                  className={`stat-rise ${i === 0 ? "pr-6" : "px-6"}`}
+                  style={{ animationDelay: `${400 + i * 120}ms` }}
+                >
                   <dt className="text-xs uppercase tracking-[0.14em] text-sidebar-foreground/55">
                     {stat.label}
                   </dt>
