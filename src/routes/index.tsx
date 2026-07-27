@@ -113,15 +113,8 @@ function ProgrammePage() {
             </p>
 
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.03] tracking-tight text-sidebar-foreground sm:text-5xl lg:text-[3.75rem]">
-              Become an{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10">Authorised Business Broker</span>
-                <span
-                  aria-hidden
-                  className="hero-underline absolute inset-x-0 bottom-1 z-0 h-2.5 bg-accent/25"
-                />
-              </span>
-              .
+              Become an <span className="text-sidebar-primary">Authorised Business Broker</span>.
+
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sidebar-foreground/75 sm:text-lg">

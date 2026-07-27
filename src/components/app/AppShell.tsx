@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import {
   BookOpen,
   FileCheck2,
@@ -11,10 +13,12 @@ import {
   LogOut,
   Menu,
   ScrollText,
+  Settings2,
   UserRound,
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getAdminAccess } from "@/lib/admin.functions";
 import { Wordmark } from "@/components/site/Wordmark";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -34,6 +38,16 @@ const NAV = [
 export function AppShell({ title, children }: { title: string; children: ReactNode }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const fetchAdminAccess = useServerFn(getAdminAccess);
+  const { data: access } = useQuery({
+    queryKey: ["admin-access"],
+    queryFn: () => fetchAdminAccess(),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+  const nav = access?.isAdmin
+    ? [...NAV, { to: "/admin/lessons", label: "Lesson admin", icon: Settings2 } as const]
+    : NAV;
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -47,7 +61,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         <Wordmark tone="light" />
 
         <nav className="mt-10 flex-1 space-y-1">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -85,7 +99,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
 
         <div className={cn("border-b border-border bg-card px-5 py-4 lg:hidden", open ? "block" : "hidden")}>
           <nav className="space-y-1">
-            {NAV.map((item) => (
+            {nav.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
