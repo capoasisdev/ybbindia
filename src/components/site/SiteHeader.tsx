@@ -46,7 +46,7 @@ export function SiteHeader() {
               <Button variant="ghost" asChild>
                 <Link to="/auth">Sign in</Link>
               </Button>
-              <Button asChild>
+              <Button asChild className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
                 <Link to="/enrol">Enroll now</Link>
               </Button>
             </>
