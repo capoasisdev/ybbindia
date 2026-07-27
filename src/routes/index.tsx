@@ -335,12 +335,18 @@ function ProgrammePage() {
               Enroll today for {formatPaise(pricePaise)} plus {gstRate}% GST and get {accessDays}{" "}
               days of access to the complete programme.
             </p>
-            <Button size="lg" variant="secondary" asChild className="mt-8 rounded-lg px-7">
+            <Button
+              size="lg"
+              variant="secondary"
+              asChild
+              className="group mt-8 rounded-lg px-7 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary/80"
+            >
               <Link to="/enrol">
                 Enroll now
-                <ArrowRight className="size-4" />
+                <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
               </Link>
             </Button>
+
           </div>
         </div>
       </section>
