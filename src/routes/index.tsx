@@ -95,15 +95,15 @@ function ProgrammePage() {
       <section className="relative overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-48 -top-56 size-[42rem] rounded-full bg-accent/20 blur-[120px]"
+          className="hero-blob-a pointer-events-none absolute -right-48 -top-56 size-[42rem] rounded-full bg-accent/20 blur-[120px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -bottom-64 -left-40 size-[34rem] rounded-full bg-sidebar-primary/10 blur-[120px]"
+          className="hero-blob-b pointer-events-none absolute -bottom-64 -left-40 size-[34rem] rounded-full bg-sidebar-primary/10 blur-[120px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_top_left,black,transparent_70%)]"
+          className="hero-grid pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_top_left,black,transparent_70%)]"
         />
 
         <div className="container-page relative grid items-start gap-14 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
