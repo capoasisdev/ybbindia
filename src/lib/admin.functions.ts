@@ -172,7 +172,7 @@ export const updateAdminLesson = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     await assertAdmin(supabase, userId);
 
-    const patch: Record<string, unknown> = { updated_at: new Date().toISOString() };
+    const patch: any = { updated_at: new Date().toISOString() };
     if (data.title !== undefined) patch.title = data.title.trim();
     if (data.summary !== undefined) patch.summary = data.summary?.trim() || null;
     if (data.videoUrl !== undefined) patch.video_url = data.videoUrl?.trim() || null;
