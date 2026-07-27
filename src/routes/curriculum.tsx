@@ -89,7 +89,7 @@ function CurriculumPage() {
           </p>
           <Button size="lg" variant="secondary" asChild className="mt-7 rounded-lg px-7">
             <Link to="/enrol">
-              Enrol now
+              Enroll now
               <ArrowRight className="size-4" />
             </Link>
           </Button>

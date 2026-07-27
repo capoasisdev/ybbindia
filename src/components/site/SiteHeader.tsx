@@ -46,8 +46,8 @@ export function SiteHeader() {
               <Button variant="ghost" asChild>
                 <Link to="/auth">Sign in</Link>
               </Button>
-              <Button asChild>
-                <Link to="/enrol">Enrol now</Link>
+              <Button asChild className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lift">
+                <Link to="/enrol">Enroll now</Link>
               </Button>
             </>
           )}
@@ -86,7 +86,7 @@ export function SiteHeader() {
                   <Link to="/auth">Sign in</Link>
                 </Button>
                 <Button asChild onClick={() => setOpen(false)}>
-                  <Link to="/enrol">Enrol now</Link>
+                  <Link to="/enrol">Enroll now</Link>
                 </Button>
               </>
             )}
