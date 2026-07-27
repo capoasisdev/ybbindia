@@ -95,14 +95,35 @@ function ProgrammePage() {
       <section className="relative overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground">
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-40 -top-40 size-[34rem] rounded-full bg-accent/15 blur-3xl"
+          className="pointer-events-none absolute -right-48 -top-56 size-[42rem] rounded-full bg-accent/20 blur-[120px]"
         />
-        <div className="container-page relative grid gap-14 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:py-28">
-          <div>
-            <h1 className="text-4xl font-semibold leading-[1.05] text-sidebar-foreground sm:text-5xl lg:text-6xl">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-64 -left-40 size-[34rem] rounded-full bg-sidebar-primary/10 blur-[120px]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,currentColor_1px,transparent_1px),linear-gradient(to_bottom,currentColor_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(ellipse_at_top_left,black,transparent_70%)]"
+        />
 
-              Become an Authorised Business Broker.
+        <div className="container-page relative grid items-start gap-14 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
+          <div>
+            <p className="border-l-2 border-sidebar-primary pl-3 text-xs font-semibold uppercase tracking-[0.22em] text-sidebar-primary">
+              Yoova Business Broking · Certification
+            </p>
+
+            <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.03] tracking-tight text-sidebar-foreground sm:text-5xl lg:text-[3.75rem]">
+              Become an{" "}
+              <span className="relative inline-block">
+                <span className="relative z-10">Authorised Business Broker</span>
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-1 z-0 h-2.5 bg-accent/25"
+                />
+              </span>
+              .
             </h1>
+
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sidebar-foreground/75 sm:text-lg">
               The {programmeName} is YBB&apos;s end-to-end pathway for professionals who advise on
               buying and selling businesses — structured training, assessed practice and a
@@ -110,43 +131,39 @@ function ProgrammePage() {
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button size="lg" asChild className="rounded-lg px-7">
+              <Button
+                size="lg"
+                asChild
+                className="group rounded-lg bg-accent px-7 text-accent-foreground shadow-lift transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/90 hover:shadow-lift focus-visible:ring-accent/50"
+              >
                 <Link to="/enrol">
-                  Enrol now
-                  <ArrowRight className="size-4" />
+                  Enroll now
+                  <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 asChild
-                className="rounded-lg border-sidebar-border bg-transparent px-7 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                className="rounded-lg border-sidebar-border bg-transparent px-7 text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
               >
                 <Link to="/curriculum">Explore the curriculum</Link>
               </Button>
             </div>
 
-            <dl className="mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-sidebar-border pt-8">
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-sidebar-foreground/55">
-                  Modules
-                </dt>
-                <dd className="mt-1 font-display text-2xl font-semibold">
-                  {modules.length || "—"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-sidebar-foreground/55">
-                  Access
-                </dt>
-                <dd className="mt-1 font-display text-2xl font-semibold">{accessDays} days</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-sidebar-foreground/55">
-                  Pass mark
-                </dt>
-                <dd className="mt-1 font-display text-2xl font-semibold">{passPercent}%</dd>
-              </div>
+            <dl className="mt-14 grid max-w-xl grid-cols-3 divide-x divide-sidebar-border border-t border-sidebar-border pt-8">
+              {[
+                { label: "Modules", value: modules.length || "—" },
+                { label: "Access", value: `${accessDays} days` },
+                { label: "Pass mark", value: `${passPercent}%` },
+              ].map((stat, i) => (
+                <div key={stat.label} className={i === 0 ? "pr-6" : "px-6"}>
+                  <dt className="text-xs uppercase tracking-[0.14em] text-sidebar-foreground/55">
+                    {stat.label}
+                  </dt>
+                  <dd className="mt-1.5 font-display text-2xl font-semibold">{stat.value}</dd>
+                </div>
+              ))}
             </dl>
           </div>
 
@@ -179,8 +196,15 @@ function ProgrammePage() {
                 ))}
               </ul>
 
-              <Button size="lg" asChild className="mt-8 w-full rounded-lg">
-                <Link to="/enrol">Start enrolment</Link>
+              <Button
+                size="lg"
+                asChild
+                className="group mt-8 w-full rounded-lg bg-accent text-accent-foreground transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/90 focus-visible:ring-accent/50"
+              >
+                <Link to="/enrol">
+                  Start enrollment
+                  <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
+                </Link>
               </Button>
               <p className="mt-3 text-center text-xs text-sidebar-foreground/55">
                 Secure payment · GST invoice · Instant access
@@ -189,6 +213,7 @@ function ProgrammePage() {
           </div>
         </div>
       </section>
+
 
       {/* Journey */}
       <section className="container-page py-20">
