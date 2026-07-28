@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Lock } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
+import { LessonPlayer } from "@/components/app/LessonPlayer";
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
