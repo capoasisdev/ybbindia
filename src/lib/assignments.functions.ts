@@ -166,13 +166,14 @@ export const recordSubmission = createServerFn({ method: "POST" })
       throw new Error("No attempts remaining for this assignment");
     }
 
-    await supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin
       .from("submissions")
       .update({ is_latest: false })
       .eq("user_id", userId)
       .eq("assignment_id", data.assignmentId);
 
-    const { error } = await supabase.from("submissions").insert({
+    const { error } = await supabaseAdmin.from("submissions").insert({
       assignment_id: data.assignmentId,
       user_id: userId,
       attempt_number: (attempts[0]?.attempt_number ?? 0) + 1,
