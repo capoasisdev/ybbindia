@@ -46,7 +46,11 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
     staleTime: 5 * 60 * 1000,
   });
   const nav = access?.isAdmin
-    ? [...NAV, { to: "/admin/lessons", label: "Lesson admin", icon: Settings2 } as const]
+    ? [
+        ...NAV,
+        { to: "/admin/lessons", label: "Lesson admin", icon: Settings2 } as const,
+        { to: "/admin/certificates", label: "Certificate approvals", icon: ScrollText } as const,
+      ]
     : NAV;
 
   const signOut = async () => {
