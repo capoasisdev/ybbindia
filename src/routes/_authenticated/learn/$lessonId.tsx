@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Lock } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
+import { LessonPlayer } from "@/components/app/LessonPlayer";
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
@@ -154,31 +156,23 @@ function Page() {
         </div>
       ) : (
         <>
-          <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
-            {lesson.videoUrl ? (
-              <video
-                ref={videoRef}
+          {lesson.videoUrl ? (
+            <div className="mt-6">
+              <LessonPlayer
                 src={lesson.videoUrl}
-                controls
-                controlsList="nodownload"
-                onContextMenu={(e) => e.preventDefault()}
-                onLoadedMetadata={(e) => {
-                  const el = e.currentTarget;
-                  if (lesson.lastPositionSeconds > 0 && lesson.lastPositionSeconds < el.duration - 5) {
-                    el.currentTime = lesson.lastPositionSeconds;
-                  }
-                }}
+                videoRef={videoRef}
+                startAt={lesson.lastPositionSeconds}
                 onTimeUpdate={onTimeUpdate}
                 onEnded={onEnded}
-                className="aspect-video w-full bg-black"
               />
-            ) : (
-              <div className="grid aspect-video w-full place-items-center bg-secondary px-6 text-center text-sm text-muted-foreground">
-                The video for this lesson has not been uploaded yet. You can still read the notes and
-                mark the lesson as complete.
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="mt-6 grid aspect-video w-full place-items-center rounded-2xl border border-border bg-secondary px-6 text-center text-sm text-muted-foreground">
+              The video for this lesson has not been uploaded yet. You can still read the notes and
+              mark the lesson as complete.
+            </div>
+          )}
+
 
           <div className="mt-5 rounded-2xl border border-border bg-card p-5">
             <div className="flex items-center justify-between text-sm">
