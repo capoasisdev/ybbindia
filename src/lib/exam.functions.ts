@@ -55,7 +55,7 @@ export const startExamAttempt = createServerFn({ method: "POST" })
 
     const expiresAt = new Date(Date.now() + overview.config.durationMinutes * 60_000).toISOString();
 
-    const { data: inserted, error } = await supabase
+    const { data: inserted, error } = await supabaseAdmin
       .from("exam_attempts")
       .insert({
         user_id: userId,
@@ -89,7 +89,8 @@ export const saveExamAnswers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { attemptId: string; answers: Record<string, string> }) => input)
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
       .from("exam_attempts")
       .update({ answers: data.answers })
       .eq("id", data.attemptId)
@@ -151,7 +152,7 @@ export const submitExamAttempt = createServerFn({ method: "POST" })
     const scorePercent = totalMarks > 0 ? Math.round((score / totalMarks) * 10000) / 100 : 0;
     const isPassed = scorePercent >= attempt.pass_percent;
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("exam_attempts")
       .update({
         answers: data.answers,

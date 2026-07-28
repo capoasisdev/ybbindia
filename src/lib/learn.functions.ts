@@ -309,9 +309,14 @@ export const saveLessonProgress = createServerFn({ method: "POST" })
       last_activity_at: new Date().toISOString(),
     };
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = existing
-      ? await supabase.from("lesson_progress").update(payload).eq("id", existing.id)
-      : await supabase.from("lesson_progress").insert(payload);
+      ? await supabaseAdmin
+          .from("lesson_progress")
+          .update(payload)
+          .eq("id", existing.id)
+          .eq("user_id", userId)
+      : await supabaseAdmin.from("lesson_progress").insert(payload);
     if (error) throw new Error(error.message);
 
     return { watchPercent, isComplete, threshold };
