@@ -114,7 +114,7 @@ function ProgrammePage() {
 
             <h1 className="mt-6 font-display text-4xl font-semibold leading-[1.03] tracking-tight text-sidebar-foreground sm:text-5xl lg:text-[3.75rem]">
               Become an{" "}
-              <span className="inline-block border-b-2 border-sidebar-foreground pb-1 text-sidebar-primary">
+              <span className="text-sidebar-primary underline decoration-sidebar-foreground decoration-2 underline-offset-[10px]">
                 Authorised Business Broker
               </span>
               .
