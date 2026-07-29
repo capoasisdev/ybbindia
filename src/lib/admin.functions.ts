@@ -46,6 +46,9 @@ export const getAdminAccess = createServerFn({ method: "GET" })
     const roles = (data ?? []).map((r: { role: string }) => r.role);
     return {
       isAdmin: roles.includes("content_admin") || roles.includes("super_admin"),
+      isStaff: ["reviewer", "support_admin", "content_admin", "super_admin"].some((r) =>
+        roles.includes(r),
+      ),
     };
   });
 

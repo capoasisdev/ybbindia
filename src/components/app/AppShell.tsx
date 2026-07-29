@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   BookOpen,
+  ClipboardCheck,
   FileCheck2,
   FolderOpen,
 
@@ -45,13 +46,18 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
-  const nav = access?.isAdmin
-    ? [
-        ...NAV,
-        { to: "/admin/lessons", label: "Lesson admin", icon: Settings2 } as const,
-        { to: "/admin/certificates", label: "Certificate approvals", icon: ScrollText } as const,
-      ]
-    : NAV;
+  const nav = [
+    ...NAV,
+    ...(access?.isStaff
+      ? [{ to: "/admin/reviews", label: "Submission reviews", icon: ClipboardCheck } as const]
+      : []),
+    ...(access?.isAdmin
+      ? [
+          { to: "/admin/lessons", label: "Lesson admin", icon: Settings2 } as const,
+          { to: "/admin/certificates", label: "Certificate approvals", icon: ScrollText } as const,
+        ]
+      : []),
+  ];
 
   const signOut = async () => {
     await supabase.auth.signOut();
