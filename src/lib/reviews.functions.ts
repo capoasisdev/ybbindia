@@ -73,7 +73,7 @@ export const listAdminSubmissions = createServerFn({ method: "GET" })
       .order("submitted_at", { ascending: false })
       .limit(300);
 
-    if (data.status && data.status !== "all") query = query.eq("status", data.status);
+    if (data.status && data.status !== "all") query = query.eq("status", data.status as any);
     if (data.latestOnly) query = query.eq("is_latest", true);
 
     const { data: rows, error } = await query;
