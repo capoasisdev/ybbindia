@@ -195,7 +195,7 @@ export function LessonPlayer({ src, videoRef, startAt = 0, onTimeUpdate, onEnded
           aria-label="Play lesson"
           className="absolute inset-0 grid place-items-center bg-[oklch(0.16_0.02_260)]/35 transition-colors hover:bg-[oklch(0.16_0.02_260)]/25"
         >
-          <span className="grid size-16 place-items-center rounded-2xl border border-primary-foreground/25 bg-primary/90 text-primary-foreground shadow-lg backdrop-blur transition-transform duration-200 hover:scale-105">
+          <span className="grid size-16 place-items-center rounded-2xl border border-primary-foreground/25 bg-accent/90 text-accent-foreground shadow-lg backdrop-blur transition-transform duration-200 hover:scale-105">
             <Play className="ml-0.5 size-7 fill-current" />
           </span>
         </button>
@@ -215,7 +215,7 @@ export function LessonPlayer({ src, videoRef, startAt = 0, onTimeUpdate, onEnded
             style={{ width: `${bufferedPercent}%` }}
           />
           <div
-            className="absolute inset-y-0 left-0 rounded-sm bg-primary"
+            className="absolute inset-y-0 left-0 rounded-sm bg-accent"
             style={{ width: `${progress}%` }}
           />
           <input
@@ -234,7 +234,7 @@ export function LessonPlayer({ src, videoRef, startAt = 0, onTimeUpdate, onEnded
             className="absolute inset-0 h-full w-full cursor-pointer appearance-none bg-transparent opacity-0"
           />
           <span
-            className="pointer-events-none absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-sm bg-primary opacity-0 transition-opacity group-hover:opacity-100"
+            className="pointer-events-none absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-sm bg-accent opacity-0 transition-opacity group-hover:opacity-100"
             style={{ left: `${progress}%` }}
           />
         </div>

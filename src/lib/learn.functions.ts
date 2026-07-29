@@ -310,13 +310,9 @@ export const saveLessonProgress = createServerFn({ method: "POST" })
     };
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = existing
-      ? await supabaseAdmin
-          .from("lesson_progress")
-          .update(payload)
-          .eq("id", existing.id)
-          .eq("user_id", userId)
-      : await supabaseAdmin.from("lesson_progress").insert(payload);
+    const { error } = await supabaseAdmin
+      .from("lesson_progress")
+      .upsert(payload, { onConflict: "user_id, lesson_id" });
     if (error) throw new Error(error.message);
 
     return { watchPercent, isComplete, threshold };
