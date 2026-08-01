@@ -1,0 +1,2602 @@
+[
+  {
+    "prompt": "A professional broker should:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Overpromise"
+      },
+      {
+        "id": "b",
+        "text": "Avoid difficult conversations"
+      },
+      {
+        "id": "c",
+        "text": "Set realistic expectations"
+      },
+      {
+        "id": "d",
+        "text": "Guarantee outcomes"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 20",
+    "module": "M5"
+  },
+  {
+    "prompt": "What is deal structure?",
+    "options": [
+      {
+        "id": "a",
+        "text": "How a transaction is organized"
+      },
+      {
+        "id": "b",
+        "text": "Valuation method only"
+      },
+      {
+        "id": "c",
+        "text": "Legal registration process"
+      },
+      {
+        "id": "d",
+        "text": "Marketing strategy"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 45",
+    "module": "M9"
+  },
+  {
+    "prompt": "What is a Partner Buyout?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sale of machinery"
+      },
+      {
+        "id": "b",
+        "text": "One partner purchasing another partner's stake"
+      },
+      {
+        "id": "c",
+        "text": "IPO"
+      },
+      {
+        "id": "d",
+        "text": "Franchise launch"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 4",
+    "module": "M1"
+  },
+  {
+    "prompt": "Which document provides detailed information about a business opportunity?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Invoice"
+      },
+      {
+        "id": "b",
+        "text": "Information Memorandum"
+      },
+      {
+        "id": "c",
+        "text": "Salary Sheet"
+      },
+      {
+        "id": "d",
+        "text": "GST Return"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 2",
+    "module": "M1"
+  },
+  {
+    "prompt": "A CBP should:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Exaggerate strengths"
+      },
+      {
+        "id": "b",
+        "text": "Hide weaknesses"
+      },
+      {
+        "id": "c",
+        "text": "Present information professionally"
+      },
+      {
+        "id": "d",
+        "text": "Guarantee investment returns"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 32",
+    "module": "M7"
+  },
+  {
+    "prompt": "What is the broker's primary role during DD?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Replace lawyers"
+      },
+      {
+        "id": "b",
+        "text": "Replace accountants"
+      },
+      {
+        "id": "c",
+        "text": "Coordinate and facilitate"
+      },
+      {
+        "id": "d",
+        "text": "Conduct audits"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 46",
+    "module": "M10"
+  },
+  {
+    "prompt": "Which industry often attracts higher EBITDA multiples?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Technology"
+      },
+      {
+        "id": "b",
+        "text": "Commodity Trading"
+      },
+      {
+        "id": "c",
+        "text": "Small Retail"
+      },
+      {
+        "id": "d",
+        "text": "Traditional Distribution"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 26",
+    "module": "M6"
+  },
+  {
+    "prompt": "What does SME stand for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Strategic Market Enterprise"
+      },
+      {
+        "id": "b",
+        "text": "Small and Medium Enterprise"
+      },
+      {
+        "id": "c",
+        "text": "Service Management Entity"
+      },
+      {
+        "id": "d",
+        "text": "Small Market Enterprise"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 6",
+    "module": "M2"
+  },
+  {
+    "prompt": "Which professional is a potential referral source?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Chartered Accountant"
+      },
+      {
+        "id": "b",
+        "text": "Lawyer"
+      },
+      {
+        "id": "c",
+        "text": "Banker"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 13",
+    "module": "M4"
+  },
+  {
+    "prompt": "Which multiple is commonly used in acquisitions?",
+    "options": [
+      {
+        "id": "a",
+        "text": "EBITDA Multiple"
+      },
+      {
+        "id": "b",
+        "text": "Attendance Multiple"
+      },
+      {
+        "id": "c",
+        "text": "Salary Multiple"
+      },
+      {
+        "id": "d",
+        "text": "Inventory Multiple"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 24",
+    "module": "M6"
+  },
+  {
+    "prompt": "What is YBB's long-term ecosystem vision?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Individual broking only"
+      },
+      {
+        "id": "b",
+        "text": "National professional network"
+      },
+      {
+        "id": "c",
+        "text": "Franchise sales"
+      },
+      {
+        "id": "d",
+        "text": "Social media marketing"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 36",
+    "module": "M8"
+  },
+  {
+    "prompt": "What should be clearly defined in a mandate?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Fees"
+      },
+      {
+        "id": "b",
+        "text": "Scope"
+      },
+      {
+        "id": "c",
+        "text": "Duration"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 30",
+    "module": "M7"
+  },
+  {
+    "prompt": "Why do buyers often purchase existing businesses?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Lower risk"
+      },
+      {
+        "id": "b",
+        "text": "Existing customers"
+      },
+      {
+        "id": "c",
+        "text": "Proven revenue"
+      },
+      {
+        "id": "d",
+        "text": "All of the above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 1",
+    "module": "M1"
+  },
+  {
+    "prompt": "What should brokers focus on when discussing exclusivity?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Broker benefits"
+      },
+      {
+        "id": "b",
+        "text": "Seller benefits"
+      },
+      {
+        "id": "c",
+        "text": "Legal threats"
+      },
+      {
+        "id": "d",
+        "text": "Competitors"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 29",
+    "module": "M7"
+  },
+  {
+    "prompt": "Which business is most suitable for asset-based valuation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing Agency"
+      },
+      {
+        "id": "b",
+        "text": "Consulting Firm"
+      },
+      {
+        "id": "c",
+        "text": "Manufacturing Unit"
+      },
+      {
+        "id": "d",
+        "text": "Coaching Institute"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 22",
+    "module": "M6"
+  },
+  {
+    "prompt": "Which is a common seller motivation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Retirement"
+      },
+      {
+        "id": "b",
+        "text": "Relocation"
+      },
+      {
+        "id": "c",
+        "text": "Lack of Successor"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 7",
+    "module": "M2"
+  },
+  {
+    "prompt": "What is often a positive buying signal?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Due diligence interest"
+      },
+      {
+        "id": "b",
+        "text": "Repeated delays"
+      },
+      {
+        "id": "c",
+        "text": "Vague answers"
+      },
+      {
+        "id": "d",
+        "text": "Lack of financial clarity"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 40",
+    "module": "M8"
+  },
+  {
+    "prompt": "A Business Broker is most similar to:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Chartered Accountant"
+      },
+      {
+        "id": "b",
+        "text": "Lawyer"
+      },
+      {
+        "id": "c",
+        "text": "Real Estate Broker"
+      },
+      {
+        "id": "d",
+        "text": "Auditor"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 1",
+    "module": "M1"
+  },
+  {
+    "prompt": "What type of questions generally create better conversations?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Open Questions"
+      },
+      {
+        "id": "b",
+        "text": "Closed Questions"
+      },
+      {
+        "id": "c",
+        "text": "Leading Questions"
+      },
+      {
+        "id": "d",
+        "text": "Legal Questions"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 40",
+    "module": "M8"
+  },
+  {
+    "prompt": "What is the objective of buyer-seller matching?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Maximum outreach"
+      },
+      {
+        "id": "b",
+        "text": "Maximum relevance"
+      },
+      {
+        "id": "c",
+        "text": "Maximum advertising"
+      },
+      {
+        "id": "d",
+        "text": "Maximum meetings"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 42",
+    "module": "M8"
+  },
+  {
+    "prompt": "Why is scalability important?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It creates growth potential"
+      },
+      {
+        "id": "b",
+        "text": "It reduces paperwork"
+      },
+      {
+        "id": "c",
+        "text": "It guarantees profits"
+      },
+      {
+        "id": "d",
+        "text": "It eliminates competition"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 18",
+    "module": "M5"
+  },
+  {
+    "prompt": "Why are data rooms used?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Organization"
+      },
+      {
+        "id": "b",
+        "text": "Security"
+      },
+      {
+        "id": "c",
+        "text": "Efficiency"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 47",
+    "module": "M10"
+  },
+  {
+    "prompt": "What should brokers prioritize?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Relationship and trust"
+      },
+      {
+        "id": "b",
+        "text": "Commission only"
+      },
+      {
+        "id": "c",
+        "text": "Advertising only"
+      },
+      {
+        "id": "d",
+        "text": "Competition only"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 50",
+    "module": "M11"
+  },
+  {
+    "prompt": "When is a CBP generally shared?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Before teaser"
+      },
+      {
+        "id": "b",
+        "text": "Before qualification"
+      },
+      {
+        "id": "c",
+        "text": "After NDA execution"
+      },
+      {
+        "id": "d",
+        "text": "After transaction completion"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 34",
+    "module": "M7"
+  },
+  {
+    "prompt": "Who is often the strongest strategic buyer?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The company that benefits most from the acquisition"
+      },
+      {
+        "id": "b",
+        "text": "The nearest company"
+      },
+      {
+        "id": "c",
+        "text": "The oldest company"
+      },
+      {
+        "id": "d",
+        "text": "The largest office"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 37",
+    "module": "M8"
+  },
+  {
+    "prompt": "Networking is primarily about:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Collecting visiting cards"
+      },
+      {
+        "id": "b",
+        "text": "Building professional relationships"
+      },
+      {
+        "id": "c",
+        "text": "Advertising"
+      },
+      {
+        "id": "d",
+        "text": "Selling immediately"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 14",
+    "module": "M4"
+  },
+  {
+    "prompt": "What is an equity swap?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Cash transaction"
+      },
+      {
+        "id": "b",
+        "text": "Share exchange transaction"
+      },
+      {
+        "id": "c",
+        "text": "Debt financing"
+      },
+      {
+        "id": "d",
+        "text": "Asset purchase"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 45",
+    "module": "M9"
+  },
+  {
+    "prompt": "Which factor is increasing demand for Business Brokers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Retirement of business owners"
+      },
+      {
+        "id": "b",
+        "text": "Succession planning"
+      },
+      {
+        "id": "c",
+        "text": "Acquisitions"
+      },
+      {
+        "id": "d",
+        "text": "All of the above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 3",
+    "module": "M1"
+  },
+  {
+    "prompt": "When should detailed business information generally be shared?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Immediately"
+      },
+      {
+        "id": "b",
+        "text": "After NDA execution"
+      },
+      {
+        "id": "c",
+        "text": "Before buyer qualification"
+      },
+      {
+        "id": "d",
+        "text": "Publicly"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 10",
+    "module": "M3"
+  },
+  {
+    "prompt": "Why do fee disputes often occur?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Poor documentation"
+      },
+      {
+        "id": "b",
+        "text": "Unclear fee triggers"
+      },
+      {
+        "id": "c",
+        "text": "Weak mandates"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 49",
+    "module": "M10"
+  },
+  {
+    "prompt": "Which is a buyer red flag?",
+    "options": [
+      {
+        "id": "a",
+        "text": "NDA execution"
+      },
+      {
+        "id": "b",
+        "text": "Clear objectives"
+      },
+      {
+        "id": "c",
+        "text": "Avoiding financial discussions"
+      },
+      {
+        "id": "d",
+        "text": "Industry experience"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 19",
+    "module": "M5"
+  },
+  {
+    "prompt": "Which factor should be assessed early?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Financial capacity"
+      },
+      {
+        "id": "b",
+        "text": "Logo design"
+      },
+      {
+        "id": "c",
+        "text": "Website traffic"
+      },
+      {
+        "id": "d",
+        "text": "Office size"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 39",
+    "module": "M8"
+  },
+  {
+    "prompt": "What is often the biggest concern for sellers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing"
+      },
+      {
+        "id": "b",
+        "text": "Confidentiality"
+      },
+      {
+        "id": "c",
+        "text": "Office Location"
+      },
+      {
+        "id": "d",
+        "text": "Website Design"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 16",
+    "module": "M4"
+  },
+  {
+    "prompt": "What is a conflict of interest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing challenge"
+      },
+      {
+        "id": "b",
+        "text": "Personal interest interfering with professional responsibility"
+      },
+      {
+        "id": "c",
+        "text": "Tax issue"
+      },
+      {
+        "id": "d",
+        "text": "Legal contract"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 11",
+    "module": "M3"
+  },
+  {
+    "prompt": "Why is referral business valuable?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Higher trust"
+      },
+      {
+        "id": "b",
+        "text": "Better conversion rates"
+      },
+      {
+        "id": "c",
+        "text": "Lower acquisition costs"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 14",
+    "module": "M4"
+  },
+  {
+    "prompt": "What is business valuation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing process"
+      },
+      {
+        "id": "b",
+        "text": "Estimation of business worth"
+      },
+      {
+        "id": "c",
+        "text": "Accounting entry"
+      },
+      {
+        "id": "d",
+        "text": "Sales strategy"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 21",
+    "module": "M6"
+  },
+  {
+    "prompt": "Ethical fees should be:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Hidden"
+      },
+      {
+        "id": "b",
+        "text": "Clearly disclosed"
+      },
+      {
+        "id": "c",
+        "text": "Flexible without explanation"
+      },
+      {
+        "id": "d",
+        "text": "Undocumented"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 9",
+    "module": "M3"
+  },
+  {
+    "prompt": "Which skill is most critical in Business Broking?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Coding"
+      },
+      {
+        "id": "b",
+        "text": "Graphic Design"
+      },
+      {
+        "id": "c",
+        "text": "Communication"
+      },
+      {
+        "id": "d",
+        "text": "Video Editing"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 2",
+    "module": "M1"
+  },
+  {
+    "prompt": "Should risks be disclosed?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Yes"
+      },
+      {
+        "id": "b",
+        "text": "No"
+      },
+      {
+        "id": "c",
+        "text": "Only if asked"
+      },
+      {
+        "id": "d",
+        "text": "Only after due diligence"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 32",
+    "module": "M7"
+  },
+  {
+    "prompt": "Income-Based Valuation focuses primarily on:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Assets"
+      },
+      {
+        "id": "b",
+        "text": "Earnings"
+      },
+      {
+        "id": "c",
+        "text": "Inventory"
+      },
+      {
+        "id": "d",
+        "text": "Furniture"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 23",
+    "module": "M6"
+  },
+  {
+    "prompt": "What does EOI stand for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Expression of Interest"
+      },
+      {
+        "id": "b",
+        "text": "Equity Offer Instrument"
+      },
+      {
+        "id": "c",
+        "text": "Exit Opportunity Indicator"
+      },
+      {
+        "id": "d",
+        "text": "Enterprise Ownership Intent"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 43",
+    "module": "M9"
+  },
+  {
+    "prompt": "What ultimately influences valuation multiples?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Business quality"
+      },
+      {
+        "id": "b",
+        "text": "Risk"
+      },
+      {
+        "id": "c",
+        "text": "Growth"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 26",
+    "module": "M6"
+  },
+  {
+    "prompt": "A referral should be viewed as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing campaign"
+      },
+      {
+        "id": "b",
+        "text": "Transfer of trust"
+      },
+      {
+        "id": "c",
+        "text": "Advertisement"
+      },
+      {
+        "id": "d",
+        "text": "Database entry"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 36",
+    "module": "M8"
+  },
+  {
+    "prompt": "What should a broker do first when hearing an objection?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Argue"
+      },
+      {
+        "id": "b",
+        "text": "Respond immediately"
+      },
+      {
+        "id": "c",
+        "text": "Listen"
+      },
+      {
+        "id": "d",
+        "text": "Negotiate"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 41",
+    "module": "M8"
+  },
+  {
+    "prompt": "Which business model usually requires significant machinery investment?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Service"
+      },
+      {
+        "id": "b",
+        "text": "Agency"
+      },
+      {
+        "id": "c",
+        "text": "Manufacturing"
+      },
+      {
+        "id": "d",
+        "text": "Marketplace"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 5",
+    "module": "M2"
+  },
+  {
+    "prompt": "What is active listening?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Waiting for your turn to speak"
+      },
+      {
+        "id": "b",
+        "text": "Paying attention and seeking understanding"
+      },
+      {
+        "id": "c",
+        "text": "Taking notes only"
+      },
+      {
+        "id": "d",
+        "text": "Speaking continuously"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 12",
+    "module": "M3"
+  },
+  {
+    "prompt": "What does EBITDA stand for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Earnings Before Interest, Taxes, Depreciation and Amortization"
+      },
+      {
+        "id": "b",
+        "text": "Estimated Business Income"
+      },
+      {
+        "id": "c",
+        "text": "Economic Balance"
+      },
+      {
+        "id": "d",
+        "text": "Enterprise Profit"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 25",
+    "module": "M6"
+  },
+  {
+    "prompt": "What creates transactions?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Luck"
+      },
+      {
+        "id": "b",
+        "text": "Activities and opportunities"
+      },
+      {
+        "id": "c",
+        "text": "Advertising alone"
+      },
+      {
+        "id": "d",
+        "text": "Office size"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 13",
+    "module": "M4"
+  },
+  {
+    "prompt": "Which category commonly forms part of due diligence?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Financial"
+      },
+      {
+        "id": "b",
+        "text": "Legal"
+      },
+      {
+        "id": "c",
+        "text": "Operational"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 46",
+    "module": "M10"
+  },
+  {
+    "prompt": "What is a business model?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Tax structure"
+      },
+      {
+        "id": "b",
+        "text": "Legal entity type"
+      },
+      {
+        "id": "c",
+        "text": "How a company creates and earns value"
+      },
+      {
+        "id": "d",
+        "text": "Marketing strategy"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 5",
+    "module": "M2"
+  },
+  {
+    "prompt": "Which mandate type allows multiple brokers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Exclusive"
+      },
+      {
+        "id": "b",
+        "text": "Non-Exclusive"
+      },
+      {
+        "id": "c",
+        "text": "Strategic"
+      },
+      {
+        "id": "d",
+        "text": "Investor"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 28",
+    "module": "M7"
+  },
+  {
+    "prompt": "Which statement is inappropriate?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"I will do my best to find a buyer.\""
+      },
+      {
+        "id": "b",
+        "text": "\"Let's review the valuation carefully.\""
+      },
+      {
+        "id": "c",
+        "text": "\"I guarantee your business will sell.\""
+      },
+      {
+        "id": "d",
+        "text": "\"We should evaluate buyer suitability.\""
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 9",
+    "module": "M3"
+  },
+  {
+    "prompt": "What is the primary principle behind most investment decisions?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Popularity"
+      },
+      {
+        "id": "b",
+        "text": "Risk versus Return"
+      },
+      {
+        "id": "c",
+        "text": "Office Size"
+      },
+      {
+        "id": "d",
+        "text": "Employee Count"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 18",
+    "module": "M5"
+  },
+  {
+    "prompt": "What is a common risk of multiple brokers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Duplicate buyer approaches"
+      },
+      {
+        "id": "b",
+        "text": "Better confidentiality"
+      },
+      {
+        "id": "c",
+        "text": "Lower competition"
+      },
+      {
+        "id": "d",
+        "text": "Fewer communications"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 29",
+    "module": "M7"
+  },
+  {
+    "prompt": "Why is customer concentration important?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It affects risk"
+      },
+      {
+        "id": "b",
+        "text": "It affects branding only"
+      },
+      {
+        "id": "c",
+        "text": "It affects office size"
+      },
+      {
+        "id": "d",
+        "text": "It affects logo design"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 31",
+    "module": "M7"
+  },
+  {
+    "prompt": "Why is financial qualification important?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Determines transaction feasibility"
+      },
+      {
+        "id": "b",
+        "text": "Improves marketing"
+      },
+      {
+        "id": "c",
+        "text": "Creates competition"
+      },
+      {
+        "id": "d",
+        "text": "Reduces networking"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 19",
+    "module": "M5"
+  },
+  {
+    "prompt": "Who owns the confidential information?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Broker"
+      },
+      {
+        "id": "b",
+        "text": "Buyer"
+      },
+      {
+        "id": "c",
+        "text": "Client"
+      },
+      {
+        "id": "d",
+        "text": "Lawyer"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 10",
+    "module": "M3"
+  },
+  {
+    "prompt": "What is the primary objective of a Strategic Buyer?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Retirement"
+      },
+      {
+        "id": "b",
+        "text": "Competitive advantage"
+      },
+      {
+        "id": "c",
+        "text": "Salary growth"
+      },
+      {
+        "id": "d",
+        "text": "Employment"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 17",
+    "module": "M5"
+  },
+  {
+    "prompt": "A seller saying \"I want \u20b95 crore\" may be hiding:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Emotional concerns"
+      },
+      {
+        "id": "b",
+        "text": "Retirement plans"
+      },
+      {
+        "id": "c",
+        "text": "Family reasons"
+      },
+      {
+        "id": "d",
+        "text": "Any of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 8",
+    "module": "M2"
+  },
+  {
+    "prompt": "A buyer database should be viewed as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Contact list"
+      },
+      {
+        "id": "b",
+        "text": "Relationship asset"
+      },
+      {
+        "id": "c",
+        "text": "Accounting record"
+      },
+      {
+        "id": "d",
+        "text": "Marketing brochure"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 35",
+    "module": "M8"
+  },
+  {
+    "prompt": "A professional broker should focus on:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Interest only"
+      },
+      {
+        "id": "b",
+        "text": "Capacity, fit and seriousness"
+      },
+      {
+        "id": "c",
+        "text": "Advertising only"
+      },
+      {
+        "id": "d",
+        "text": "Seller emotion only"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 39",
+    "module": "M8"
+  },
+  {
+    "prompt": "What does APA stand for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Asset Purchase Agreement"
+      },
+      {
+        "id": "b",
+        "text": "Acquisition Planning Agreement"
+      },
+      {
+        "id": "c",
+        "text": "Approved Purchase Arrangement"
+      },
+      {
+        "id": "d",
+        "text": "Asset Protection Agreement"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 48",
+    "module": "M10"
+  },
+  {
+    "prompt": "A good teaser balances:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing and confidentiality"
+      },
+      {
+        "id": "b",
+        "text": "Valuation and accounting"
+      },
+      {
+        "id": "c",
+        "text": "Buyers and lawyers"
+      },
+      {
+        "id": "d",
+        "text": "Revenue and profit"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 33",
+    "module": "M7"
+  },
+  {
+    "prompt": "What is a synergy?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Combined value creation"
+      },
+      {
+        "id": "b",
+        "text": "Loan repayment"
+      },
+      {
+        "id": "c",
+        "text": "Tax planning"
+      },
+      {
+        "id": "d",
+        "text": "Inventory valuation"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 37",
+    "module": "M8"
+  },
+  {
+    "prompt": "Why are mandate agreements important?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Clarity"
+      },
+      {
+        "id": "b",
+        "text": "Protection"
+      },
+      {
+        "id": "c",
+        "text": "Defined responsibilities"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 30",
+    "module": "M7"
+  },
+  {
+    "prompt": "What is a limitation of asset-based valuation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Ignores future earning potential"
+      },
+      {
+        "id": "b",
+        "text": "Considers liabilities"
+      },
+      {
+        "id": "c",
+        "text": "Uses assets"
+      },
+      {
+        "id": "d",
+        "text": "Calculates NAV"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 22",
+    "module": "M6"
+  },
+  {
+    "prompt": "Business Broking in India is currently:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Fully regulated and structured"
+      },
+      {
+        "id": "b",
+        "text": "Largely unorganized"
+      },
+      {
+        "id": "c",
+        "text": "Government controlled"
+      },
+      {
+        "id": "d",
+        "text": "Limited to listed companies"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 3",
+    "module": "M1"
+  },
+  {
+    "prompt": "Which principle helps manage many conflicts?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Secrecy"
+      },
+      {
+        "id": "b",
+        "text": "Transparency"
+      },
+      {
+        "id": "c",
+        "text": "Delay"
+      },
+      {
+        "id": "d",
+        "text": "Aggression"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 11",
+    "module": "M3"
+  },
+  {
+    "prompt": "What is the primary objective of the first seller conversation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Close a transaction"
+      },
+      {
+        "id": "b",
+        "text": "Understand the seller"
+      },
+      {
+        "id": "c",
+        "text": "Discuss commission"
+      },
+      {
+        "id": "d",
+        "text": "Discuss valuation immediately"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 16",
+    "module": "M4"
+  },
+  {
+    "prompt": "What should be controlled carefully?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Access rights"
+      },
+      {
+        "id": "b",
+        "text": "Confidential information"
+      },
+      {
+        "id": "c",
+        "text": "Document versions"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 47",
+    "module": "M10"
+  },
+  {
+    "prompt": "Which principle is part of YBB Professional Standards?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Confidentiality"
+      },
+      {
+        "id": "b",
+        "text": "Integrity"
+      },
+      {
+        "id": "c",
+        "text": "Professionalism"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 50",
+    "module": "M11"
+  },
+  {
+    "prompt": "What should be evaluated in addition to price?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Structure"
+      },
+      {
+        "id": "b",
+        "text": "Funding certainty"
+      },
+      {
+        "id": "c",
+        "text": "Conditions"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 43",
+    "module": "M9"
+  },
+  {
+    "prompt": "What is a success fee?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Tax payment"
+      },
+      {
+        "id": "b",
+        "text": "Broker compensation linked to transaction completion"
+      },
+      {
+        "id": "c",
+        "text": "Legal fee"
+      },
+      {
+        "id": "d",
+        "text": "Audit fee"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 49",
+    "module": "M10"
+  },
+  {
+    "prompt": "What does HNI stand for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "High Net Worth Individual"
+      },
+      {
+        "id": "b",
+        "text": "High Network Investor"
+      },
+      {
+        "id": "c",
+        "text": "Hybrid National Investor"
+      },
+      {
+        "id": "d",
+        "text": "Holding Network Institution"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 38",
+    "module": "M8"
+  },
+  {
+    "prompt": "Why are repeat buyers valuable?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Higher trust"
+      },
+      {
+        "id": "b",
+        "text": "Faster decisions"
+      },
+      {
+        "id": "c",
+        "text": "Reduced marketing effort"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 35",
+    "module": "M8"
+  },
+  {
+    "prompt": "Why should large listed companies not always be directly compared with SMEs?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Different scale and risk profile"
+      },
+      {
+        "id": "b",
+        "text": "Same valuation"
+      },
+      {
+        "id": "c",
+        "text": "Same liquidity"
+      },
+      {
+        "id": "d",
+        "text": "Same ownership structure"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 24",
+    "module": "M6"
+  },
+  {
+    "prompt": "Which buyer category often seeks diversification?",
+    "options": [
+      {
+        "id": "a",
+        "text": "HNI"
+      },
+      {
+        "id": "b",
+        "text": "Customer"
+      },
+      {
+        "id": "c",
+        "text": "Employee"
+      },
+      {
+        "id": "d",
+        "text": "Vendor"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 17",
+    "module": "M5"
+  },
+  {
+    "prompt": "Which process helps identify risks before acquisition?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Marketing"
+      },
+      {
+        "id": "b",
+        "text": "Prospecting"
+      },
+      {
+        "id": "c",
+        "text": "Due Diligence"
+      },
+      {
+        "id": "d",
+        "text": "Networking"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 20",
+    "module": "M5"
+  },
+  {
+    "prompt": "Startup valuations are often driven by:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Future growth potential"
+      },
+      {
+        "id": "b",
+        "text": "Machinery value"
+      },
+      {
+        "id": "c",
+        "text": "Office rent"
+      },
+      {
+        "id": "d",
+        "text": "Employee count"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 6",
+    "module": "M2"
+  },
+  {
+    "prompt": "Why should referral sources be tracked?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Measure effectiveness"
+      },
+      {
+        "id": "b",
+        "text": "Identify strong partners"
+      },
+      {
+        "id": "c",
+        "text": "Improve business development"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 15",
+    "module": "M4"
+  },
+  {
+    "prompt": "A referral is best described as:",
+    "options": [
+      {
+        "id": "a",
+        "text": "A lead list"
+      },
+      {
+        "id": "b",
+        "text": "A transfer of trust"
+      },
+      {
+        "id": "c",
+        "text": "A marketing expense"
+      },
+      {
+        "id": "d",
+        "text": "A database entry"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 15",
+    "module": "M4"
+  },
+  {
+    "prompt": "Which transaction involves raising capital without selling the entire business?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Investment Transaction"
+      },
+      {
+        "id": "b",
+        "text": "Business Closure"
+      },
+      {
+        "id": "c",
+        "text": "Asset Disposal"
+      },
+      {
+        "id": "d",
+        "text": "Liquidation"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 4",
+    "module": "M1"
+  },
+  {
+    "prompt": "An objection usually indicates:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Immediate rejection"
+      },
+      {
+        "id": "b",
+        "text": "Concern requiring clarification"
+      },
+      {
+        "id": "c",
+        "text": "Transaction completion"
+      },
+      {
+        "id": "d",
+        "text": "Valuation approval"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 41",
+    "module": "M8"
+  },
+  {
+    "prompt": "Which behavior helps build trust?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Overpromising"
+      },
+      {
+        "id": "b",
+        "text": "Ignoring follow-ups"
+      },
+      {
+        "id": "c",
+        "text": "Following commitments"
+      },
+      {
+        "id": "d",
+        "text": "Interrupting clients"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 12",
+    "module": "M3"
+  },
+  {
+    "prompt": "Which information is usually excluded?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Industry"
+      },
+      {
+        "id": "b",
+        "text": "Growth opportunities"
+      },
+      {
+        "id": "c",
+        "text": "Customer names"
+      },
+      {
+        "id": "d",
+        "text": "Revenue range"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 33",
+    "module": "M7"
+  },
+  {
+    "prompt": "A professional broker should primarily:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pressure parties"
+      },
+      {
+        "id": "b",
+        "text": "Facilitate agreement"
+      },
+      {
+        "id": "c",
+        "text": "Choose sides"
+      },
+      {
+        "id": "d",
+        "text": "Control outcomes"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 44",
+    "module": "M9"
+  },
+  {
+    "prompt": "In an SPA, what is generally acquired?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Shares"
+      },
+      {
+        "id": "b",
+        "text": "Assets only"
+      },
+      {
+        "id": "c",
+        "text": "Inventory only"
+      },
+      {
+        "id": "d",
+        "text": "Brand only"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 48",
+    "module": "M10"
+  },
+  {
+    "prompt": "What often causes deadlocks?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Valuation disagreements"
+      },
+      {
+        "id": "b",
+        "text": "Emotional reactions"
+      },
+      {
+        "id": "c",
+        "text": "Timing issues"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 44",
+    "module": "M9"
+  },
+  {
+    "prompt": "Does past investment automatically determine current value?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Yes"
+      },
+      {
+        "id": "b",
+        "text": "No"
+      },
+      {
+        "id": "c",
+        "text": "Only for manufacturing businesses"
+      },
+      {
+        "id": "d",
+        "text": "Only for startups"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 27",
+    "module": "M6"
+  },
+  {
+    "prompt": "What does EBITDA measure?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Revenue only"
+      },
+      {
+        "id": "b",
+        "text": "Operational earnings before certain adjustments"
+      },
+      {
+        "id": "c",
+        "text": "Tax payable"
+      },
+      {
+        "id": "d",
+        "text": "Net worth"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 23",
+    "module": "M6"
+  },
+  {
+    "prompt": "Who remains the final decision maker?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Broker"
+      },
+      {
+        "id": "b",
+        "text": "Buyer"
+      },
+      {
+        "id": "c",
+        "text": "Seller"
+      },
+      {
+        "id": "d",
+        "text": "Lawyer"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 28",
+    "module": "M7"
+  },
+  {
+    "prompt": "A broker should think like:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Distributor"
+      },
+      {
+        "id": "b",
+        "text": "Matchmaker"
+      },
+      {
+        "id": "c",
+        "text": "Advertiser"
+      },
+      {
+        "id": "d",
+        "text": "Auditor"
+      }
+    ],
+    "correct_option_ids": [
+      "b"
+    ],
+    "lesson": "Lesson 42",
+    "module": "M8"
+  },
+  {
+    "prompt": "Which characteristic is generally attractive to financial buyers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Recurring revenue"
+      },
+      {
+        "id": "b",
+        "text": "Predictable earnings"
+      },
+      {
+        "id": "c",
+        "text": "Strong cash flow"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 38",
+    "module": "M8"
+  },
+  {
+    "prompt": "SDE is commonly used for:",
+    "options": [
+      {
+        "id": "a",
+        "text": "Owner-managed businesses"
+      },
+      {
+        "id": "b",
+        "text": "Government departments"
+      },
+      {
+        "id": "c",
+        "text": "NGOs"
+      },
+      {
+        "id": "d",
+        "text": "Banks"
+      }
+    ],
+    "correct_option_ids": [
+      "a"
+    ],
+    "lesson": "Lesson 25",
+    "module": "M6"
+  },
+  {
+    "prompt": "How many years of financial information are ideally collected?",
+    "options": [
+      {
+        "id": "a",
+        "text": "1 Year"
+      },
+      {
+        "id": "b",
+        "text": "2 Years"
+      },
+      {
+        "id": "c",
+        "text": "3 Years"
+      },
+      {
+        "id": "d",
+        "text": "10 Years"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 31",
+    "module": "M7"
+  },
+  {
+    "prompt": "Which stage is generally most attractive to buyers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Startup"
+      },
+      {
+        "id": "b",
+        "text": "Growth"
+      },
+      {
+        "id": "c",
+        "text": "Maturity"
+      },
+      {
+        "id": "d",
+        "text": "Decline"
+      }
+    ],
+    "correct_option_ids": [
+      "c"
+    ],
+    "lesson": "Lesson 7",
+    "module": "M2"
+  },
+  {
+    "prompt": "Why is understanding seller motivation important?",
+    "options": [
+      {
+        "id": "a",
+        "text": "To structure better transactions"
+      },
+      {
+        "id": "b",
+        "text": "To identify suitable buyers"
+      },
+      {
+        "id": "c",
+        "text": "To manage expectations"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 8",
+    "module": "M2"
+  },
+  {
+    "prompt": "What often influences unrealistic valuation expectations?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Emotional attachment"
+      },
+      {
+        "id": "b",
+        "text": "Market misinformation"
+      },
+      {
+        "id": "c",
+        "text": "Success stories"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 27",
+    "module": "M6"
+  },
+  {
+    "prompt": "What should occur before sharing detailed information?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Buyer Qualification"
+      },
+      {
+        "id": "b",
+        "text": "NDA"
+      },
+      {
+        "id": "c",
+        "text": "Process Review"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 34",
+    "module": "M7"
+  },
+  {
+    "prompt": "Which factor often influences valuation significantly?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Risk"
+      },
+      {
+        "id": "b",
+        "text": "Profitability"
+      },
+      {
+        "id": "c",
+        "text": "Growth Potential"
+      },
+      {
+        "id": "d",
+        "text": "All of the Above"
+      }
+    ],
+    "correct_option_ids": [
+      "d"
+    ],
+    "lesson": "Lesson 21",
+    "module": "M6"
+  }
+]

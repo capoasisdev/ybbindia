@@ -1,0 +1,1118 @@
+AUTHORISED BUSINESS BROKER (ABB)
+Certification Examination Question Bank
+100 mixed multiple-choice questions | Developer master
+Implementation Instructions
+Create one examination by randomly drawing 50 questions from this 100-question pool without repetition.
+Display one question at a time with four answer options. Do not show the source reference or answer key to learners.
+Record the selected question IDs, learner answers, score and completion time. The answer key is included only for grading.
+All questions are selected directly from the ABB Professional Workbook assessment material. The pool covers every lesson: two questions from each of the 50 lessons.
+Question Bank
+Question order has been deliberately mixed across modules. Source references are retained for the developer only.
+Question 1. A professional broker should:
+Source reference: Module 5 - Understanding Buyers | Lesson 20
+A. Overpromise
+B. Avoid difficult conversations
+C. Set realistic expectations
+D. Guarantee outcomes
+Question 2. What is deal structure?
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 45
+A. How a transaction is organized
+B. Valuation method only
+C. Legal registration process
+D. Marketing strategy
+Question 3. What is a Partner Buyout?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 4
+A. Sale of machinery
+B. One partner purchasing another partner's stake
+C. IPO
+D. Franchise launch
+Question 4. Which document provides detailed information about a business opportunity?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 2
+A. Invoice
+B. Information Memorandum
+C. Salary Sheet
+D. GST Return
+Question 5. A CBP should:
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 32
+A. Exaggerate strengths
+B. Hide weaknesses
+C. Present information professionally
+D. Guarantee investment returns
+Question 6. What is the broker's primary role during DD?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 46
+A. Replace lawyers
+B. Replace accountants
+C. Coordinate and facilitate
+D. Conduct audits
+Question 7. Which industry often attracts higher EBITDA multiples?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 26
+A. Technology
+B. Commodity Trading
+C. Small Retail
+D. Traditional Distribution
+Question 8. What does SME stand for?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 6
+A. Strategic Market Enterprise
+B. Small and Medium Enterprise
+C. Service Management Entity
+D. Small Market Enterprise
+Question 9. Which professional is a potential referral source?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 13
+A. Chartered Accountant
+B. Lawyer
+C. Banker
+D. All of the Above
+Question 10. Which multiple is commonly used in acquisitions?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 24
+A. EBITDA Multiple
+B. Attendance Multiple
+C. Salary Multiple
+D. Inventory Multiple
+Question 11. What is YBB's long-term ecosystem vision?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 36
+A. Individual broking only
+B. National professional network
+C. Franchise sales
+D. Social media marketing
+Question 12. What should be clearly defined in a mandate?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 30
+A. Fees
+B. Scope
+C. Duration
+D. All of the Above
+Question 13. Why do buyers often purchase existing businesses?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 1
+A. Lower risk
+B. Existing customers
+C. Proven revenue
+D. All of the above
+Question 14. What should brokers focus on when discussing exclusivity?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 29
+A. Broker benefits
+B. Seller benefits
+C. Legal threats
+D. Competitors
+Question 15. Which business is most suitable for asset-based valuation?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 22
+A. Marketing Agency
+B. Consulting Firm
+C. Manufacturing Unit
+D. Coaching Institute
+Question 16. Which is a common seller motivation?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 7
+A. Retirement
+B. Relocation
+C. Lack of Successor
+D. All of the Above
+Question 17. What is often a positive buying signal?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 40
+A. Due diligence interest
+B. Repeated delays
+C. Vague answers
+D. Lack of financial clarity
+Question 18. A Business Broker is most similar to:
+Source reference: Module 1 - Introduction to Business Broking | Lesson 1
+A. Chartered Accountant
+B. Lawyer
+C. Real Estate Broker
+D. Auditor
+Question 19. What type of questions generally create better conversations?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 40
+A. Open Questions
+B. Closed Questions
+C. Leading Questions
+D. Legal Questions
+Question 20. What is the objective of buyer-seller matching?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 42
+A. Maximum outreach
+B. Maximum relevance
+C. Maximum advertising
+D. Maximum meetings
+Question 21. Why is scalability important?
+Source reference: Module 5 - Understanding Buyers | Lesson 18
+A. It creates growth potential
+B. It reduces paperwork
+C. It guarantees profits
+D. It eliminates competition
+Question 22. Why are data rooms used?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 47
+A. Organization
+B. Security
+C. Efficiency
+D. All of the Above
+Question 23. What should brokers prioritize?
+Source reference: Module 11 - Ethics, Professional Standards & Career Development | Lesson 50
+A. Relationship and trust
+B. Commission only
+C. Advertising only
+D. Competition only
+Question 24. When is a CBP generally shared?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 34
+A. Before teaser
+B. Before qualification
+C. After NDA execution
+D. After transaction completion
+Question 25. Who is often the strongest strategic buyer?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 37
+A. The company that benefits most from the acquisition
+B. The nearest company
+C. The oldest company
+D. The largest office
+Question 26. Networking is primarily about:
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 14
+A. Collecting visiting cards
+B. Building professional relationships
+C. Advertising
+D. Selling immediately
+Question 27. What is an equity swap?
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 45
+A. Cash transaction
+B. Share exchange transaction
+C. Debt financing
+D. Asset purchase
+Question 28. Which factor is increasing demand for Business Brokers?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 3
+A. Retirement of business owners
+B. Succession planning
+C. Acquisitions
+D. All of the above
+Question 29. When should detailed business information generally be shared?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 10
+A. Immediately
+B. After NDA execution
+C. Before buyer qualification
+D. Publicly
+Question 30. Why do fee disputes often occur?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 49
+A. Poor documentation
+B. Unclear fee triggers
+C. Weak mandates
+D. All of the Above
+Question 31. Which is a buyer red flag?
+Source reference: Module 5 - Understanding Buyers | Lesson 19
+A. NDA execution
+B. Clear objectives
+C. Avoiding financial discussions
+D. Industry experience
+Question 32. Which factor should be assessed early?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 39
+A. Financial capacity
+B. Logo design
+C. Website traffic
+D. Office size
+Question 33. What is often the biggest concern for sellers?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 16
+A. Marketing
+B. Confidentiality
+C. Office Location
+D. Website Design
+Question 34. What is a conflict of interest?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 11
+A. Marketing challenge
+B. Personal interest interfering with professional responsibility
+C. Tax issue
+D. Legal contract
+Question 35. Why is referral business valuable?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 14
+A. Higher trust
+B. Better conversion rates
+C. Lower acquisition costs
+D. All of the Above
+Question 36. What is business valuation?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 21
+A. Marketing process
+B. Estimation of business worth
+C. Accounting entry
+D. Sales strategy
+Question 37. Ethical fees should be:
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 9
+A. Hidden
+B. Clearly disclosed
+C. Flexible without explanation
+D. Undocumented
+Question 38. Which skill is most critical in Business Broking?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 2
+A. Coding
+B. Graphic Design
+C. Communication
+D. Video Editing
+Question 39. Should risks be disclosed?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 32
+A. Yes
+B. No
+C. Only if asked
+D. Only after due diligence
+Question 40. Income-Based Valuation focuses primarily on:
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 23
+A. Assets
+B. Earnings
+C. Inventory
+D. Furniture
+Question 41. What does EOI stand for?
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 43
+A. Expression of Interest
+B. Equity Offer Instrument
+C. Exit Opportunity Indicator
+D. Enterprise Ownership Intent
+Question 42. What ultimately influences valuation multiples?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 26
+A. Business quality
+B. Risk
+C. Growth
+D. All of the Above
+Question 43. A referral should be viewed as:
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 36
+A. Marketing campaign
+B. Transfer of trust
+C. Advertisement
+D. Database entry
+Question 44. What should a broker do first when hearing an objection?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 41
+A. Argue
+B. Respond immediately
+C. Listen
+D. Negotiate
+Question 45. Which business model usually requires significant machinery investment?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 5
+A. Service
+B. Agency
+C. Manufacturing
+D. Marketplace
+Question 46. What is active listening?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 12
+A. Waiting for your turn to speak
+B. Paying attention and seeking understanding
+C. Taking notes only
+D. Speaking continuously
+Question 47. What does EBITDA stand for?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 25
+A. Earnings Before Interest, Taxes, Depreciation and Amortization
+B. Estimated Business Income
+C. Economic Balance
+D. Enterprise Profit
+Question 48. What creates transactions?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 13
+A. Luck
+B. Activities and opportunities
+C. Advertising alone
+D. Office size
+Question 49. Which category commonly forms part of due diligence?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 46
+A. Financial
+B. Legal
+C. Operational
+D. All of the Above
+Question 50. What is a business model?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 5
+A. Tax structure
+B. Legal entity type
+C. How a company creates and earns value
+D. Marketing strategy
+Question 51. Which mandate type allows multiple brokers?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 28
+A. Exclusive
+B. Non-Exclusive
+C. Strategic
+D. Investor
+Question 52. Which statement is inappropriate?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 9
+A. "I will do my best to find a buyer."
+B. "Let's review the valuation carefully."
+C. "I guarantee your business will sell."
+D. "We should evaluate buyer suitability."
+Question 53. What is the primary principle behind most investment decisions?
+Source reference: Module 5 - Understanding Buyers | Lesson 18
+A. Popularity
+B. Risk versus Return
+C. Office Size
+D. Employee Count
+Question 54. What is a common risk of multiple brokers?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 29
+A. Duplicate buyer approaches
+B. Better confidentiality
+C. Lower competition
+D. Fewer communications
+Question 55. Why is customer concentration important?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 31
+A. It affects risk
+B. It affects branding only
+C. It affects office size
+D. It affects logo design
+Question 56. Why is financial qualification important?
+Source reference: Module 5 - Understanding Buyers | Lesson 19
+A. Determines transaction feasibility
+B. Improves marketing
+C. Creates competition
+D. Reduces networking
+Question 57. Who owns the confidential information?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 10
+A. Broker
+B. Buyer
+C. Client
+D. Lawyer
+Question 58. What is the primary objective of a Strategic Buyer?
+Source reference: Module 5 - Understanding Buyers | Lesson 17
+A. Retirement
+B. Competitive advantage
+C. Salary growth
+D. Employment
+Question 59. A seller saying "I want ₹5 crore" may be hiding:
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 8
+A. Emotional concerns
+B. Retirement plans
+C. Family reasons
+D. Any of the Above
+Question 60. A buyer database should be viewed as:
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 35
+A. Contact list
+B. Relationship asset
+C. Accounting record
+D. Marketing brochure
+Question 61. A professional broker should focus on:
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 39
+A. Interest only
+B. Capacity, fit and seriousness
+C. Advertising only
+D. Seller emotion only
+Question 62. What does APA stand for?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 48
+A. Asset Purchase Agreement
+B. Acquisition Planning Agreement
+C. Approved Purchase Arrangement
+D. Asset Protection Agreement
+Question 63. A good teaser balances:
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 33
+A. Marketing and confidentiality
+B. Valuation and accounting
+C. Buyers and lawyers
+D. Revenue and profit
+Question 64. What is a synergy?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 37
+A. Combined value creation
+B. Loan repayment
+C. Tax planning
+D. Inventory valuation
+Question 65. Why are mandate agreements important?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 30
+A. Clarity
+B. Protection
+C. Defined responsibilities
+D. All of the Above
+Question 66. What is a limitation of asset-based valuation?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 22
+A. Ignores future earning potential
+B. Considers liabilities
+C. Uses assets
+D. Calculates NAV
+Question 67. Business Broking in India is currently:
+Source reference: Module 1 - Introduction to Business Broking | Lesson 3
+A. Fully regulated and structured
+B. Largely unorganized
+C. Government controlled
+D. Limited to listed companies
+Question 68. Which principle helps manage many conflicts?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 11
+A. Secrecy
+B. Transparency
+C. Delay
+D. Aggression
+Question 69. What is the primary objective of the first seller conversation?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 16
+A. Close a transaction
+B. Understand the seller
+C. Discuss commission
+D. Discuss valuation immediately
+Question 70. What should be controlled carefully?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 47
+A. Access rights
+B. Confidential information
+C. Document versions
+D. All of the Above
+Question 71. Which principle is part of YBB Professional Standards?
+Source reference: Module 11 - Ethics, Professional Standards & Career Development | Lesson 50
+A. Confidentiality
+B. Integrity
+C. Professionalism
+D. All of the Above
+Question 72. What should be evaluated in addition to price?
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 43
+A. Structure
+B. Funding certainty
+C. Conditions
+D. All of the Above
+Question 73. What is a success fee?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 49
+A. Tax payment
+B. Broker compensation linked to transaction completion
+C. Legal fee
+D. Audit fee
+Question 74. What does HNI stand for?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 38
+A. High Net Worth Individual
+B. High Network Investor
+C. Hybrid National Investor
+D. Holding Network Institution
+Question 75. Why are repeat buyers valuable?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 35
+A. Higher trust
+B. Faster decisions
+C. Reduced marketing effort
+D. All of the Above
+Question 76. Why should large listed companies not always be directly compared with SMEs?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 24
+A. Different scale and risk profile
+B. Same valuation
+C. Same liquidity
+D. Same ownership structure
+Question 77. Which buyer category often seeks diversification?
+Source reference: Module 5 - Understanding Buyers | Lesson 17
+A. HNI
+B. Customer
+C. Employee
+D. Vendor
+Question 78. Which process helps identify risks before acquisition?
+Source reference: Module 5 - Understanding Buyers | Lesson 20
+A. Marketing
+B. Prospecting
+C. Due Diligence
+D. Networking
+Question 79. Startup valuations are often driven by:
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 6
+A. Future growth potential
+B. Machinery value
+C. Office rent
+D. Employee count
+Question 80. Why should referral sources be tracked?
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 15
+A. Measure effectiveness
+B. Identify strong partners
+C. Improve business development
+D. All of the Above
+Question 81. A referral is best described as:
+Source reference: Module 4 - Finding Business Sale Opportunities | Lesson 15
+A. A lead list
+B. A transfer of trust
+C. A marketing expense
+D. A database entry
+Question 82. Which transaction involves raising capital without selling the entire business?
+Source reference: Module 1 - Introduction to Business Broking | Lesson 4
+A. Investment Transaction
+B. Business Closure
+C. Asset Disposal
+D. Liquidation
+Question 83. An objection usually indicates:
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 41
+A. Immediate rejection
+B. Concern requiring clarification
+C. Transaction completion
+D. Valuation approval
+Question 84. Which behavior helps build trust?
+Source reference: Module 3 - Business Broker Ethics & Professional Standards | Lesson 12
+A. Overpromising
+B. Ignoring follow-ups
+C. Following commitments
+D. Interrupting clients
+Question 85. Which information is usually excluded?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 33
+A. Industry
+B. Growth opportunities
+C. Customer names
+D. Revenue range
+Question 86. A professional broker should primarily:
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 44
+A. Pressure parties
+B. Facilitate agreement
+C. Choose sides
+D. Control outcomes
+Question 87. In an SPA, what is generally acquired?
+Source reference: Module 10 - Due Diligence & Transaction Execution | Lesson 48
+A. Shares
+B. Assets only
+C. Inventory only
+D. Brand only
+Question 88. What often causes deadlocks?
+Source reference: Module 9 - Offer Management & Negotiation | Lesson 44
+A. Valuation disagreements
+B. Emotional reactions
+C. Timing issues
+D. All of the Above
+Question 89. Does past investment automatically determine current value?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 27
+A. Yes
+B. No
+C. Only for manufacturing businesses
+D. Only for startups
+Question 90. What does EBITDA measure?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 23
+A. Revenue only
+B. Operational earnings before certain adjustments
+C. Tax payable
+D. Net worth
+Question 91. Who remains the final decision maker?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 28
+A. Broker
+B. Buyer
+C. Seller
+D. Lawyer
+Question 92. A broker should think like:
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 42
+A. Distributor
+B. Matchmaker
+C. Advertiser
+D. Auditor
+Question 93. Which characteristic is generally attractive to financial buyers?
+Source reference: Module 8 - Buyer Acquisition & Deal Sourcing | Lesson 38
+A. Recurring revenue
+B. Predictable earnings
+C. Strong cash flow
+D. All of the Above
+Question 94. SDE is commonly used for:
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 25
+A. Owner-managed businesses
+B. Government departments
+C. NGOs
+D. Banks
+Question 95. How many years of financial information are ideally collected?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 31
+A. 1 Year
+B. 2 Years
+C. 3 Years
+D. 10 Years
+Question 96. Which stage is generally most attractive to buyers?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 7
+A. Startup
+B. Growth
+C. Maturity
+D. Decline
+Question 97. Why is understanding seller motivation important?
+Source reference: Module 2 - Foundations of Business Ownership | Lesson 8
+A. To structure better transactions
+B. To identify suitable buyers
+C. To manage expectations
+D. All of the Above
+Question 98. What often influences unrealistic valuation expectations?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 27
+A. Emotional attachment
+B. Market misinformation
+C. Success stories
+D. All of the Above
+Question 99. What should occur before sharing detailed information?
+Source reference: Module 7 - Creating Business Sale Mandates | Lesson 34
+A. Buyer Qualification
+B. NDA
+C. Process Review
+D. All of the Above
+Question 100. Which factor often influences valuation significantly?
+Source reference: Module 6 - Business Valuation Fundamentals | Lesson 21
+A. Risk
+B. Profitability
+C. Growth Potential
+D. All of the Above
+
+Answer Key
+For developer, administrator and assessor use only. Do not expose this section to learners during the examination.
+#
+Source lesson
+Correct option
+Correct answer
+Module
+1
+Lesson 20
+C
+Set realistic expectations
+M5
+2
+Lesson 45
+A
+How a transaction is organized
+M9
+3
+Lesson 4
+B
+One partner purchasing another partner's stake
+M1
+4
+Lesson 2
+B
+Information Memorandum
+M1
+5
+Lesson 32
+C
+Present information professionally
+M7
+6
+Lesson 46
+C
+Coordinate and facilitate
+M10
+7
+Lesson 26
+A
+Technology
+M6
+8
+Lesson 6
+B
+Small and Medium Enterprise
+M2
+9
+Lesson 13
+D
+All of the Above
+M4
+10
+Lesson 24
+A
+EBITDA Multiple
+M6
+11
+Lesson 36
+B
+National professional network
+M8
+12
+Lesson 30
+D
+All of the Above
+M7
+13
+Lesson 1
+D
+All of the above
+M1
+14
+Lesson 29
+B
+Seller benefits
+M7
+15
+Lesson 22
+C
+Manufacturing Unit
+M6
+16
+Lesson 7
+D
+All of the Above
+M2
+17
+Lesson 40
+A
+Due diligence interest
+M8
+18
+Lesson 1
+C
+Real Estate Broker
+M1
+19
+Lesson 40
+A
+Open Questions
+M8
+20
+Lesson 42
+B
+Maximum relevance
+M8
+21
+Lesson 18
+A
+It creates growth potential
+M5
+22
+Lesson 47
+D
+All of the Above
+M10
+23
+Lesson 50
+A
+Relationship and trust
+M11
+24
+Lesson 34
+C
+After NDA execution
+M7
+25
+Lesson 37
+A
+The company that benefits most from the acquisition
+M8
+26
+Lesson 14
+B
+Building professional relationships
+M4
+27
+Lesson 45
+B
+Share exchange transaction
+M9
+28
+Lesson 3
+D
+All of the above
+M1
+29
+Lesson 10
+B
+After NDA execution
+M3
+30
+Lesson 49
+D
+All of the Above
+M10
+31
+Lesson 19
+C
+Avoiding financial discussions
+M5
+32
+Lesson 39
+A
+Financial capacity
+M8
+33
+Lesson 16
+B
+Confidentiality
+M4
+34
+Lesson 11
+B
+Personal interest interfering with professional responsibility
+M3
+35
+Lesson 14
+D
+All of the Above
+M4
+36
+Lesson 21
+B
+Estimation of business worth
+M6
+37
+Lesson 9
+B
+Clearly disclosed
+M3
+38
+Lesson 2
+C
+Communication
+M1
+39
+Lesson 32
+A
+Yes
+M7
+40
+Lesson 23
+B
+Earnings
+M6
+41
+Lesson 43
+A
+Expression of Interest
+M9
+42
+Lesson 26
+D
+All of the Above
+M6
+43
+Lesson 36
+B
+Transfer of trust
+M8
+44
+Lesson 41
+C
+Listen
+M8
+45
+Lesson 5
+C
+Manufacturing
+M2
+46
+Lesson 12
+B
+Paying attention and seeking understanding
+M3
+47
+Lesson 25
+A
+Earnings Before Interest, Taxes, Depreciation and Amortization
+M6
+48
+Lesson 13
+B
+Activities and opportunities
+M4
+49
+Lesson 46
+D
+All of the Above
+M10
+50
+Lesson 5
+C
+How a company creates and earns value
+M2
+51
+Lesson 28
+B
+Non-Exclusive
+M7
+52
+Lesson 9
+C
+"I guarantee your business will sell."
+M3
+53
+Lesson 18
+B
+Risk versus Return
+M5
+54
+Lesson 29
+A
+Duplicate buyer approaches
+M7
+55
+Lesson 31
+A
+It affects risk
+M7
+56
+Lesson 19
+A
+Determines transaction feasibility
+M5
+57
+Lesson 10
+C
+Client
+M3
+58
+Lesson 17
+B
+Competitive advantage
+M5
+59
+Lesson 8
+D
+Any of the Above
+M2
+60
+Lesson 35
+B
+Relationship asset
+M8
+61
+Lesson 39
+B
+Capacity, fit and seriousness
+M8
+62
+Lesson 48
+A
+Asset Purchase Agreement
+M10
+63
+Lesson 33
+A
+Marketing and confidentiality
+M7
+64
+Lesson 37
+A
+Combined value creation
+M8
+65
+Lesson 30
+D
+All of the Above
+M7
+66
+Lesson 22
+A
+Ignores future earning potential
+M6
+67
+Lesson 3
+B
+Largely unorganized
+M1
+68
+Lesson 11
+B
+Transparency
+M3
+69
+Lesson 16
+B
+Understand the seller
+M4
+70
+Lesson 47
+D
+All of the Above
+M10
+71
+Lesson 50
+D
+All of the Above
+M11
+72
+Lesson 43
+D
+All of the Above
+M9
+73
+Lesson 49
+B
+Broker compensation linked to transaction completion
+M10
+74
+Lesson 38
+A
+High Net Worth Individual
+M8
+75
+Lesson 35
+D
+All of the Above
+M8
+76
+Lesson 24
+A
+Different scale and risk profile
+M6
+77
+Lesson 17
+A
+HNI
+M5
+78
+Lesson 20
+C
+Due Diligence
+M5
+79
+Lesson 6
+A
+Future growth potential
+M2
+80
+Lesson 15
+D
+All of the Above
+M4
+81
+Lesson 15
+B
+A transfer of trust
+M4
+82
+Lesson 4
+A
+Investment Transaction
+M1
+83
+Lesson 41
+B
+Concern requiring clarification
+M8
+84
+Lesson 12
+C
+Following commitments
+M3
+85
+Lesson 33
+C
+Customer names
+M7
+86
+Lesson 44
+B
+Facilitate agreement
+M9
+87
+Lesson 48
+A
+Shares
+M10
+88
+Lesson 44
+D
+All of the Above
+M9
+89
+Lesson 27
+B
+No
+M6
+90
+Lesson 23
+B
+Operational earnings before certain adjustments
+M6
+91
+Lesson 28
+C
+Seller
+M7
+92
+Lesson 42
+B
+Matchmaker
+M8
+93
+Lesson 38
+D
+All of the Above
+M8
+94
+Lesson 25
+A
+Owner-managed businesses
+M6
+95
+Lesson 31
+C
+3 Years
+M7
+96
+Lesson 7
+C
+Maturity
+M2
+97
+Lesson 8
+D
+All of the Above
+M2
+98
+Lesson 27
+D
+All of the Above
+M6
+99
+Lesson 34
+D
+All of the Above
+M7
+100
+Lesson 21
+D
+All of the Above
+M6
