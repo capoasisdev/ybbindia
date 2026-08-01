@@ -88,28 +88,31 @@ function Page() {
           </p>
         </header>
 
-        {data.workbook && (
-          <section className="rounded-2xl border border-primary/30 bg-primary/5 p-6">
+        <section className="rounded-2xl border border-primary/30 bg-primary/5 p-6 space-y-4 shadow-soft">
+          <div>
             <p className="text-xs font-medium uppercase tracking-wide text-primary">
               Course workbook
             </p>
-            <h2 className="mt-1 text-xl font-semibold">{data.workbook.title}</h2>
-            {data.workbook.description && (
-              <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-                {data.workbook.description}
-              </p>
-            )}
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              {data.workbook.version && <span>Version {data.workbook.version}</span>}
-              {formatSize(data.workbook.fileSizeBytes) && (
-                <span>{formatSize(data.workbook.fileSizeBytes)}</span>
-              )}
-            </div>
-            <Button className="mt-5" onClick={() => open(data.workbook!)}>
-              <BookMarked className="size-4" /> Download workbook
-            </Button>
-          </section>
-        )}
+            <h2 className="mt-1 text-xl font-semibold">ABB Professional Workbook</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              View the course workbook directly on the screen or download it for your reference.
+            </p>
+          </div>
+          
+          <Button asChild variant="outline" size="sm">
+            <a href="/YBB_Workbook_Final.pdf" download="YBB_Workbook_Final.pdf" className="inline-flex items-center gap-2">
+              <Download className="size-4" /> Download workbook
+            </a>
+          </Button>
+
+          <div className="mt-4 rounded-xl border border-border bg-background overflow-hidden w-full h-[600px] shadow-inner">
+            <iframe
+              src="/YBB_Workbook_Final.pdf"
+              title="ABB Workbook"
+              className="w-full h-full border-0"
+            />
+          </div>
+        </section>
 
         {Object.keys(grouped).length === 0 && !data.workbook ? (
           <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
