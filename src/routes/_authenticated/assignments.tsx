@@ -8,6 +8,7 @@ import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import {
   getLearnerAssignments,
   getSubmissionUrl,
@@ -69,6 +70,34 @@ function Page() {
 
   const total = data.assignments.length;
 
+  // Group assignments by moduleTitle.
+  const groups: { title: string; assignments: LearnerAssignment[] }[] = [];
+
+  data.assignments.forEach((assignment) => {
+    const key = assignment.isFinalProject
+      ? "Final Project"
+      : assignment.moduleTitle || "General Assignments";
+
+    let group = groups.find((g) => g.title === key);
+    if (!group) {
+      group = { title: key, assignments: [] };
+      groups.push(group);
+    }
+    group.assignments.push(assignment);
+  });
+
+  // Sort groups: Modules in order, then Final Project
+  groups.sort((a, b) => {
+    if (a.title === "Final Project") return 1;
+    if (b.title === "Final Project") return -1;
+    const matchA = a.title.match(/\d+/);
+    const matchB = b.title.match(/\d+/);
+    if (matchA && matchB) {
+      return parseInt(matchA[0], 10) - parseInt(matchB[0], 10);
+    }
+    return a.title.localeCompare(b.title);
+  });
+
   return (
     <AppShell title="Assignments">
       <div className="space-y-8">
@@ -79,16 +108,48 @@ function Page() {
           </p>
         </header>
 
-        <div className="space-y-5">
-          {data.assignments.map((assignment) => (
-            <AssignmentCard key={assignment.id} assignment={assignment} />
-          ))}
-          {total === 0 && (
-            <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
-              No assignments have been published yet.
-            </div>
-          )}
-        </div>
+        {total === 0 ? (
+          <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
+            No assignments have been published yet.
+          </div>
+        ) : (
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {groups.map((group, groupIdx) => {
+              const key = `group-${groupIdx}`;
+              const groupTotal = group.assignments.length;
+              const groupApproved = group.assignments.filter(
+                (a) => a.submissions[0]?.status === "approved",
+              ).length;
+              const groupSubmitted = group.assignments.filter(
+                (a) => a.submissions.length > 0,
+              ).length;
+
+              return (
+                <AccordionItem
+                  key={key}
+                  value={key}
+                  className="border border-border bg-card rounded-2xl px-6 py-1 shadow-soft"
+                >
+                  <AccordionTrigger className="hover:no-underline py-5">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="text-lg font-semibold text-foreground">{group.title}</span>
+                      <span className="text-xs text-muted-foreground bg-muted px-2.5 py-1 rounded-full font-medium">
+                        {groupApproved} / {groupTotal} approved · {groupSubmitted} submitted
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-2 pb-6">
+                    <div className="space-y-5 pt-3">
+                      {group.assignments.map((assignment) => (
+                        <AssignmentCard key={assignment.id} assignment={assignment} />
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        )}
       </div>
     </AppShell>
   );
