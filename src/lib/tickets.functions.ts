@@ -25,8 +25,9 @@ export type TicketMessage = {
 export const getLearnerTickets = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<SupportTicket[]> => {
-    const { supabase, userId } = context;
-    const { data, error } = await supabase
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin
       .from("support_tickets")
       .select("id, ticket_number, subject, description, category, priority, status, created_at, updated_at")
       .eq("user_id", userId)
@@ -58,10 +59,11 @@ export const createSupportTicket = createServerFn({ method: "POST" })
     }) => input,
   )
   .handler(async ({ data, context }): Promise<SupportTicket> => {
-    const { supabase, userId } = context;
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const ticketNumber = `TKT-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    const { data: insertedData, error: error } = await supabase
+    const { data: insertedData, error: error } = await supabaseAdmin
       .from("support_tickets")
       .insert({
         user_id: userId,
@@ -98,10 +100,11 @@ export const getTicketDetails = createServerFn({ method: "GET" })
       data,
       context,
     }): Promise<{ ticket: SupportTicket; messages: TicketMessage[] }> => {
-      const { supabase, userId } = context;
+      const { userId } = context;
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
       // 1. Fetch ticket
-      const { data: ticketData, error: ticketError } = await supabase
+      const { data: ticketData, error: ticketError } = await supabaseAdmin
         .from("support_tickets")
         .select("id, ticket_number, subject, description, category, priority, status, created_at, updated_at, user_id")
         .eq("id", data.ticketId)
@@ -111,7 +114,7 @@ export const getTicketDetails = createServerFn({ method: "GET" })
       if (ticketData.user_id !== userId) throw new Error("Unauthorized access to ticket");
 
       // 2. Fetch messages
-      const { data: msgData, error: msgError } = await supabase
+      const { data: msgData, error: msgError } = await supabaseAdmin
         .from("ticket_messages")
         .select("id, ticket_id, author_id, body, is_staff_reply, created_at")
         .eq("ticket_id", data.ticketId)
@@ -153,10 +156,11 @@ export const sendTicketMessage = createServerFn({ method: "POST" })
     }) => input,
   )
   .handler(async ({ data, context }): Promise<TicketMessage> => {
-    const { supabase, userId } = context;
+    const { userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Verify ticket ownership first
-    const { data: ticketData, error: ticketError } = await supabase
+    const { data: ticketData, error: ticketError } = await supabaseAdmin
       .from("support_tickets")
       .select("user_id")
       .eq("id", data.ticketId)
@@ -165,7 +169,7 @@ export const sendTicketMessage = createServerFn({ method: "POST" })
     if (ticketError) throw new Error(ticketError.message);
     if (ticketData.user_id !== userId) throw new Error("Unauthorized");
 
-    const { data: insertedData, error: error } = await supabase
+    const { data: insertedData, error: error } = await supabaseAdmin
       .from("ticket_messages")
       .insert({
         ticket_id: data.ticketId,
@@ -179,7 +183,7 @@ export const sendTicketMessage = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
 
     // Also update ticket's updated_at timestamp
-    await supabase
+    await supabaseAdmin
       .from("support_tickets")
       .update({ updated_at: new Date().toISOString() })
       .eq("id", data.ticketId);
