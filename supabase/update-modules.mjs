@@ -44,7 +44,7 @@ async function update() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          title: `Module ${mData.position}: ${mData.title}`
+          title: mData.title
         })
       });
 
