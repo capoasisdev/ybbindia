@@ -114,59 +114,58 @@ function Page() {
           </div>
         </section>
 
-        {Object.keys(grouped).length === 0 && !data.workbook ? (
-          <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
-            No resources have been published yet — they appear here as each module goes live.
-          </div>
-        ) : (
-          Object.entries(grouped).map(([group, items]) => (
-            <section key={group} className="space-y-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {group}
-              </h2>
-              <ul className="space-y-2">
-                {items.map((resource) => (
-                  <li
-                    key={resource.id}
-                    className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 shadow-soft"
-                  >
-                    <div className="flex items-start gap-3">
-                      <FileText className="mt-0.5 size-4 text-muted-foreground" />
-                      <div>
-                        <p className="text-sm font-medium">{resource.title}</p>
-                        {resource.description && (
+        {Object.keys(grouped).length > 0 && (
+          <div className="space-y-6 mt-8 border-t pt-8">
+            <h3 className="text-lg font-semibold">Additional Module Resources</h3>
+            {Object.entries(grouped).map(([group, items]) => (
+              <section key={group} className="space-y-3">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  {group}
+                </h2>
+                <ul className="space-y-2">
+                  {items.map((resource) => (
+                    <li
+                      key={resource.id}
+                      className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-card p-4 shadow-soft"
+                    >
+                      <div className="flex items-start gap-3">
+                        <FileText className="mt-0.5 size-4 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-medium">{resource.title}</p>
+                          {resource.description && (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {resource.description}
+                            </p>
+                          )}
                           <p className="mt-1 text-xs text-muted-foreground">
-                            {resource.description}
+                            {[
+                              resource.fileType?.toUpperCase(),
+                              formatSize(resource.fileSizeBytes),
+                              resource.version ? `v${resource.version}` : null,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
-                        )}
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          {[
-                            resource.fileType?.toUpperCase(),
-                            formatSize(resource.fileSizeBytes),
-                            resource.version ? `v${resource.version}` : null,
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </p>
+                        </div>
                       </div>
-                    </div>
-                    {resource.isDownloadable ? (
-                      <Button variant="outline" size="sm" onClick={() => open(resource)}>
-                        {resource.externalUrl ? (
-                          <ExternalLink className="size-4" />
-                        ) : (
-                          <Download className="size-4" />
-                        )}
-                        {resource.externalUrl ? "Open" : "Download"}
-                      </Button>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">View only</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))
+                      {resource.isDownloadable ? (
+                        <Button variant="outline" size="sm" onClick={() => open(resource)}>
+                          {resource.externalUrl ? (
+                            <ExternalLink className="size-4" />
+                          ) : (
+                            <Download className="size-4" />
+                          )}
+                          {resource.externalUrl ? "Open" : "Download"}
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">View only</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
         )}
       </div>
     </AppShell>
