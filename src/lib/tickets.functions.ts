@@ -57,19 +57,19 @@ export const createSupportTicket = createServerFn({ method: "POST" })
       description: string;
     }) => input,
   )
-  .handler(async ({ input, context }): Promise<SupportTicket> => {
+  .handler(async ({ data, context }): Promise<SupportTicket> => {
     const { supabase, userId } = context;
     const ticketNumber = `TKT-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    const { data, error } = await supabase
+    const { data: insertedData, error: error } = await supabase
       .from("support_tickets")
       .insert({
         user_id: userId,
         ticket_number: ticketNumber,
-        subject: input.subject,
-        description: input.description,
-        category: input.category,
-        priority: input.priority,
+        subject: data.subject,
+        description: data.description,
+        category: data.category,
+        priority: data.priority,
         status: "open",
       })
       .select("id, ticket_number, subject, description, category, priority, status, created_at, updated_at")
@@ -78,15 +78,15 @@ export const createSupportTicket = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
 
     return {
-      id: data.id,
-      ticketNumber: data.ticket_number,
-      subject: data.subject,
-      description: data.description,
-      category: data.category,
-      priority: data.priority,
-      status: data.status,
-      createdAt: data.created_at,
-      updatedAt: data.updated_at,
+      id: insertedData.id,
+      ticketNumber: insertedData.ticket_number,
+      subject: insertedData.subject,
+      description: insertedData.description,
+      category: insertedData.category,
+      priority: insertedData.priority,
+      status: insertedData.status,
+      createdAt: insertedData.created_at,
+      updatedAt: insertedData.updated_at,
     };
   });
 
@@ -95,7 +95,7 @@ export const getTicketDetails = createServerFn({ method: "GET" })
   .inputValidator((input: { ticketId: string }) => input)
   .handler(
     async ({
-      input,
+      data,
       context,
     }): Promise<{ ticket: SupportTicket; messages: TicketMessage[] }> => {
       const { supabase, userId } = context;
@@ -104,7 +104,7 @@ export const getTicketDetails = createServerFn({ method: "GET" })
       const { data: ticketData, error: ticketError } = await supabase
         .from("support_tickets")
         .select("id, ticket_number, subject, description, category, priority, status, created_at, updated_at, user_id")
-        .eq("id", input.ticketId)
+        .eq("id", data.ticketId)
         .single();
 
       if (ticketError) throw new Error(ticketError.message);
@@ -152,25 +152,25 @@ export const sendTicketMessage = createServerFn({ method: "POST" })
       body: string;
     }) => input,
   )
-  .handler(async ({ input, context }): Promise<TicketMessage> => {
+  .handler(async ({ data, context }): Promise<TicketMessage> => {
     const { supabase, userId } = context;
 
     // Verify ticket ownership first
     const { data: ticketData, error: ticketError } = await supabase
       .from("support_tickets")
       .select("user_id")
-      .eq("id", input.ticketId)
+      .eq("id", data.ticketId)
       .single();
 
     if (ticketError) throw new Error(ticketError.message);
     if (ticketData.user_id !== userId) throw new Error("Unauthorized");
 
-    const { data, error } = await supabase
+    const { data: insertedData, error: error } = await supabase
       .from("ticket_messages")
       .insert({
-        ticket_id: input.ticketId,
+        ticket_id: data.ticketId,
         author_id: userId,
-        body: input.body,
+        body: data.body,
         is_staff_reply: false,
       })
       .select("id, ticket_id, author_id, body, is_staff_reply, created_at")
@@ -182,14 +182,14 @@ export const sendTicketMessage = createServerFn({ method: "POST" })
     await supabase
       .from("support_tickets")
       .update({ updated_at: new Date().toISOString() })
-      .eq("id", input.ticketId);
+      .eq("id", data.ticketId);
 
     return {
-      id: data.id,
-      ticketId: data.ticket_id,
-      authorId: data.author_id,
-      body: data.body,
-      isStaffReply: data.is_staff_reply,
-      createdAt: data.created_at,
+      id: insertedData.id,
+      ticketId: insertedData.ticket_id,
+      authorId: insertedData.author_id,
+      body: insertedData.body,
+      isStaffReply: insertedData.is_staff_reply,
+      createdAt: insertedData.created_at,
     };
   });

@@ -313,15 +313,16 @@ function TicketDetailView({ ticketId, onBack }: { ticketId: string; onBack: () =
     postMessage.mutate(replyText);
   };
 
-  if (isLoading || !data) {
+  const ticket = data?.ticket;
+  const messages = data?.messages || [];
+
+  if (isLoading || !ticket) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <Loader2 className="size-5 animate-spin text-muted-foreground" />
       </div>
     );
   }
-
-  const { ticket, messages } = data;
 
   return (
     <div className="space-y-6">
