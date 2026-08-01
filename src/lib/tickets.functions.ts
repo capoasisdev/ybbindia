@@ -8,7 +8,7 @@ export type SupportTicket = {
   description: string;
   category: string;
   priority: string;
-  status: "open" | "in_progress" | "closed";
+  status: "open" | "in_progress" | "waiting_for_learner" | "resolved" | "closed";
   createdAt: string;
   updatedAt: string;
 };
@@ -114,7 +114,7 @@ export const getTicketDetails = createServerFn({ method: "GET" })
       const { data: msgData, error: msgError } = await supabase
         .from("ticket_messages")
         .select("id, ticket_id, author_id, body, is_staff_reply, created_at")
-        .eq("ticket_id", input.ticketId)
+        .eq("ticket_id", data.ticketId)
         .order("created_at", { ascending: true });
 
       if (msgError) throw new Error(msgError.message);
