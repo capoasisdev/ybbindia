@@ -56,8 +56,8 @@ async function loadOutline(supabase: any, userId: string): Promise<CourseOutline
 
   let courseId = enrolment?.course_id ?? null;
 
-  if (!enrolment && isStaff) {
-    // If staff but not enrolled, find the first published course to show them
+  if (!courseId) {
+    // Find the first published course to show as preview outline
     const { data: firstCourse } = await supabase
       .from("courses")
       .select("id")
@@ -122,6 +122,8 @@ async function loadOutline(supabase: any, userId: string): Promise<CourseOutline
     progress = progressRes.data ?? [];
   }
 
+  const hasEnrolment = enrolment !== null || isStaff;
+
   const progressByLesson = new Map(progress.map((p: any) => [p.lesson_id, p]));
 
   let previousComplete = true;
@@ -135,7 +137,7 @@ async function loadOutline(supabase: any, userId: string): Promise<CourseOutline
       .map((l) => {
         const p = progressByLesson.get(l.id);
         const isComplete = isStaff ? true : Boolean(p?.is_complete);
-        const isLocked = sequential ? !previousComplete : false;
+        const isLocked = hasEnrolment ? (sequential ? !previousComplete : false) : true;
         previousComplete = isComplete;
         lessonsTotal += 1;
         if (isComplete) lessonsCompleted += 1;
@@ -169,13 +171,13 @@ async function loadOutline(supabase: any, userId: string): Promise<CourseOutline
   }
 
   return {
-    enrolled: true,
+    enrolled: hasEnrolment,
     courseTitle: courseRes.data?.title ?? null,
     sequential,
     modules: outlineModules,
     lessonsTotal,
     lessonsCompleted,
-    nextLessonId,
+    nextLessonId: hasEnrolment ? nextLessonId : null,
   };
 }
 
