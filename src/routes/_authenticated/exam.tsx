@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useBlocker } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -351,7 +351,10 @@ function ExamRunner({ paper, onFinish }: { paper: ExamPaper; onFinish: (r: ExamR
   const [visited, setVisited] = useState<Set<number>>(new Set([0]));
   const [markedForLater, setMarkedForLater] = useState<Set<string>>(new Set());
   const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
-  
+  const blocker = useBlocker({
+    shouldBlockFn: () => !submittedRef.current,
+    enableBeforeUnload: !submittedRef.current,
+  });
   const submittedRef = useRef(false);
   const answersRef = useRef(answers);
   answersRef.current = answers;
@@ -655,6 +658,34 @@ function ExamRunner({ paper, onFinish }: { paper: ExamPaper; onFinish: (r: ExamR
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
                 Yes, Submit Exam
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Blocker Confirmation Modal */}
+      {blocker.state === "blocked" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-card border border-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-scale-up">
+            <div className="flex items-center gap-3 text-destructive">
+              <AlertCircle className="size-6 shrink-0" />
+              <h4 className="text-lg font-semibold">Leave Examination?</h4>
+            </div>
+            
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Warning: You are in the middle of a certification exam. Leaving this page or changing tabs may cause you to fail or lose progress.
+            </p>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="ghost" onClick={() => blocker.reset()}>
+                Stay and Complete Exam
+              </Button>
+              <Button
+                onClick={() => blocker.proceed()}
+                className="bg-destructive hover:bg-destructive/95 text-white"
+              >
+                Yes, Leave Exam
               </Button>
             </div>
           </div>
