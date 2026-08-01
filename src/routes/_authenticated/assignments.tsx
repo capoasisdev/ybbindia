@@ -94,7 +94,7 @@ function Page() {
   );
 }
 
-function AssignmentCard({ assignment }: { assignment: LearnerAssignment }) {
+export function AssignmentCard({ assignment }: { assignment: LearnerAssignment }) {
   const queryClient = useQueryClient();
   const submitFn = useServerFn(recordSubmission);
   const urlFn = useServerFn(getSubmissionUrl);

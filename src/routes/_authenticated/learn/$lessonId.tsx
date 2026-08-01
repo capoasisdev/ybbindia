@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { getLessonPlayback, saveLessonProgress } from "@/lib/learn.functions";
+import { AssignmentCard } from "../assignments";
+import { type LearnerAssignment } from "@/lib/assignments.functions";
 
 export const Route = createFileRoute("/_authenticated/learn/$lessonId")({
   head: () => ({
@@ -206,6 +208,15 @@ function Page() {
               </p>
             </div>
           ) : null}
+
+          {lesson.assignment && (
+            <div className="mt-6 space-y-4">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Lesson assignment
+              </h2>
+              <AssignmentCard assignment={lesson.assignment} />
+            </div>
+          )}
         </>
       )}
 

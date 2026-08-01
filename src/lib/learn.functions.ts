@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { type AssignmentSubmission, type LearnerAssignment } from "./assignments.functions";
 
 export type OutlineLesson = {
   id: string;
@@ -201,6 +202,7 @@ export type LessonPlayback = {
     isLocked: boolean;
     previousLessonId: string | null;
     nextLessonId: string | null;
+    assignment?: LearnerAssignment | null;
   } | null;
 };
 
@@ -222,11 +224,63 @@ export const getLessonPlayback = createServerFn({ method: "POST" })
 
     let videoUrl: string | null = null;
     if (!item.isLocked) {
-      const { data: row } = await supabase
-        .from("lessons")
-        .select("description, video_url, video_storage_path")
-        .eq("id", item.id)
-        .maybeSingle();
+      const [lessonDetails, assignmentRes] = await Promise.all([
+        supabase
+          .from("lessons")
+          .select("description, video_url, video_storage_path")
+          .eq("id", item.id)
+          .maybeSingle(),
+        supabase
+          .from("assignments")
+          .select("id, title, instructions, allowed_file_types, max_file_size_mb, max_attempts")
+          .eq("lesson_id", item.id)
+          .eq("is_published", true)
+          .maybeSingle(),
+      ]);
+
+      const row = lessonDetails.data;
+      const assignmentData = assignmentRes.data;
+
+      let assignment = null;
+      if (assignmentData) {
+        const { data: submissions } = await supabase
+          .from("submissions")
+          .select(
+            "id, attempt_number, file_name, storage_path, learner_note, status, submitted_at, reviewer_feedback, score, reviewed_at",
+          )
+          .eq("assignment_id", assignmentData.id)
+          .eq("user_id", userId)
+          .order("attempt_number", { ascending: false });
+
+        const mappedSubmissions: AssignmentSubmission[] = (submissions ?? []).map((s: any) => ({
+          id: s.id,
+          attemptNumber: s.attempt_number,
+          fileName: s.file_name,
+          storagePath: s.storage_path,
+          learnerNote: s.learner_note,
+          status: s.status,
+          submittedAt: s.submitted_at,
+          reviewerFeedback: s.reviewer_feedback,
+          score: s.score ? Number(s.score) : null,
+          reviewedAt: s.reviewed_at,
+        }));
+
+        assignment = {
+          id: assignmentData.id,
+          title: assignmentData.title,
+          instructions: assignmentData.instructions,
+          moduleTitle: item.moduleTitle,
+          position: item.position,
+          isFinalProject: false,
+          isCompulsory: true,
+          allowedFileTypes: assignmentData.allowed_file_types,
+          maxFileSizeMb: assignmentData.max_file_size_mb,
+          maxAttempts: assignmentData.max_attempts,
+          attemptsUsed: mappedSubmissions.length,
+          submissions: mappedSubmissions,
+        };
+      }
+
       if (row?.video_url) {
         videoUrl = row.video_url;
       } else if (row?.video_storage_path) {
@@ -251,6 +305,7 @@ export const getLessonPlayback = createServerFn({ method: "POST" })
           isLocked: false,
           previousLessonId: flat[index - 1]?.id ?? null,
           nextLessonId: flat[index + 1]?.id ?? null,
+          assignment,
         },
       };
     }
