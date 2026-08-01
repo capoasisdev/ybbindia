@@ -35,6 +35,7 @@ export type Database = {
           is_compulsory: boolean;
           is_final_project: boolean;
           is_published: boolean;
+          lesson_id: string | null;
           max_attempts: number;
           max_file_size_mb: number;
           module_id: string | null;
@@ -53,6 +54,7 @@ export type Database = {
           is_compulsory?: boolean;
           is_final_project?: boolean;
           is_published?: boolean;
+          lesson_id?: string | null;
           max_attempts?: number;
           max_file_size_mb?: number;
           module_id?: string | null;
@@ -71,6 +73,7 @@ export type Database = {
           is_compulsory?: boolean;
           is_final_project?: boolean;
           is_published?: boolean;
+          lesson_id?: string | null;
           max_attempts?: number;
           max_file_size_mb?: number;
           module_id?: string | null;
@@ -91,6 +94,13 @@ export type Database = {
             columns: ["module_id"];
             isOneToOne: false;
             referencedRelation: "modules";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "assignments_lesson_id_fkey";
+            columns: ["lesson_id"];
+            isOneToOne: false;
+            referencedRelation: "lessons";
             referencedColumns: ["id"];
           },
         ];
