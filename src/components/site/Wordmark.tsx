@@ -13,7 +13,10 @@ export function Wordmark({
       <img
         src="/logo_header.png"
         alt="YBB Logo"
-        className="h-10 w-auto object-contain transition-opacity group-hover:opacity-90"
+        className={cn(
+          "h-10 w-auto object-contain transition-opacity group-hover:opacity-90",
+          tone === "light" && "brightness-0 invert",
+        )}
       />
     </Link>
   );
