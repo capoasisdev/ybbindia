@@ -351,11 +351,11 @@ function ExamRunner({ paper, onFinish }: { paper: ExamPaper; onFinish: (r: ExamR
   const [visited, setVisited] = useState<Set<number>>(new Set([0]));
   const [markedForLater, setMarkedForLater] = useState<Set<string>>(new Set());
   const [showConfirmSubmit, setShowConfirmSubmit] = useState(false);
+  const submittedRef = useRef(false);
   const blocker = useBlocker({
     shouldBlockFn: () => !submittedRef.current,
     enableBeforeUnload: !submittedRef.current,
   });
-  const submittedRef = useRef(false);
   const answersRef = useRef(answers);
   answersRef.current = answers;
 
