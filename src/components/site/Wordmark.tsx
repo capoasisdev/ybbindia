@@ -14,7 +14,7 @@ export function Wordmark({
         src="/logo_header.png"
         alt="YBB Logo"
         className={cn(
-          "h-10 w-auto object-contain transition-opacity group-hover:opacity-90",
+          "h-10 w-auto object-contain transition-opacity group-hover:opacity-90 origin-left scale-x-110",
           tone === "light" && "brightness-0 invert",
         )}
       />
