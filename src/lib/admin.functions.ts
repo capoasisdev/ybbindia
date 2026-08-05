@@ -571,3 +571,89 @@ export const deleteAdminQuestion = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export type AdminPricingSettings = {
+  coursePricePaise: number;
+  gstRatePercent: number;
+  currency: string;
+  accessDurationDays: number;
+  paymentsTestMode: boolean;
+};
+
+export const getAdminPricingSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AdminPricingSettings> => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+
+    const { data, error } = await supabase
+      .from("settings")
+      .select("key, value")
+      .in("key", [
+        "course_price_paise",
+        "gst_rate_percent",
+        "currency",
+        "access_duration_days",
+        "payments_test_mode",
+      ]);
+
+    if (error) throw new Error(error.message);
+
+    const settings: Record<string, any> = {};
+    for (const row of data ?? []) {
+      settings[row.key] = row.value;
+    }
+
+    // Default fallbacks matching SETTING_DEFAULTS from domain/settings
+    return {
+      coursePricePaise: Number(settings.course_price_paise ?? 1500000),
+      gstRatePercent: Number(settings.gst_rate_percent ?? 18),
+      currency: String(settings.currency ?? "INR"),
+      accessDurationDays: Number(settings.access_duration_days ?? 365),
+      paymentsTestMode: Boolean(settings.payments_test_mode ?? true),
+    };
+  });
+
+export const updateAdminPricingSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (data: AdminPricingSettings) => {
+      if (typeof data.coursePricePaise !== "number" || data.coursePricePaise < 0) {
+        throw new Error("Invalid course price");
+      }
+      if (typeof data.gstRatePercent !== "number" || data.gstRatePercent < 0 || data.gstRatePercent > 100) {
+        throw new Error("Invalid GST rate percentage");
+      }
+      if (!data.currency || typeof data.currency !== "string") {
+        throw new Error("Invalid currency");
+      }
+      if (typeof data.accessDurationDays !== "number" || data.accessDurationDays <= 0) {
+        throw new Error("Invalid access duration days");
+      }
+      if (typeof data.paymentsTestMode !== "boolean") {
+        throw new Error("Invalid payments test mode");
+      }
+      return data;
+    },
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Upsert pricing settings
+    const updates = [
+      { key: "course_price_paise", value: data.coursePricePaise, label: "Course price (paise)", group_name: "commerce", is_public: true },
+      { key: "gst_rate_percent", value: data.gstRatePercent, label: "GST rate (%)", group_name: "commerce", is_public: true },
+      { key: "currency", value: data.currency, label: "Currency", group_name: "commerce", is_public: true },
+      { key: "access_duration_days", value: data.accessDurationDays, label: "Course access duration (days)", group_name: "commerce", is_public: true },
+      { key: "payments_test_mode", value: data.paymentsTestMode, label: "Test mode payments", group_name: "commerce", is_public: false },
+    ];
+
+    const { error } = await supabaseAdmin.from("settings").upsert(updates, { onConflict: "key" });
+    if (error) throw new Error(error.message);
+
+    return { ok: true };
+  });
+

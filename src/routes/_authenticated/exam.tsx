@@ -355,6 +355,7 @@ function ExamRunner({ paper, onFinish }: { paper: ExamPaper; onFinish: (r: ExamR
   const blocker = useBlocker({
     shouldBlockFn: () => !submittedRef.current,
     enableBeforeUnload: !submittedRef.current,
+    withResolver: true,
   });
   const answersRef = useRef(answers);
   answersRef.current = answers;
@@ -665,7 +666,7 @@ function ExamRunner({ paper, onFinish }: { paper: ExamPaper; onFinish: (r: ExamR
       )}
 
       {/* Blocker Confirmation Modal */}
-      {blocker.state === "blocked" && (
+      {blocker.status === "blocked" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-card border border-border rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-scale-up">
             <div className="flex items-center gap-3 text-destructive">
