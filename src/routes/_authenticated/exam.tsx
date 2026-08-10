@@ -14,17 +14,24 @@ import {
   ChevronRight,
   RotateCcw,
   BookOpen,
+  CreditCard,
+  FlaskConical,
+  ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { formatPaiseExact, computeGst } from "@/domain/money";
 import {
   getExamOverview,
   resumeExamAttempt,
   saveExamAnswers,
   startExamAttempt,
   submitExamAttempt,
+  createAttemptOrder,
+  confirmAttemptPayment,
+  simulateAttemptPayment,
 } from "@/lib/exam.functions";
 import type { ExamPaper, ExamResult } from "@/lib/exam.types";
 
@@ -39,6 +46,30 @@ export const Route = createFileRoute("/_authenticated/exam")({
   component: Page,
 });
 
+type RazorpayResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+  }
+}
+
+function loadRazorpayScript(): Promise<boolean> {
+  if (typeof window === "undefined") return Promise.resolve(false);
+  if (window.Razorpay) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
 function formatClock(msLeft: number) {
   const total = Math.max(0, Math.floor(msLeft / 1000));
   const m = String(Math.floor(total / 60)).padStart(2, "0");
@@ -50,17 +81,86 @@ function Page() {
   const fetchOverview = useServerFn(getExamOverview);
   const startFn = useServerFn(startExamAttempt);
   const resumeFn = useServerFn(resumeExamAttempt);
+  const createAttemptOrderFn = useServerFn(createAttemptOrder);
+  const confirmAttemptPaymentFn = useServerFn(confirmAttemptPayment);
+  const simulateAttemptPaymentFn = useServerFn(simulateAttemptPayment);
   const queryClient = useQueryClient();
 
   const [paper, setPaper] = useState<ExamPaper | null>(null);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [showingInstructions, setShowingInstructions] = useState(false);
   const [instructSeconds, setInstructSeconds] = useState(60);
+  const [payingAttempt, setPayingAttempt] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["exam-overview"],
     queryFn: () => fetchOverview({}),
   });
+
+  const handlePayAttempt = async () => {
+    setPayingAttempt(true);
+    try {
+      const ready = await loadRazorpayScript();
+      if (!ready || !window.Razorpay) throw new Error("Payment window could not be loaded.");
+
+      const order = await createAttemptOrderFn();
+
+      const razorpay = new window.Razorpay({
+        key: order.keyId,
+        order_id: order.gatewayOrderId,
+        amount: order.amountPaise,
+        currency: order.currency,
+        name: order.name,
+        description: `Exam Attempt #${data?.eligibility?.nextAttemptNumber ?? ""}`,
+        prefill: order.prefill,
+        theme: { color: "#12233f" },
+        modal: {
+          ondismiss: () => {
+            setPayingAttempt(false);
+            toast.info("Attempt payment cancelled.");
+          },
+        },
+        handler: async (response: RazorpayResponse) => {
+          try {
+            await confirmAttemptPaymentFn({
+              data: {
+                orderId: order.orderId,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              },
+            });
+            toast.success(`Payment successful! Attempt #${data?.eligibility?.nextAttemptNumber} is now unlocked.`);
+            queryClient.invalidateQueries({ queryKey: ["exam-overview"] });
+          } catch (error) {
+            toast.error(
+              error instanceof Error ? error.message : "Could not verify payment.",
+            );
+          } finally {
+            setPayingAttempt(false);
+          }
+        },
+      });
+
+      razorpay.open();
+    } catch (error) {
+      setPayingAttempt(false);
+      toast.error(error instanceof Error ? error.message : "Failed to initiate attempt payment.");
+    }
+  };
+
+  const handleSimulateAttempt = async () => {
+    setPayingAttempt(true);
+    try {
+      await simulateAttemptPaymentFn();
+      toast.success(`Test payment recorded! Attempt #${data?.eligibility?.nextAttemptNumber} is unlocked.`);
+      queryClient.invalidateQueries({ queryKey: ["exam-overview"] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Test payment failed.");
+    } finally {
+      setPayingAttempt(false);
+    }
+  };
 
   const start = useMutation({
     mutationFn: () => startFn({}),
@@ -252,12 +352,52 @@ function Page() {
               value={eligibility.assignmentsApproved}
               total={eligibility.assignmentsTotal}
             />
-            <p className="text-xs text-muted-foreground">
-              Attempts used: {eligibility.attemptsUsed} of {config.maxAttempts}
-            </p>
+            <div className="flex flex-wrap items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
+              <span>Free attempts included: <strong>{eligibility.freeAttemptsCount}</strong></span>
+              <span>Paid attempts unlocked: <strong>{eligibility.paidAttemptsCount}</strong></span>
+              <span>Total attempts used: <strong>{eligibility.attemptsUsed}</strong></span>
+            </div>
           </div>
 
-          {eligibility.reasons.length > 0 && (
+          {eligibility.requiresPayment && !data.activeAttempt && (
+            <div className="mt-6 rounded-xl border border-primary/30 bg-primary/5 p-5 space-y-4">
+              <div className="flex items-start gap-3">
+                <CreditCard className="size-5 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-semibold text-sm text-foreground">
+                    Additional Attempt Required — Attempt #{eligibility.nextAttemptNumber}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    You have used your {eligibility.freeAttemptsCount} free attempt{eligibility.freeAttemptsCount === 1 ? "" : "s"}.
+                    Purchase attempt #{eligibility.nextAttemptNumber} to re-take the certification exam.
+                  </p>
+                  <p className="text-xs font-semibold text-foreground mt-2">
+                    Fee: {formatPaiseExact(config.attemptPricePaise)} + {config.gstRatePercent}% GST
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <Button onClick={handlePayAttempt} disabled={payingAttempt}>
+                  {payingAttempt ? (
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                  ) : (
+                    <CreditCard className="size-4 mr-2" />
+                  )}
+                  Pay & Unlock Attempt #{eligibility.nextAttemptNumber}
+                </Button>
+
+                {config.testMode && (
+                  <Button variant="outline" onClick={handleSimulateAttempt} disabled={payingAttempt}>
+                    <FlaskConical className="size-4 mr-2 text-warning" />
+                    Simulate Payment (Test Mode)
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {eligibility.reasons.length > 0 && !eligibility.requiresPayment && (
             <ul className="mt-5 space-y-2 border-t border-border pt-5">
               {eligibility.reasons.map((reason) => (
                 <li key={reason} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -281,7 +421,7 @@ function Page() {
                 )}
                 Resume attempt in progress
               </Button>
-            ) : (
+            ) : !eligibility.requiresPayment ? (
               <Button
                 onClick={() => {
                   setInstructSeconds(60);
@@ -290,9 +430,9 @@ function Page() {
                 disabled={!eligibility.canStart}
               >
                 <GraduationCap className="size-4 mr-2" />
-                Start examination
+                Start examination (Attempt #{eligibility.attemptsUsed + 1})
               </Button>
-            )}
+            ) : null}
           </div>
         </section>
 

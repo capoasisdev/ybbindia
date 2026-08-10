@@ -23,6 +23,11 @@ export type ExamOverview = {
     passPercent: number;
     maxAttempts: number;
     waitHours: number;
+    freeAttempts: number;
+    attemptPricePaise: number;
+    gstRatePercent: number;
+    currency: string;
+    testMode: boolean;
   };
   eligibility: {
     canStart: boolean;
@@ -32,6 +37,11 @@ export type ExamOverview = {
     assignmentsApproved: number;
     assignmentsTotal: number;
     attemptsUsed: number;
+    freeAttemptsCount: number;
+    paidAttemptsCount: number;
+    totalAllowedAttempts: number;
+    requiresPayment: boolean;
+    nextAttemptNumber: number;
     nextAttemptAt: string | null;
   };
   activeAttempt: { id: string; expiresAt: string } | null;

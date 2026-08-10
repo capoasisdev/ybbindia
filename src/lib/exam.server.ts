@@ -1,4 +1,4 @@
-import { readBool, readNumber, type SettingsMap } from "@/domain/settings";
+import { readBool, readNumber, readSetting, type SettingsMap } from "@/domain/settings";
 import type { ExamOverview, ExamPaper, ExamQuestion, ExamResult } from "./exam.types";
 
 async function loadSettings(supabase: any): Promise<SettingsMap> {
@@ -66,12 +66,23 @@ export async function loadPaper(
 export async function buildOverview(supabase: any, userId: string): Promise<ExamOverview> {
   const settings = await loadSettings(supabase);
 
+  const freeAttemptsCount = readNumber(settings, "exam_free_attempts");
+  const attemptPricePaise = readNumber(settings, "exam_attempt_price_paise");
+  const gstRatePercent = readNumber(settings, "gst_rate_percent");
+  const currency = String(readSetting(settings, "currency") ?? "INR");
+  const testMode = readBool(settings, "payments_test_mode");
+
   const config = {
     questionCount: readNumber(settings, "exam_question_count"),
     durationMinutes: readNumber(settings, "exam_duration_minutes"),
     passPercent: readNumber(settings, "exam_pass_percent"),
     maxAttempts: readNumber(settings, "exam_max_attempts"),
     waitHours: readNumber(settings, "exam_wait_hours"),
+    freeAttempts: freeAttemptsCount,
+    attemptPricePaise,
+    gstRatePercent,
+    currency,
+    testMode,
   };
 
   const [enrolment, rolesRes] = await Promise.all([
@@ -94,6 +105,11 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
         assignmentsApproved: 0,
         assignmentsTotal: 0,
         attemptsUsed: 0,
+        freeAttemptsCount,
+        paidAttemptsCount: 0,
+        totalAllowedAttempts: freeAttemptsCount,
+        requiresPayment: false,
+        nextAttemptNumber: 1,
         nextAttemptAt: null,
       },
       activeAttempt: null,
@@ -127,6 +143,11 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
         assignmentsApproved: 0,
         assignmentsTotal: 0,
         attemptsUsed: 0,
+        freeAttemptsCount,
+        paidAttemptsCount: 0,
+        totalAllowedAttempts: freeAttemptsCount,
+        requiresPayment: false,
+        nextAttemptNumber: 1,
         nextAttemptAt: null,
       },
       activeAttempt: null,
@@ -154,7 +175,7 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
     lessonsTotal = lessonIds.length;
   }
 
-  const [progressRes, assignmentsRes, submissionsRes, attemptsRes] = await Promise.all([
+  const [progressRes, assignmentsRes, submissionsRes, attemptsRes, paidOrdersRes] = await Promise.all([
     lessonIds.length
       ? supabase
           .from("lesson_progress")
@@ -177,6 +198,11 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
       )
       .eq("user_id", userId)
       .order("attempt_number", { ascending: false }),
+    supabase
+      .from("orders")
+      .select("id, billing_snapshot")
+      .eq("user_id", userId)
+      .eq("status", "paid"),
   ]);
 
   const lessonsCompleted = isStaff ? lessonsTotal : (progressRes.data ?? []).length;
@@ -196,13 +222,25 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
   const finished = attemptRows.filter((a: any) => a.status !== "in_progress");
   const passed = finished.some((a: any) => a.is_passed);
 
+  // Count paid orders for exam re-attempts
+  const paidAttemptOrders = (paidOrdersRes.data ?? []).filter((o: any) => {
+    const snap = o.billing_snapshot as any;
+    return snap && snap.item_type === "exam_attempt";
+  });
+  const paidAttemptsCount = paidAttemptOrders.length;
+  const totalAllowedAttempts = isStaff ? 999 : freeAttemptsCount + paidAttemptsCount;
+  const attemptsUsed = finished.length;
+  const nextAttemptNumber = attemptsUsed + 1;
+
   const lastEnded = finished
     .map((a: any) => (a.ended_at ? new Date(a.ended_at).getTime() : 0))
     .sort((a: number, b: number) => b - a)[0];
   const nextAttemptAt =
     lastEnded && !passed ? new Date(lastEnded + config.waitHours * 3600_000).toISOString() : null;
 
+  let requiresPayment = false;
   const reasons: string[] = [];
+
   if (!isStaff) {
     if (readBool(settings, "exam_require_all_lessons") && lessonsCompleted < lessonsTotal) {
       reasons.push(`Complete all ${lessonsTotal} lessons (${lessonsCompleted} done).`);
@@ -212,8 +250,12 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
         `All ${compulsory.length} compulsory assignments must be approved (${assignmentsApproved} approved).`,
       );
     }
-    if (finished.length >= config.maxAttempts && !passed) {
-      reasons.push("You have used all available attempts — contact support.");
+    if (attemptsUsed >= totalAllowedAttempts && !passed) {
+      requiresPayment = true;
+      reasons.push(`Attempt #${nextAttemptNumber} requires payment to unlock.`);
+    }
+    if (attemptsUsed >= config.maxAttempts && !passed) {
+      reasons.push("You have reached the maximum total attempt limit — contact support.");
     }
     if (nextAttemptAt && new Date(nextAttemptAt).getTime() > now) {
       reasons.push(`Cooling-off period ends ${new Date(nextAttemptAt).toLocaleString("en-IN")}.`);
@@ -225,13 +267,18 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
     enrolled: true,
     config,
     eligibility: {
-      canStart: reasons.length === 0,
+      canStart: reasons.length === 0 && !requiresPayment,
       reasons,
       lessonsCompleted,
       lessonsTotal,
       assignmentsApproved,
       assignmentsTotal: compulsory.length,
-      attemptsUsed: finished.length,
+      attemptsUsed,
+      freeAttemptsCount,
+      paidAttemptsCount,
+      totalAllowedAttempts,
+      requiresPayment,
+      nextAttemptNumber,
       nextAttemptAt,
     },
     activeAttempt: active ? { id: active.id, expiresAt: active.expires_at } : null,

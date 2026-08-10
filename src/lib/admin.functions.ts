@@ -578,6 +578,8 @@ export type AdminPricingSettings = {
   currency: string;
   accessDurationDays: number;
   paymentsTestMode: boolean;
+  examFreeAttempts: number;
+  examAttemptPricePaise: number;
 };
 
 export const getAdminPricingSettings = createServerFn({ method: "GET" })
@@ -595,6 +597,8 @@ export const getAdminPricingSettings = createServerFn({ method: "GET" })
         "currency",
         "access_duration_days",
         "payments_test_mode",
+        "exam_free_attempts",
+        "exam_attempt_price_paise",
       ]);
 
     if (error) throw new Error(error.message);
@@ -611,6 +615,8 @@ export const getAdminPricingSettings = createServerFn({ method: "GET" })
       currency: String(settings.currency ?? "INR"),
       accessDurationDays: Number(settings.access_duration_days ?? 365),
       paymentsTestMode: Boolean(settings.payments_test_mode ?? true),
+      examFreeAttempts: Number(settings.exam_free_attempts ?? 2),
+      examAttemptPricePaise: Number(settings.exam_attempt_price_paise ?? 50000),
     };
   });
 
@@ -633,6 +639,12 @@ export const updateAdminPricingSettings = createServerFn({ method: "POST" })
       if (typeof data.paymentsTestMode !== "boolean") {
         throw new Error("Invalid payments test mode");
       }
+      if (typeof data.examFreeAttempts !== "number" || data.examFreeAttempts < 0) {
+        throw new Error("Invalid exam free attempts");
+      }
+      if (typeof data.examAttemptPricePaise !== "number" || data.examAttemptPricePaise < 0) {
+        throw new Error("Invalid exam attempt price");
+      }
       return data;
     },
   )
@@ -649,6 +661,8 @@ export const updateAdminPricingSettings = createServerFn({ method: "POST" })
       { key: "currency", value: data.currency, label: "Currency", group_name: "commerce", is_public: true },
       { key: "access_duration_days", value: data.accessDurationDays, label: "Course access duration (days)", group_name: "commerce", is_public: true },
       { key: "payments_test_mode", value: data.paymentsTestMode, label: "Test mode payments", group_name: "commerce", is_public: false },
+      { key: "exam_free_attempts", value: data.examFreeAttempts, label: "Free exam attempts", group_name: "exam", is_public: true },
+      { key: "exam_attempt_price_paise", value: data.examAttemptPricePaise, label: "Re-exam attempt fee (paise)", group_name: "exam", is_public: true },
     ];
 
     const { error } = await supabaseAdmin.from("settings").upsert(updates, { onConflict: "key" });

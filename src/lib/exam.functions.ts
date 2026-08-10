@@ -190,3 +190,245 @@ export const submitExamAttempt = createServerFn({ method: "POST" })
 
     return { scorePercent, score, totalMarks, isPassed, passPercent: attempt.pass_percent };
   });
+
+export type CreatedAttemptOrder = {
+  orderId: string;
+  gatewayOrderId: string;
+  keyId: string;
+  amountPaise: number;
+  currency: string;
+  name: string;
+  prefill: { name: string; email: string; contact: string };
+};
+
+export const createAttemptOrder = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<CreatedAttemptOrder> => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { buildOverview } = await import("./exam.server");
+    const { loadSettings } = await import("./checkout.server");
+    const { createRazorpayOrder, getRazorpayKeyId } = await import("./razorpay.server");
+    const { computeGst } = await import("@/domain/money");
+    const { readSetting, readNumber } = await import("@/domain/settings");
+
+    const overview = await buildOverview(supabase, userId);
+    if (!overview.eligibility.requiresPayment) {
+      throw new Error("Payment is not required for your next attempt.");
+    }
+
+    const settings = await loadSettings(supabaseAdmin);
+    const { data: profile } = await supabase
+      .from("learner_profiles")
+      .select("full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, gst_number, state")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const buyerState = profile?.billing_state ?? profile?.state ?? null;
+    const price = computeGst({
+      baseAmountPaise: readNumber(settings, "exam_attempt_price_paise"),
+      gstRatePercent: readNumber(settings, "gst_rate_percent"),
+      sellerState: String(readSetting(settings, "company_state") ?? ""),
+      buyerState: buyerState ?? "",
+    });
+
+    const currency = String(readSetting(settings, "currency") ?? "INR");
+
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .insert({
+        user_id: userId,
+        status: "created",
+        base_amount_paise: price.baseAmountPaise,
+        discount_amount_paise: price.discountAmountPaise,
+        gst_rate_percent: price.gstRatePercent,
+        cgst_paise: price.cgstPaise,
+        sgst_paise: price.sgstPaise,
+        igst_paise: price.igstPaise,
+        total_amount_paise: price.totalAmountPaise,
+        currency,
+        gateway: "razorpay",
+        billing_snapshot: {
+          item_type: "exam_attempt",
+          attempt_number: overview.eligibility.nextAttemptNumber,
+          full_name: profile?.full_name ?? null,
+          email: profile?.email ?? null,
+          mobile: profile?.mobile ?? null,
+          address: profile?.billing_address ?? null,
+          city: profile?.billing_city ?? null,
+          state: buyerState,
+          pincode: profile?.billing_pincode ?? null,
+          gst_number: profile?.gst_number ?? null,
+        } as never,
+      })
+      .select("id")
+      .single();
+
+    if (error || !order) {
+      throw new Error("Could not create the attempt payment order.");
+    }
+
+    const gatewayOrder = await createRazorpayOrder({
+      amountPaise: price.totalAmountPaise,
+      currency,
+      receipt: order.id,
+      notes: { order_id: order.id, user_id: userId, item_type: "exam_attempt" },
+    });
+
+    await supabaseAdmin
+      .from("orders")
+      .update({ gateway_order_id: gatewayOrder.id, status: "pending" })
+      .eq("id", order.id);
+
+    return {
+      orderId: order.id,
+      gatewayOrderId: gatewayOrder.id,
+      keyId: getRazorpayKeyId(),
+      amountPaise: price.totalAmountPaise,
+      currency,
+      name: String(readSetting(settings, "company_legal_name")),
+      prefill: {
+        name: profile?.full_name ?? "",
+        email: profile?.email ?? "",
+        contact: profile?.mobile ?? "",
+      },
+    };
+  });
+
+export const confirmAttemptPayment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (input: {
+      orderId: string;
+      razorpayOrderId: string;
+      razorpayPaymentId: string;
+      signature: string;
+    }) => input,
+  )
+  .handler(async ({ data, context }): Promise<{ status: "paid" }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { markOrderPaid } = await import("./checkout.server");
+    const { verifyCheckoutSignature, fetchRazorpayPayment } = await import("./razorpay.server");
+
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, user_id, gateway_order_id, total_amount_paise")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (!order || order.user_id !== context.userId) throw new Error("Order not found");
+    if (order.gateway_order_id !== data.razorpayOrderId) throw new Error("Order mismatch");
+
+    if (
+      !verifyCheckoutSignature({
+        razorpayOrderId: data.razorpayOrderId,
+        razorpayPaymentId: data.razorpayPaymentId,
+        signature: data.signature,
+      })
+    ) {
+      throw new Error("Payment signature could not be verified.");
+    }
+
+    const payment = await fetchRazorpayPayment(data.razorpayPaymentId);
+    if (payment.order_id !== data.razorpayOrderId) throw new Error("Payment mismatch");
+    if (payment.status !== "captured" && payment.status !== "authorized") {
+      throw new Error("Payment is not complete yet.");
+    }
+    if (payment.amount !== order.total_amount_paise) throw new Error("Payment amount mismatch");
+
+    await markOrderPaid(supabaseAdmin, {
+      orderId: order.id,
+      gatewayPaymentId: payment.id,
+      gatewaySignature: data.signature,
+      method: payment.method ?? null,
+      amountPaise: payment.amount,
+      rawEvent: payment,
+    });
+
+    return { status: "paid" };
+  });
+
+export const simulateAttemptPayment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ status: "paid" }> => {
+    const { supabase, userId } = context;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { buildOverview } = await import("./exam.server");
+    const { loadSettings, markOrderPaid } = await import("./checkout.server");
+    const { computeGst } = await import("@/domain/money");
+    const { readSetting, readNumber, readBool } = await import("@/domain/settings");
+
+    const overview = await buildOverview(supabase, userId);
+    if (!overview.eligibility.requiresPayment) {
+      throw new Error("Payment is not required for your next attempt.");
+    }
+
+    const settings = await loadSettings(supabaseAdmin);
+    if (!readBool(settings, "payments_test_mode")) {
+      throw new Error("Test payments are disabled.");
+    }
+
+    const { data: profile } = await supabase
+      .from("learner_profiles")
+      .select("full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, gst_number, state")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const buyerState = profile?.billing_state ?? profile?.state ?? null;
+    const price = computeGst({
+      baseAmountPaise: readNumber(settings, "exam_attempt_price_paise"),
+      gstRatePercent: readNumber(settings, "gst_rate_percent"),
+      sellerState: String(readSetting(settings, "company_state") ?? ""),
+      buyerState: buyerState ?? "",
+    });
+
+    const currency = String(readSetting(settings, "currency") ?? "INR");
+    const stamp = Date.now().toString(36);
+
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .insert({
+        user_id: userId,
+        status: "pending",
+        base_amount_paise: price.baseAmountPaise,
+        discount_amount_paise: price.discountAmountPaise,
+        gst_rate_percent: price.gstRatePercent,
+        cgst_paise: price.cgstPaise,
+        sgst_paise: price.sgstPaise,
+        igst_paise: price.igstPaise,
+        total_amount_paise: price.totalAmountPaise,
+        currency,
+        gateway: "razorpay",
+        gateway_order_id: `test_attempt_order_${stamp}`,
+        billing_snapshot: {
+          item_type: "exam_attempt",
+          attempt_number: overview.eligibility.nextAttemptNumber,
+          full_name: profile?.full_name ?? null,
+          email: profile?.email ?? null,
+          mobile: profile?.mobile ?? null,
+          address: profile?.billing_address ?? null,
+          city: profile?.billing_city ?? null,
+          state: buyerState,
+          pincode: profile?.billing_pincode ?? null,
+          gst_number: profile?.gst_number ?? null,
+          test_mode: true,
+        } as never,
+      })
+      .select("id")
+      .single();
+
+    if (error || !order) {
+      throw new Error("Could not create the test attempt order.");
+    }
+
+    await markOrderPaid(supabaseAdmin, {
+      orderId: order.id,
+      gatewayPaymentId: `test_attempt_pay_${stamp}`,
+      gatewaySignature: null,
+      method: "test",
+      amountPaise: price.totalAmountPaise,
+      rawEvent: { simulated: true, item_type: "exam_attempt", at: new Date().toISOString() },
+    });
+
+    return { status: "paid" };
+  });

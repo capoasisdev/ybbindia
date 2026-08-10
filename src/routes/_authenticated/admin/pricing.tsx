@@ -43,6 +43,8 @@ function PricingPage() {
   const [currency, setCurrency] = useState("INR");
   const [accessDurationDays, setAccessDurationDays] = useState("");
   const [paymentsTestMode, setPaymentsTestMode] = useState(true);
+  const [examFreeAttempts, setExamFreeAttempts] = useState("2");
+  const [examAttemptPriceRupees, setExamAttemptPriceRupees] = useState("500");
 
   // Populate local state when query finishes loading
   useEffect(() => {
@@ -52,6 +54,8 @@ function PricingPage() {
       setCurrency(currentSettings.currency);
       setAccessDurationDays(currentSettings.accessDurationDays.toString());
       setPaymentsTestMode(currentSettings.paymentsTestMode);
+      setExamFreeAttempts(currentSettings.examFreeAttempts.toString());
+      setExamAttemptPriceRupees((currentSettings.examAttemptPricePaise / 100).toString());
     }
   }, [currentSettings]);
 
@@ -63,6 +67,7 @@ function PricingPage() {
       queryClient.invalidateQueries({ queryKey: ["admin-pricing-settings"] });
       // Invalidate public settings too so website/enrolment changes reflect instantly
       queryClient.invalidateQueries({ queryKey: ["public-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["exam-overview"] });
     },
     onError: (err: Error) => {
       toast.error(err.message || "Failed to update pricing settings.");
@@ -95,8 +100,21 @@ function PricingPage() {
       return;
     }
 
-    // Convert price back to paise for storage
+    const freeAttempts = parseInt(examFreeAttempts, 10);
+    if (isNaN(freeAttempts) || freeAttempts < 0) {
+      toast.error("Free exam attempts must be 0 or more.");
+      return;
+    }
+
+    const attemptPrice = parseFloat(examAttemptPriceRupees);
+    if (isNaN(attemptPrice) || attemptPrice < 0) {
+      toast.error("Please enter a valid attempt price.");
+      return;
+    }
+
+    // Convert prices back to paise for storage
     const coursePricePaise = Math.round(basePrice * 100);
+    const examAttemptPricePaise = Math.round(attemptPrice * 100);
 
     updateMutation.mutate({
       coursePricePaise,
@@ -104,6 +122,8 @@ function PricingPage() {
       currency: currency.trim().toUpperCase(),
       accessDurationDays: duration,
       paymentsTestMode,
+      examFreeAttempts: freeAttempts,
+      examAttemptPricePaise,
     });
   };
 
@@ -243,6 +263,52 @@ function PricingPage() {
                 </p>
               </div>
 
+              <div className="pt-2 border-t border-border">
+                <h3 className="text-sm font-semibold text-foreground mb-3">Certification Examination Attempts Fee</h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="examFreeAttempts">Free Exam Attempts</Label>
+                    <Input
+                      id="examFreeAttempts"
+                      type="number"
+                      min="0"
+                      max="10"
+                      placeholder="2"
+                      value={examFreeAttempts}
+                      onChange={(e) => setExamFreeAttempts(e.target.value)}
+                      className="mt-1.5"
+                      required
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Number of attempts allowed for free (e.g. 2).
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="examAttemptPrice">Re-Attempt Fee (excluding GST)</Label>
+                    <div className="relative mt-1.5">
+                      <span className="absolute left-3 top-2.5 text-sm text-muted-foreground font-semibold">
+                        {currency}
+                      </span>
+                      <Input
+                        id="examAttemptPrice"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="500.00"
+                        value={examAttemptPriceRupees}
+                        onChange={(e) => setExamAttemptPriceRupees(e.target.value)}
+                        className="pl-14"
+                        required
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Fee charged for 3rd, 4th, 5th etc. attempts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/20 p-4 mt-2">
                 <div className="space-y-0.5">
                   <Label htmlFor="testMode" className="text-sm font-semibold">
@@ -313,6 +379,32 @@ function PricingPage() {
                   </dd>
                 </div>
               </dl>
+
+              {/* Re-attempt Fee Preview */}
+              <div className="mt-6 pt-5 border-t border-border">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Re-Examination Fee Preview</h3>
+                {(() => {
+                  const attemptBase = parseFloat(examAttemptPriceRupees) || 0;
+                  const attemptGst = (attemptBase * gstVal) / 100;
+                  const attemptTotal = attemptBase + attemptGst;
+                  return (
+                    <div className="rounded-xl border border-border bg-muted/20 p-3.5 space-y-2 text-xs">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Free Included Attempts:</span>
+                        <span className="font-semibold text-foreground">{examFreeAttempts || "0"}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Extra Attempt Fee (excl. GST):</span>
+                        <span className="font-medium">{currency} {attemptBase.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between font-semibold border-t border-border/50 pt-2 text-foreground">
+                        <span>Total per Extra Attempt (incl. GST):</span>
+                        <span>{currency} {attemptTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
 
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 flex flex-col gap-3">
