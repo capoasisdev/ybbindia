@@ -31,6 +31,7 @@ import {
   submitExamAttempt,
   createAttemptOrder,
   confirmAttemptPayment,
+  recordAttemptOrderFailure,
   simulateAttemptPayment,
 } from "@/lib/exam.functions";
 import type { ExamPaper, ExamResult } from "@/lib/exam.types";
@@ -54,7 +55,10 @@ type RazorpayResponse = {
 
 declare global {
   interface Window {
-    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay?: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on?: (event: string, callback: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -83,6 +87,7 @@ function Page() {
   const resumeFn = useServerFn(resumeExamAttempt);
   const createAttemptOrderFn = useServerFn(createAttemptOrder);
   const confirmAttemptPaymentFn = useServerFn(confirmAttemptPayment);
+  const recordAttemptOrderFailureFn = useServerFn(recordAttemptOrderFailure);
   const simulateAttemptPaymentFn = useServerFn(simulateAttemptPayment);
   const queryClient = useQueryClient();
 
@@ -115,12 +120,27 @@ function Page() {
         prefill: order.prefill,
         theme: { color: "#12233f" },
         modal: {
-          ondismiss: () => {
+          ondismiss: async () => {
             setPayingAttempt(false);
-            toast.info("Attempt payment cancelled.");
+            try {
+              await recordAttemptOrderFailureFn({
+                data: {
+                  orderId: order.orderId,
+                  description: "Exam attempt payment cancelled by user",
+                },
+              });
+            } catch {
+              // Ignore background logging error
+            }
+            toast.error("Attempt payment cancelled. Your attempt was not unlocked.");
           },
         },
         handler: async (response: RazorpayResponse) => {
+          if (!response?.razorpay_payment_id || !response?.razorpay_signature) {
+            setPayingAttempt(false);
+            toast.error("Attempt payment details incomplete. Payment was not confirmed.");
+            return;
+          }
           try {
             await confirmAttemptPaymentFn({
               data: {
@@ -141,6 +161,27 @@ function Page() {
           }
         },
       });
+
+      if (typeof razorpay.on === "function") {
+        razorpay.on("payment.failed", async (response: unknown) => {
+          setPayingAttempt(false);
+          const err = (response as { error?: { description?: string; code?: string; metadata?: { payment_id?: string } } })?.error;
+          const description = err?.description || "Attempt payment was cancelled or failed.";
+          try {
+            await recordAttemptOrderFailureFn({
+              data: {
+                orderId: order.orderId,
+                paymentId: err?.metadata?.payment_id ?? null,
+                code: err?.code ?? null,
+                description,
+              },
+            });
+          } catch {
+            // Ignore background logging error
+          }
+          toast.error(`Attempt payment failed: ${description}`);
+        });
+      }
 
       razorpay.open();
     } catch (error) {

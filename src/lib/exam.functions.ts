@@ -348,6 +348,41 @@ export const confirmAttemptPayment = createServerFn({ method: "POST" })
     return { status: "paid" };
   });
 
+export const recordAttemptOrderFailure = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (input: {
+      orderId: string;
+      paymentId?: string | null;
+      code?: string | null;
+      description?: string | null;
+    }) => input,
+  )
+  .handler(async ({ data, context }): Promise<{ status: "failed" }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { markOrderFailed } = await import("./checkout.server");
+
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, user_id, total_amount_paise")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (!order || order.user_id !== context.userId) return { status: "failed" };
+
+    await markOrderFailed(supabaseAdmin, {
+      orderId: order.id,
+      userId: context.userId,
+      paymentId: data.paymentId ?? null,
+      code: data.code ?? null,
+      description: data.description ?? "Attempt payment cancelled by user",
+      amountPaise: order.total_amount_paise,
+    });
+
+    return { status: "failed" };
+  });
+
+
 export const simulateAttemptPayment = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<{ status: "paid" }> => {

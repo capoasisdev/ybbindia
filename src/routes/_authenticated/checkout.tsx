@@ -11,6 +11,7 @@ import {
   getCheckoutSummary,
   createEnrolmentOrder,
   confirmEnrolmentPayment,
+  recordEnrolmentOrderFailure,
   simulateEnrolmentPayment,
 } from "@/lib/checkout.functions";
 
@@ -33,7 +34,10 @@ type RazorpayResponse = {
 
 declare global {
   interface Window {
-    Razorpay?: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay?: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on?: (event: string, callback: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -54,6 +58,7 @@ function CheckoutPage() {
   const fetchSummary = useServerFn(getCheckoutSummary);
   const createOrder = useServerFn(createEnrolmentOrder);
   const confirmPayment = useServerFn(confirmEnrolmentPayment);
+  const recordOrderFailure = useServerFn(recordEnrolmentOrderFailure);
   const simulatePayment = useServerFn(simulateEnrolmentPayment);
   const [busy, setBusy] = useState(false);
 
@@ -93,12 +98,27 @@ function CheckoutPage() {
         prefill: order.prefill,
         theme: { color: "#12233f" },
         modal: {
-          ondismiss: () => {
+          ondismiss: async () => {
             setBusy(false);
-            toast.info("Payment cancelled. Your order is saved — you can try again.");
+            try {
+              await recordOrderFailure({
+                data: {
+                  orderId: order.orderId,
+                  description: "Payment cancelled by user from Razorpay popup",
+                },
+              });
+            } catch {
+              // Ignore background logging failure
+            }
+            toast.error("Payment cancelled. Enrolment was not completed. You can try again whenever you are ready.");
           },
         },
         handler: async (response: RazorpayResponse) => {
+          if (!response?.razorpay_payment_id || !response?.razorpay_signature) {
+            setBusy(false);
+            toast.error("Payment details incomplete. Enrolment was not processed.");
+            return;
+          }
           try {
             await confirmPayment({
               data: {
@@ -121,6 +141,27 @@ function CheckoutPage() {
           }
         },
       });
+
+      if (typeof razorpay.on === "function") {
+        razorpay.on("payment.failed", async (response: unknown) => {
+          setBusy(false);
+          const err = (response as { error?: { description?: string; code?: string; metadata?: { payment_id?: string } } })?.error;
+          const description = err?.description || "Payment was cancelled or failed.";
+          try {
+            await recordOrderFailure({
+              data: {
+                orderId: order.orderId,
+                paymentId: err?.metadata?.payment_id ?? null,
+                code: err?.code ?? null,
+                description,
+              },
+            });
+          } catch {
+            // Ignore background logging failure
+          }
+          toast.error(`Payment failed: ${description}`);
+        });
+      }
 
       razorpay.open();
     } catch (error) {
