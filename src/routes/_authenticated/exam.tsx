@@ -413,7 +413,7 @@ function Page() {
                     Purchase attempt #{eligibility.nextAttemptNumber} to re-take the certification exam.
                   </p>
                   <p className="text-xs font-semibold text-foreground mt-2">
-                    Fee: {formatPaiseExact(config.attemptPricePaise)} + {config.gstRatePercent}% GST
+                    Fee: {formatPaiseExact(config.attemptPricePaise)}
                   </p>
                 </div>
               </div>

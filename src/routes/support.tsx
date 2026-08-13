@@ -34,7 +34,7 @@ const TOPICS = [
   {
     icon: LifeBuoy,
     title: "Enrolment and payment",
-    body: "Payment failures, GST invoices, billing details and access activation.",
+    body: "Payment failures, payment receipts/invoices, billing details and access activation.",
   },
   {
     icon: MessageSquare,

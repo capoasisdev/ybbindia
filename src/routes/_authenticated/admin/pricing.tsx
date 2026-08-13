@@ -186,7 +186,7 @@ function PricingPage() {
 
             <div className="space-y-4">
               <div>
-                <Label htmlFor="coursePrice">Course Price (excluding GST)</Label>
+                <Label htmlFor="coursePrice">Course Price</Label>
                 <div className="relative mt-1.5">
                   <span className="absolute left-3 top-2.5 text-sm text-muted-foreground font-semibold">
                     {currency}
@@ -204,7 +204,7 @@ function PricingPage() {
                   />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  The base cost of the ABB Certification Program before taxation.
+                  The cost of the ABB Certification Program.
                 </p>
               </div>
 
@@ -285,7 +285,7 @@ function PricingPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="examAttemptPrice">Re-Attempt Fee (excluding GST)</Label>
+                    <Label htmlFor="examAttemptPrice">Re-Attempt Fee</Label>
                     <div className="relative mt-1.5">
                       <span className="absolute left-3 top-2.5 text-sm text-muted-foreground font-semibold">
                         {currency}
@@ -352,30 +352,18 @@ function PricingPage() {
                   Student Enrolment Cost
                 </span>
                 <div className="text-2xl font-extrabold text-foreground mt-1">
-                  {currency} {totalVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {currency} {baseVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  Includes GST & gives {accessDurationDays || "0"} days of access.
+                  Gives {accessDurationDays || "0"} days of access.
                 </div>
               </div>
 
               <dl className="space-y-3 text-sm">
-                <div className="flex justify-between border-b border-border/50 pb-2">
-                  <dt className="text-muted-foreground">Base Program Fee</dt>
-                  <dd className="font-medium text-foreground">
-                    {currency} {baseVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </dd>
-                </div>
-                <div className="flex justify-between border-b border-border/50 pb-2">
-                  <dt className="text-muted-foreground">GST ({gstVal}%)</dt>
-                  <dd className="font-medium text-foreground">
-                    {currency} {gstAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </dd>
-                </div>
                 <div className="flex justify-between pt-1">
                   <dt className="font-semibold text-foreground">Total Enrolment Fee</dt>
                   <dd className="font-semibold text-foreground">
-                    {currency} {totalVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {currency} {baseVal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </dd>
                 </div>
               </dl>
@@ -385,21 +373,15 @@ function PricingPage() {
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Re-Examination Fee Preview</h3>
                 {(() => {
                   const attemptBase = parseFloat(examAttemptPriceRupees) || 0;
-                  const attemptGst = (attemptBase * gstVal) / 100;
-                  const attemptTotal = attemptBase + attemptGst;
                   return (
                     <div className="rounded-xl border border-border bg-muted/20 p-3.5 space-y-2 text-xs">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Free Included Attempts:</span>
                         <span className="font-semibold text-foreground">{examFreeAttempts || "0"}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Extra Attempt Fee (excl. GST):</span>
-                        <span className="font-medium">{currency} {attemptBase.toFixed(2)}</span>
-                      </div>
                       <div className="flex justify-between font-semibold border-t border-border/50 pt-2 text-foreground">
-                        <span>Total per Extra Attempt (incl. GST):</span>
-                        <span>{currency} {attemptTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                        <span>Total per Extra Attempt:</span>
+                        <span>{currency} {attemptBase.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                       </div>
                     </div>
                   );

@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Become an Authorised Business Broker. Structured video training, assessed assignments, a proctored final examination and a verifiable ABB certificate.",
+          "Become an Authorised Business Broker. Structured video training, assessed assignments, a timed and randomised final examination and a verifiable ABB certificate.",
       },
       { property: "og:title", content: "ABB Certification Programme | Yoova Business Broking" },
       {
@@ -177,7 +177,7 @@ function ProgrammePage() {
                 {formatPaise(pricePaise)}
               </p>
               <p className="mt-1 text-sm text-sidebar-foreground/65">
-                plus {gstRate}% GST · one-time payment
+                one-time payment
               </p>
 
               <ul className="mt-8 space-y-3.5 text-sm text-sidebar-foreground/80">
@@ -187,7 +187,7 @@ function ProgrammePage() {
                   "Reviewer-graded practical assignments",
                   `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
-                  "GST invoice issued on payment",
+                  "Payment receipt/invoice issued on payment",
                 ].map((item) => (
                   <li key={item} className="flex gap-3">
                     <BadgeCheck className="mt-0.5 size-4 shrink-0 text-sidebar-primary" />
@@ -207,7 +207,7 @@ function ProgrammePage() {
                 </Link>
               </Button>
               <p className="mt-3 text-center text-xs text-sidebar-foreground/55">
-                Secure payment · GST invoice · Instant access
+                Secure payment · Payment receipt/invoice · Instant access
               </p>
             </div>
           </div>
@@ -335,7 +335,7 @@ function ProgrammePage() {
               Ready to earn the ABB credential?
             </h2>
             <p className="mt-4 text-primary-foreground/75">
-              Enroll today for {formatPaise(pricePaise)} plus {gstRate}% GST and get {accessDays}{" "}
+              Enroll today for {formatPaise(pricePaise)} and get {accessDays}{" "}
               days of access to the complete programme.
             </p>
             <Button

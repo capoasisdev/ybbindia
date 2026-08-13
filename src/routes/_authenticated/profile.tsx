@@ -460,14 +460,6 @@ function Page() {
               placeholder="6-digit PIN"
               disabled={!editing}
             />
-            <Field
-              id="gst_number"
-              label="GST number (optional)"
-              value={form.gst_number ?? ""}
-              onChange={set("gst_number")}
-              placeholder="e.g. 27AAPFU0939F1ZV"
-              disabled={!editing}
-            />
           </div>
         </Section>
 

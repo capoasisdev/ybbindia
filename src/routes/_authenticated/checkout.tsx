@@ -199,11 +199,7 @@ function CheckoutPage() {
               <dl className="mt-6 space-y-3 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">{summary.courseTitle}</dt>
-                  <dd className="font-medium">{formatPaiseExact(summary.baseAmountPaise)}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-muted-foreground">GST ({summary.gstRatePercent}%)</dt>
-                  <dd className="font-medium">{formatPaiseExact(summary.totalTaxPaise)}</dd>
+                  <dd className="font-medium">{formatPaiseExact(summary.totalAmountPaise)}</dd>
                 </div>
                 <div className="mt-4 flex justify-between border-t border-border pt-4 text-base">
                   <dt className="font-semibold">Total payable</dt>
@@ -225,7 +221,7 @@ function CheckoutPage() {
                     <div>
                       <p className="text-sm font-medium">Test mode is on</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Simulate a successful payment to activate a real enrolment, invoice and
+                        Simulate a successful payment to activate a real enrolment, payment receipt/invoice and
                         365-day access — with no money moving. Turn test mode off before launch.
                       </p>
                     </div>
@@ -243,7 +239,7 @@ function CheckoutPage() {
 
               <p className="mt-6 flex items-start gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
-                Payments are processed by Razorpay. A GST invoice is issued automatically once
+                Payments are processed by Razorpay. A payment receipt/invoice is issued automatically once
                 payment is confirmed.
               </p>
 

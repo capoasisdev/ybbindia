@@ -63,7 +63,7 @@ function EnrolPage() {
               },
               {
                 title: "Confirm billing and certificate details",
-                body: "We use these for your GST invoice and the name printed on your certificate.",
+                body: "We use these for your payment receipt/invoice and the name printed on your certificate.",
               },
               {
                 title: "Pay the programme fee",
@@ -93,16 +93,12 @@ function EnrolPage() {
             <dl className="mt-6 space-y-3 text-sm">
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Programme fee</dt>
-                <dd className="font-medium">{formatPaiseExact(breakup.taxableAmountPaise)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-muted-foreground">GST ({gstRatePercent}%)</dt>
-                <dd className="font-medium">{formatPaiseExact(breakup.totalTaxPaise)}</dd>
+                <dd className="font-medium">{formatPaiseExact(pricePaise)}</dd>
               </div>
               <div className="mt-4 flex justify-between border-t border-border pt-4 text-base">
                 <dt className="font-semibold">Total payable</dt>
                 <dd className="font-display font-semibold">
-                  {formatPaiseExact(breakup.totalAmountPaise)}
+                  {formatPaiseExact(pricePaise)}
                 </dd>
               </div>
             </dl>
@@ -133,7 +129,7 @@ function EnrolPage() {
 
             <p className="mt-5 flex items-start gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
-              Payments are processed securely. A GST invoice is issued automatically once payment is
+              Payments are processed securely. A payment receipt/invoice is issued automatically once payment is
               confirmed.
             </p>
           </div>
