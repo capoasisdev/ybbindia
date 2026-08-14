@@ -7,11 +7,20 @@ export function SiteFooter() {
       <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <Wordmark tone="light" />
-          <p className="mt-4 max-w-sm text-sm text-sidebar-foreground/70">
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-sidebar-foreground/70">
             The Authorised Business Broker (ABB) certification programme — structured training,
             assessed assignments and a verifiable credential for business broking professionals in
             India.
           </p>
+          <div className="mt-6 border-t border-sidebar-border pt-4 text-xs text-sidebar-foreground/65 leading-relaxed">
+            <p className="font-semibold text-sidebar-foreground">Yoova Business Broking Pvt Ltd</p>
+            <p className="mt-1">
+              E503, Samraat Tropicano, Serene Meadows, Gangapur Road, Nashik – 422013, Maharashtra, India
+            </p>
+            <p className="mt-1">
+              Email: <a href="mailto:info@ybbindia.com" className="hover:text-sidebar-primary underline">info@ybbindia.com</a> | Web: <a href="https://www.ybbindia.com" className="hover:text-sidebar-primary underline">www.ybbindia.com</a>
+            </p>
+          </div>
         </div>
 
         <div>
@@ -41,7 +50,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h2 className="font-display text-sm font-semibold text-sidebar-foreground">Legal</h2>
+          <h2 className="font-display text-sm font-semibold text-sidebar-foreground">Legal & Support</h2>
           <ul className="mt-4 space-y-2.5 text-sm text-sidebar-foreground/70">
             <li>
               <Link
@@ -72,7 +81,7 @@ export function SiteFooter() {
             </li>
             <li>
               <Link to="/support" className="hover:text-sidebar-primary">
-                Support
+                Support & Enquiries
               </Link>
             </li>
           </ul>
@@ -81,10 +90,11 @@ export function SiteFooter() {
 
       <div className="border-t border-sidebar-border">
         <div className="container-page flex flex-col gap-2 py-6 text-xs text-sidebar-foreground/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Yoova Business Broking. All rights reserved.</p>
-          <p>Certification issued by Yoova Business Broking.</p>
+          <p>© {new Date().getFullYear()} Yoova Business Broking Pvt Ltd. All rights reserved.</p>
+          <p>Certification issued by Yoova Business Broking Pvt Ltd.</p>
         </div>
       </div>
     </footer>
   );
 }
+

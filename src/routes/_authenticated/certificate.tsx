@@ -375,17 +375,17 @@ function CertificateCard({ cert, validityNote }: { cert: CertData; validityNote?
 
         {/* Certify text */}
         <p style={{
-          marginTop: "24px", fontSize: "11px", letterSpacing: "0.12em",
-          textTransform: "uppercase", color: "rgba(148,163,184,0.65)",
+          marginTop: "24px", fontSize: "11px", letterSpacing: "0.22em",
+          textTransform: "uppercase", fontWeight: 600, color: "rgba(226,232,240,0.85)",
         }}>
-          This is to certify that
+          THIS ACKNOWLEDGES THAT
         </p>
 
         {/* Recipient name */}
         <p style={{
           marginTop: "10px",
           fontFamily: "Georgia, 'Times New Roman', serif",
-          fontSize: "44px",
+          fontSize: "42px",
           fontWeight: 700,
           letterSpacing: "0.01em",
           color: "#e8d5a3",
@@ -395,19 +395,20 @@ function CertificateCard({ cert, validityNote }: { cert: CertData; validityNote?
           {cert.learnerName}
         </p>
 
-        {/* Body */}
+        {/* Requirements statement */}
         <p style={{
-          marginTop: "18px", maxWidth: "460px", margin: "18px auto 0",
-          fontSize: "13px", lineHeight: "1.65", color: "rgba(148,163,184,0.75)",
+          marginTop: "18px", fontSize: "11px", letterSpacing: "0.20em",
+          textTransform: "uppercase", fontWeight: 600, color: "rgba(226,232,240,0.85)",
         }}>
-          has successfully completed all coursework, assignments and the final
-          examination, and is hereby recognised as an
+          HAS COMPLETED THE REQUIREMENTS FOR
         </p>
+
         <p style={{
-          marginTop: "8px", letterSpacing: "0.14em", fontSize: "13px",
-          fontWeight: 600, textTransform: "uppercase", color: "rgba(203,169,89,0.9)",
+          marginTop: "8px", letterSpacing: "0.08em", fontSize: "16px",
+          fontFamily: "Georgia, 'Times New Roman', serif",
+          fontWeight: 700, textTransform: "uppercase", color: "rgba(240,217,122,0.95)",
         }}>
-          Authorised Business Broker
+          {cert.programmeName || "Authorised Business Broker (ABB) Certification Programme"}
         </p>
 
         {/* Wide gold divider */}

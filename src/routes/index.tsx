@@ -3,11 +3,9 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import {
   ArrowRight,
   BadgeCheck,
-  CalendarClock,
   FileCheck2,
   GraduationCap,
   PlayCircle,
-  ShieldCheck,
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
@@ -15,6 +13,15 @@ import { Button } from "@/components/ui/button";
 import { getPublicCourseOutline, getPublicSettings } from "@/lib/public.functions";
 import { formatPaise } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
+
+import { AudienceSection } from "@/components/site/trust/AudienceSection";
+import { LearningOutcomesSection } from "@/components/site/trust/LearningOutcomesSection";
+import { WhyYbbSection } from "@/components/site/trust/WhyYbbSection";
+import { CertificationStandardsSection } from "@/components/site/trust/CertificationStandardsSection";
+import { WorkbookPreviewSection } from "@/components/site/trust/WorkbookPreviewSection";
+import { CertificatePreviewSection } from "@/components/site/trust/CertificatePreviewSection";
+import { FounderCredibilitySection } from "@/components/site/trust/FounderCredibilitySection";
+import { FaqSection } from "@/components/site/trust/FaqSection";
 
 const settingsQuery = queryOptions({
   queryKey: ["public-settings"],
@@ -80,7 +87,6 @@ function ProgrammePage() {
   const { data: outline } = useSuspenseQuery(outlineQuery);
 
   const pricePaise = readNumber(settings, "course_price_paise");
-  const gstRate = readNumber(settings, "gst_rate_percent");
   const accessDays = readNumber(settings, "access_duration_days");
   const passPercent = readNumber(settings, "exam_pass_percent");
   const examMinutes = readNumber(settings, "exam_duration_minutes");
@@ -91,7 +97,7 @@ function ProgrammePage() {
 
   return (
     <SiteLayout>
-      {/* Hero */}
+      {/* 1 & 2. Hero & Programme Fee & Statistics */}
       <section className="relative overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground">
         <div
           aria-hidden
@@ -149,7 +155,7 @@ function ProgrammePage() {
 
             <dl className="mt-14 grid max-w-xl grid-cols-3 divide-x divide-sidebar-border border-t border-sidebar-border pt-8">
               {[
-                { label: "Modules", value: modules.length || "—" },
+                { label: "Modules", value: modules.length || "11" },
                 { label: "Access", value: `${accessDays} days` },
                 { label: "Pass mark", value: `${passPercent}%` },
               ].map((stat, i) => (
@@ -214,7 +220,7 @@ function ProgrammePage() {
         </div>
       </section>
 
-      {/* Journey */}
+      {/* 3. How certification works */}
       <section className="container-page py-20">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
@@ -248,19 +254,28 @@ function ProgrammePage() {
         </ol>
       </section>
 
-      {/* Curriculum preview */}
+      {/* 4. Who the programme is for */}
+      <AudienceSection />
+
+      {/* 5. What learners will learn */}
+      <LearningOutcomesSection />
+
+      {/* 6. Why choose YBB */}
+      <WhyYbbSection />
+
+      {/* 7. Curriculum preview */}
       {modules.length > 0 && (
         <section className="border-y border-border bg-secondary/50 py-20">
           <div className="container-page">
             <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                  Curriculum
-                </p>
-                <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{outline?.course.title}</h2>
-                {outline?.course.subtitle && (
-                  <p className="mt-4 text-muted-foreground">{outline.course.subtitle}</p>
-                )}
-              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                Curriculum
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{outline?.course.title}</h2>
+              {outline?.course.subtitle && (
+                <p className="mt-4 text-muted-foreground">{outline.course.subtitle}</p>
+              )}
+            </div>
 
             <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {modules.slice(0, 5).map((module, index) => (
@@ -280,7 +295,6 @@ function ProgrammePage() {
                 </article>
               ))}
 
-              {/* 6th slot — View full curriculum CTA */}
               <Link
                 to="/curriculum"
                 className="group flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-card p-6 shadow-soft transition-colors hover:border-accent hover:bg-accent/5"
@@ -297,38 +311,25 @@ function ProgrammePage() {
         </section>
       )}
 
-      {/* Assurance */}
-      <section className="container-page grid gap-6 py-20 md:grid-cols-3">
-        {[
-          {
-            icon: ShieldCheck,
-            title: "Verifiable credential",
-            body: "Each certificate carries a unique ABB ID that clients and employers can verify on this site at any time.",
-          },
-          {
-            icon: CalendarClock,
-            title: "Learn on your schedule",
-            body: `Progress is saved lesson by lesson, and your enrolment stays open for ${accessDays} days.`,
-          },
-          {
-            icon: FileCheck2,
-            title: "Assessed, not attended",
-            body: "Assignments are reviewed by YBB and the final exam is timed and randomised for every attempt.",
-          },
-        ].map((item) => (
-          <div
-            key={item.title}
-            className="rounded-2xl border border-border bg-card p-7 shadow-soft"
-          >
-            <item.icon className="size-6 text-accent" />
-            <h3 className="mt-5 text-lg font-semibold">{item.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-          </div>
-        ))}
-      </section>
+      {/* 8. Certification standards */}
+      <CertificationStandardsSection />
 
-      {/* CTA */}
-      <section className="container-page pb-8">
+      {/* 9. Workbook preview */}
+      <WorkbookPreviewSection />
+
+      {/* 10. Sample certificate and public verification */}
+      <CertificatePreviewSection />
+
+      {/* 11. Founder and YBB credibility */}
+      <FounderCredibilitySection />
+
+      {/* 12. Learner Testimonials (Intentionally omitted until real cohort results are available) */}
+
+      {/* 13. Frequently asked questions */}
+      <FaqSection />
+
+      {/* 14. Final enrolment call-to-action */}
+      <section className="container-page py-16">
         <div className="overflow-hidden rounded-3xl bg-primary px-8 py-14 text-primary-foreground sm:px-14">
           <div className="max-w-2xl">
             <h2 className="text-3xl font-semibold sm:text-4xl">
@@ -355,3 +356,4 @@ function ProgrammePage() {
     </SiteLayout>
   );
 }
+
