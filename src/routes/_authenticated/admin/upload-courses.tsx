@@ -244,17 +244,28 @@ export function UploadCoursesPage() {
 
   const handleFilesSelected = (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const newTasks: UploadTask[] = Array.from(files).map((f) => ({
-      id: `${f.name}-${Date.now()}-${Math.random()}`,
-      file: f,
-      name: f.name,
-      size: f.size,
-      progress: 0,
-      status: "waiting",
-    }));
+    const MAX_SIZE_BYTES = 5 * 1024 * 1024 * 1024; // 5 GB
+    const validTasks: UploadTask[] = [];
 
-    setUploadTasks((prev) => [...prev, ...newTasks]);
-    setIsUploadOpen(true);
+    Array.from(files).forEach((f) => {
+      if (f.size > MAX_SIZE_BYTES) {
+        toast.error(`"${f.name}" exceeds the 5 GB maximum upload size limit.`);
+        return;
+      }
+      validTasks.push({
+        id: `${f.name}-${Date.now()}-${Math.random()}`,
+        file: f,
+        name: f.name,
+        size: f.size,
+        progress: 0,
+        status: "waiting",
+      });
+    });
+
+    if (validTasks.length > 0) {
+      setUploadTasks((prev) => [...prev, ...validTasks]);
+      setIsUploadOpen(true);
+    }
   };
 
   const executeUploadQueue = async () => {
@@ -591,24 +602,33 @@ export function UploadCoursesPage() {
             e.preventDefault();
             handleFilesSelected(e.dataTransfer.files);
           }}
-          className="group relative overflow-hidden rounded-2xl border-2 border-dashed border-border/80 bg-card/40 p-6 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
+          className="group relative overflow-hidden rounded-2xl border-2 border-dashed border-border/80 bg-card/40 p-6 sm:p-8 text-center transition-all hover:border-primary/50 hover:bg-primary/5"
         >
-          <div className="flex flex-col items-center justify-center gap-2">
+          <div className="flex flex-col items-center justify-center gap-2.5">
             <div className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary transition-transform group-hover:scale-105">
               <UploadCloud className="size-6" />
             </div>
-            <p className="text-sm font-semibold text-foreground">
-              Drag & Drop course videos or files here
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Supports MP4, WebM, MOV, MKV, and other video formats. Uploads directly to Cloudflare
-              R2 at full speed.
-            </p>
+
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-foreground sm:text-base">
+                Drag & Drop course videos or files here
+              </p>
+              <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                Supports MP4, WebM, MOV, MKV, and course materials. Uploads stream directly to
+                Cloudflare R2 at maximum bandwidth.
+              </p>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-semibold text-primary">
+              <Sparkles className="size-3.5" />
+              Maximum Upload Size: 5 GB per file
+            </div>
+
             <Button
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              className="mt-2 text-xs rounded-xl"
+              className="mt-1 text-xs rounded-xl"
             >
               Browse Computer
             </Button>
@@ -1027,8 +1047,9 @@ export function UploadCoursesPage() {
               <UploadCloud className="size-5 text-primary" />
               Upload Queue ({uploadTasks.length} {uploadTasks.length === 1 ? "file" : "files"})
             </DialogTitle>
-            <DialogDescription className="truncate">
-              Target path: <code className="font-mono">{currentPrefix || "root/"}</code>
+            <DialogDescription className="truncate text-xs">
+              Target: <code className="font-mono">{currentPrefix || "root/"}</code> • Direct
+              Cloudflare R2 Upload (Max 5 GB per file)
             </DialogDescription>
           </DialogHeader>
 
