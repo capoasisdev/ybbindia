@@ -56,6 +56,7 @@ import {
   getUploadPresignedUrlFn,
   deleteR2FileFn,
   deleteR2FolderFn,
+  configureR2CorsFn,
   getCourseLessonsList,
   attachVideoToLessonFn,
   type LessonOption,
@@ -173,8 +174,11 @@ export function UploadCoursesPage() {
   const getPresignedUrl = useServerFn(getUploadPresignedUrlFn);
   const deleteFile = useServerFn(deleteR2FileFn);
   const deleteFolder = useServerFn(deleteR2FolderFn);
+  const configureCors = useServerFn(configureR2CorsFn);
   const fetchLessons = useServerFn(getCourseLessonsList);
   const attachToLesson = useServerFn(attachVideoToLessonFn);
+
+  const [isConfiguringCors, setIsConfiguringCors] = useState(false);
 
   // Queries
   const { data: status, isLoading: isStatusLoading } = useQuery({
@@ -199,6 +203,19 @@ export function UploadCoursesPage() {
   const refreshAll = () => {
     queryClient.invalidateQueries({ queryKey: ["r2-listing"] });
     queryClient.invalidateQueries({ queryKey: ["r2-status"] });
+  };
+
+  const handleConfigureCors = async () => {
+    setIsConfiguringCors(true);
+    try {
+      const res = await configureCors({ data: { allowedOrigins: ["*"] } });
+      toast.success(res.message || "CORS policy configured successfully!");
+      refreshAll();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to configure CORS on R2 bucket");
+    } finally {
+      setIsConfiguringCors(false);
+    }
   };
 
   // Breadcrumbs
@@ -319,7 +336,12 @@ export function UploadCoursesPage() {
             }
           };
 
-          xhr.onerror = () => reject(new Error("Network error during upload"));
+          xhr.onerror = () =>
+            reject(
+              new Error(
+                "Upload blocked: CORS or network error. Please ensure CORS is enabled on your Cloudflare R2 bucket.",
+              ),
+            );
           xhr.onabort = () => reject(new Error("Upload aborted"));
 
           xhr.send(task.file);
@@ -411,10 +433,39 @@ export function UploadCoursesPage() {
                 Upload Courses
               </h1>
               {status?.isConfigured ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                  <ShieldCheck className="size-3.5" />
-                  R2 Connected ({status.bucketName})
-                </span>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                    <ShieldCheck className="size-3.5" />
+                    R2 Connected ({status.bucketName})
+                  </span>
+                  {status.isCorsConfigured ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                      <Check className="size-3" /> CORS Active
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleConfigureCors}
+                      disabled={isConfiguringCors}
+                      className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-semibold text-amber-700 hover:bg-amber-500/25 dark:text-amber-300 transition-colors"
+                      title="Click to automatically configure CORS on your Cloudflare R2 bucket"
+                    >
+                      {isConfiguringCors ? (
+                        <Loader2 className="size-3 animate-spin" />
+                      ) : (
+                        <AlertTriangle className="size-3" />
+                      )}
+                      Configure CORS
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsConfigGuideOpen(true)}
+                    className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+                  >
+                    <Info className="size-3" /> Guide
+                  </button>
+                </div>
               ) : (
                 <button
                   type="button"
@@ -1338,6 +1389,52 @@ R2_PUBLIC_DOMAIN="https://pub-xxxxxx.r2.dev" # (Optional: your public dev or cus
                 domain (e.g. <code className="font-mono">https://media.ybbindia.com</code>) and set
                 it as <code className="font-mono">R2_PUBLIC_DOMAIN</code>.
               </p>
+            </div>
+
+            <div className="space-y-2 rounded-xl border border-primary/20 bg-primary/5 p-3.5">
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                  <ShieldCheck className="size-4 text-primary" />
+                  5. Configure CORS Policy (Required for Direct Browser Uploads)
+                </h4>
+              </div>
+              <p>
+                Direct uploads from the browser (e.g. from localhost or your production web domain)
+                require a CORS rule on the R2 bucket.
+              </p>
+              <div className="pt-1 flex flex-wrap items-center gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleConfigureCors}
+                  disabled={isConfiguringCors}
+                  className="gap-1.5 text-xs"
+                >
+                  {isConfiguringCors ? (
+                    <Loader2 className="size-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="size-3.5" />
+                  )}
+                  Auto-Configure CORS Policy Now
+                </Button>
+              </div>
+              <div className="pt-1">
+                <p className="text-[11px] text-muted-foreground">
+                  Or in Cloudflare Dashboard: Bucket &rarr; <strong>Settings</strong> &rarr;{" "}
+                  <strong>CORS Policy</strong> &rarr; Paste:
+                </p>
+                <pre className="mt-1 rounded-lg bg-background p-2.5 font-mono text-[10px] text-foreground overflow-x-auto border border-border">
+{`[
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["GET", "PUT", "POST", "HEAD", "DELETE"],
+    "AllowedHeaders": ["*"],
+    "ExposeHeaders": ["ETag", "Content-Type", "Content-Length"],
+    "MaxAgeSeconds": 86400
+  }
+]`}
+                </pre>
+              </div>
             </div>
           </div>
 

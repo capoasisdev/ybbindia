@@ -5,8 +5,43 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
+  PutBucketCorsCommand,
+  GetBucketCorsCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import fs from "node:fs";
+import path from "node:path";
+
+function readEnvFile(): Record<string, string> {
+  try {
+    const envPath = path.resolve(process.cwd(), ".env");
+    if (!fs.existsSync(envPath)) return {};
+    const content = fs.readFileSync(envPath, "utf8");
+    const result: Record<string, string> = {};
+    for (const line of content.split(/\r?\n/)) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx === -1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      let val = trimmed.slice(eqIdx + 1).trim();
+      if (!val.startsWith('"') && !val.startsWith("'")) {
+        const hashIdx = val.indexOf("#");
+        if (hashIdx !== -1) val = val.slice(0, hashIdx).trim();
+      } else if (val.startsWith('"')) {
+        const endQuote = val.indexOf('"', 1);
+        if (endQuote !== -1) val = val.slice(1, endQuote);
+      } else if (val.startsWith("'")) {
+        const endQuote = val.indexOf("'", 1);
+        if (endQuote !== -1) val = val.slice(1, endQuote);
+      }
+      result[key] = val;
+    }
+    return result;
+  } catch {
+    return {};
+  }
+}
 
 export type R2Config = {
   accountId: string;
@@ -42,12 +77,53 @@ export type R2FolderListing = {
 };
 
 export function getR2Config(): R2Config | null {
-  const accountId = process.env.R2_ACCOUNT_ID || process.env.CLOUDFLARE_R2_ACCOUNT_ID;
-  const accessKeyId = process.env.R2_ACCESS_KEY_ID || process.env.CLOUDFLARE_R2_ACCESS_KEY_ID;
-  const secretAccessKey =
-    process.env.R2_SECRET_ACCESS_KEY || process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY;
-  const bucketName = process.env.R2_BUCKET_NAME || process.env.CLOUDFLARE_R2_BUCKET_NAME;
-  const publicDomain = process.env.R2_PUBLIC_DOMAIN || process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN;
+  const fileEnv = readEnvFile();
+
+  const accountId = (
+    fileEnv.R2_ACCOUNT_ID ||
+    process.env.R2_ACCOUNT_ID ||
+    fileEnv.CLOUDFLARE_R2_ACCOUNT_ID ||
+    process.env.CLOUDFLARE_R2_ACCOUNT_ID
+  )?.trim();
+
+  const accessKeyId = (
+    fileEnv.R2_ACCESS_KEY_ID ||
+    process.env.R2_ACCESS_KEY_ID ||
+    fileEnv.CLOUDFLARE_R2_ACCESS_KEY_ID ||
+    process.env.CLOUDFLARE_R2_ACCESS_KEY_ID
+  )?.trim();
+
+  const secretAccessKey = (
+    fileEnv.R2_SECRET_ACCESS_KEY ||
+    process.env.R2_SECRET_ACCESS_KEY ||
+    fileEnv.CLOUDFLARE_R2_SECRET_ACCESS_KEY ||
+    process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY
+  )?.trim();
+
+  const bucketName = (
+    fileEnv.R2_BUCKET_NAME ||
+    process.env.R2_BUCKET_NAME ||
+    fileEnv.CLOUDFLARE_R2_BUCKET_NAME ||
+    process.env.CLOUDFLARE_R2_BUCKET_NAME
+  )?.trim();
+
+  let publicDomain = (
+    fileEnv.R2_PUBLIC_DOMAIN ||
+    process.env.R2_PUBLIC_DOMAIN ||
+    fileEnv.CLOUDFLARE_R2_PUBLIC_DOMAIN ||
+    process.env.CLOUDFLARE_R2_PUBLIC_DOMAIN
+  )?.trim();
+
+  if (publicDomain) {
+    // Strip surrounding quotes
+    publicDomain = publicDomain.replace(/^["']|["']$/g, "").trim();
+    // Strip trailing slashes
+    publicDomain = publicDomain.replace(/\/+$/, "");
+    // Ensure protocol
+    if (publicDomain && !publicDomain.startsWith("http://") && !publicDomain.startsWith("https://")) {
+      publicDomain = `https://${publicDomain}`;
+    }
+  }
 
   if (!accountId || !accessKeyId || !secretAccessKey || !bucketName) {
     return null;
@@ -58,7 +134,7 @@ export function getR2Config(): R2Config | null {
     accessKeyId,
     secretAccessKey,
     bucketName,
-    publicDomain: publicDomain ? publicDomain.replace(/\/+$/, "") : undefined,
+    publicDomain: publicDomain || undefined,
   };
 }
 
@@ -91,18 +167,23 @@ export function getR2Client(): { client: S3Client; config: R2Config } {
 
 export function isPublicWebDomain(domain?: string): boolean {
   if (!domain) return false;
-  // If it's the S3 API endpoint, it requires AWS SigV4 auth, not open web access
+  // If it's the internal S3 API endpoint, it requires AWS SigV4 auth, not open web access
   if (domain.includes(".r2.cloudflarestorage.com")) return false;
   return domain.startsWith("http://") || domain.startsWith("https://");
 }
 
 export function buildPublicUrl(key: string, config: R2Config): string {
+  const cleanKey = key.replace(/^\/+/, "");
+  const encodedKey = cleanKey
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+
   if (config.publicDomain && isPublicWebDomain(config.publicDomain)) {
     const cleanDomain = config.publicDomain.replace(/\/+$/, "");
-    const cleanKey = key.replace(/^\/+/, "");
-    return `${cleanDomain}/${encodeURI(cleanKey)}`;
+    return `${cleanDomain}/${encodedKey}`;
   }
-  return `https://${config.accountId}.r2.cloudflarestorage.com/${config.bucketName}/${encodeURI(key)}`;
+  return `https://${config.accountId}.r2.cloudflarestorage.com/${config.bucketName}/${encodedKey}`;
 }
 
 const VIDEO_EXTENSIONS = new Set(["mp4", "webm", "mov", "m4v", "mkv", "avi", "flv", "wmv"]);
@@ -309,3 +390,49 @@ export async function deleteFolderFromR2(
 
   return { ok: true, deletedCount: objectsToDelete.length };
 }
+
+export async function configureR2Cors(
+  allowedOrigins: string[] = ["*"],
+): Promise<{ success: boolean; message: string }> {
+  const { client, config } = getR2Client();
+  const command = new PutBucketCorsCommand({
+    Bucket: config.bucketName,
+    CORSConfiguration: {
+      CORSRules: [
+        {
+          AllowedHeaders: ["*"],
+          AllowedMethods: ["GET", "PUT", "POST", "HEAD", "DELETE"],
+          AllowedOrigins: allowedOrigins.length > 0 ? allowedOrigins : ["*"],
+          ExposeHeaders: ["ETag", "Content-Type", "Content-Length"],
+          MaxAgeSeconds: 86400,
+        },
+      ],
+    },
+  });
+
+  await client.send(command);
+  return {
+    success: true,
+    message: `CORS policy successfully configured for bucket "${config.bucketName}".`,
+  };
+}
+
+export async function checkR2Cors(): Promise<{ isCorsConfigured: boolean; rules?: any[] }> {
+  const { client, config } = getR2Client();
+  try {
+    const command = new GetBucketCorsCommand({
+      Bucket: config.bucketName,
+    });
+    const res = await client.send(command);
+    return {
+      isCorsConfigured: (res.CORSRules?.length ?? 0) > 0,
+      rules: res.CORSRules,
+    };
+  } catch (err: any) {
+    if (err.name === "NoSuchCORSConfiguration") {
+      return { isCorsConfigured: false, rules: [] };
+    }
+    return { isCorsConfigured: false, rules: [] };
+  }
+}
+

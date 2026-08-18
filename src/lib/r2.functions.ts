@@ -7,6 +7,8 @@ import {
   generateUploadPresignedUrl,
   deleteFileFromR2,
   deleteFolderFromR2,
+  configureR2Cors,
+  checkR2Cors,
   type R2FolderListing,
 } from "./r2.server";
 
@@ -24,12 +26,31 @@ export const getR2Status = createServerFn({ method: "GET" })
     await assertAdmin(supabase, userId);
 
     const config = getR2Config();
+    let isCorsConfigured = false;
+    if (config) {
+      const cors = await checkR2Cors();
+      isCorsConfigured = cors.isCorsConfigured;
+    }
+
     return {
       isConfigured: Boolean(config),
       bucketName: config?.bucketName ?? null,
       publicDomain: config?.publicDomain ?? null,
       accountIdMasked: config?.accountId ? `${config.accountId.slice(0, 6)}...` : null,
+      isCorsConfigured,
     };
+  });
+
+export const configureR2CorsFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { allowedOrigins?: string[] } | undefined) => {
+    return { allowedOrigins: input?.allowedOrigins ?? ["*"] };
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+
+    return await configureR2Cors(data.allowedOrigins);
   });
 
 export const listR2Items = createServerFn({ method: "GET" })
