@@ -22,6 +22,7 @@ export type R2Item = {
   size: number;
   lastModified: string | null;
   publicUrl: string;
+  previewUrl: string;
   isFolder: boolean;
   contentType?: string;
   extension: string;
@@ -88,8 +89,15 @@ export function getR2Client(): { client: S3Client; config: R2Config } {
   return { client: cachedS3Client, config };
 }
 
+export function isPublicWebDomain(domain?: string): boolean {
+  if (!domain) return false;
+  // If it's the S3 API endpoint, it requires AWS SigV4 auth, not open web access
+  if (domain.includes(".r2.cloudflarestorage.com")) return false;
+  return domain.startsWith("http://") || domain.startsWith("https://");
+}
+
 export function buildPublicUrl(key: string, config: R2Config): string {
-  if (config.publicDomain) {
+  if (config.publicDomain && isPublicWebDomain(config.publicDomain)) {
     const cleanDomain = config.publicDomain.replace(/\/+$/, "");
     const cleanKey = key.replace(/^\/+/, "");
     return `${cleanDomain}/${encodeURI(cleanKey)}`;
@@ -110,6 +118,16 @@ export function sanitizePrefix(prefix: string): string {
     clean += "/";
   }
   return clean;
+}
+
+export async function generateDownloadPresignedUrl(key: string): Promise<string> {
+  const { client, config } = getR2Client();
+  const command = new GetObjectCommand({
+    Bucket: config.bucketName,
+    Key: key,
+  });
+  // 7-day expiration for streaming preview
+  return getSignedUrl(client, command, { expiresIn: 604800 });
 }
 
 export async function listR2FolderContents(prefix: string = ""): Promise<R2FolderListing> {
@@ -150,17 +168,19 @@ export async function listR2FolderContents(prefix: string = ""): Promise<R2Folde
     .filter((f) => Boolean(f.name));
 
   // Files from Contents
-  const files: R2Item[] = (response.Contents ?? [])
-    .filter((item) => {
-      const key = item.Key ?? "";
-      // Exclude folder marker itself or subfolder items
-      return key !== cleanPrefix && !key.endsWith("/");
-    })
-    .map((item) => {
+  const rawFiles = (response.Contents ?? []).filter((item) => {
+    const key = item.Key ?? "";
+    return key !== cleanPrefix && !key.endsWith("/");
+  });
+
+  // Generate signed preview URLs in parallel so videos stream immediately
+  const files: R2Item[] = await Promise.all(
+    rawFiles.map(async (item) => {
       const key = item.Key ?? "";
       const name = key.slice(cleanPrefix.length);
       const ext = name.split(".").pop()?.toLowerCase() ?? "";
       const isVideo = isVideoFile(name);
+      const previewUrl = await generateDownloadPresignedUrl(key);
 
       return {
         key,
@@ -168,11 +188,13 @@ export async function listR2FolderContents(prefix: string = ""): Promise<R2Folde
         size: item.Size ?? 0,
         lastModified: item.LastModified ? item.LastModified.toISOString() : null,
         publicUrl: buildPublicUrl(key, config),
+        previewUrl,
         isFolder: false,
         extension: ext,
         isVideo,
       };
-    });
+    }),
+  );
 
   return {
     currentPrefix: cleanPrefix,
@@ -241,15 +263,6 @@ export async function generateUploadPresignedUrl(
     key,
     publicUrl,
   };
-}
-
-export async function generateDownloadPresignedUrl(key: string): Promise<string> {
-  const { client, config } = getR2Client();
-  const command = new GetObjectCommand({
-    Bucket: config.bucketName,
-    Key: key,
-  });
-  return getSignedUrl(client, command, { expiresIn: 86400 });
 }
 
 export async function deleteFileFromR2(key: string): Promise<{ ok: boolean }> {

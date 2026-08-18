@@ -26,7 +26,6 @@ import {
   AlertTriangle,
   Info,
   Loader2,
-  X,
   Link2,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -151,7 +150,11 @@ export function UploadCoursesPage() {
   const [uploadTasks, setUploadTasks] = useState<UploadTask[]>([]);
   const [isUploadingAny, setIsUploadingAny] = useState(false);
 
-  const [previewVideo, setPreviewVideo] = useState<{ url: string; title: string } | null>(null);
+  const [previewVideo, setPreviewVideo] = useState<{
+    url: string;
+    publicUrl: string;
+    title: string;
+  } | null>(null);
   const [assignVideo, setAssignVideo] = useState<{ url: string; name: string } | null>(null);
   const [selectedLessonId, setSelectedLessonId] = useState<string>("");
   const [isConfigGuideOpen, setIsConfigGuideOpen] = useState(false);
@@ -183,7 +186,6 @@ export function UploadCoursesPage() {
     data: listing,
     isLoading: isListingLoading,
     isFetching: isListingFetching,
-    refetch: refetchListing,
   } = useQuery({
     queryKey: ["r2-listing", currentPrefix],
     queryFn: () => fetchListing({ data: { prefix: currentPrefix } }),
@@ -722,7 +724,11 @@ export function UploadCoursesPage() {
                           <button
                             type="button"
                             onClick={() =>
-                              setPreviewVideo({ url: file.publicUrl, title: file.name })
+                              setPreviewVideo({
+                                url: file.previewUrl || file.publicUrl,
+                                publicUrl: file.publicUrl,
+                                title: file.name,
+                              })
                             }
                             className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"
                           >
@@ -759,7 +765,11 @@ export function UploadCoursesPage() {
                                 size="sm"
                                 className="h-7 flex-1 text-[11px] rounded-lg gap-1 px-2"
                                 onClick={() =>
-                                  setPreviewVideo({ url: file.publicUrl, title: file.name })
+                                  setPreviewVideo({
+                                    url: file.previewUrl || file.publicUrl,
+                                    publicUrl: file.publicUrl,
+                                    title: file.name,
+                                  })
                                 }
                               >
                                 <Play className="size-3" />
@@ -771,7 +781,10 @@ export function UploadCoursesPage() {
                                 size="sm"
                                 className="h-7 text-[11px] rounded-lg gap-1 px-2 text-primary"
                                 onClick={() =>
-                                  setAssignVideo({ url: file.publicUrl, name: file.name })
+                                  setAssignVideo({
+                                    url: file.publicUrl,
+                                    name: file.name,
+                                  })
                                 }
                                 title="Attach to Lesson"
                               >
@@ -786,7 +799,7 @@ export function UploadCoursesPage() {
                             size="icon"
                             className="size-7 rounded-lg text-muted-foreground hover:text-foreground"
                             onClick={() => handleCopyUrl(file.publicUrl, file.key)}
-                            title="Copy Public URL"
+                            title="Copy Storage URL"
                           >
                             {copiedKey === file.key ? (
                               <Check className="size-3.5 text-emerald-500" />
@@ -895,7 +908,11 @@ export function UploadCoursesPage() {
                                 size="sm"
                                 className="h-7 text-xs gap-1"
                                 onClick={() =>
-                                  setPreviewVideo({ url: file.publicUrl, title: file.name })
+                                  setPreviewVideo({
+                                    url: file.previewUrl || file.publicUrl,
+                                    publicUrl: file.publicUrl,
+                                    title: file.name,
+                                  })
                                 }
                               >
                                 <Play className="size-3" /> Preview
@@ -905,7 +922,10 @@ export function UploadCoursesPage() {
                                 size="sm"
                                 className="h-7 text-xs gap-1 text-primary"
                                 onClick={() =>
-                                  setAssignVideo({ url: file.publicUrl, name: file.name })
+                                  setAssignVideo({
+                                    url: file.publicUrl,
+                                    name: file.name,
+                                  })
                                 }
                               >
                                 <Link2 className="size-3" /> Assign
@@ -953,7 +973,7 @@ export function UploadCoursesPage() {
 
       {/* Create Folder Modal */}
       <Dialog open={isCreateFolderOpen} onOpenChange={setIsCreateFolderOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-full max-w-md overflow-hidden sm:rounded-2xl p-6">
           <form onSubmit={handleCreateFolder}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
@@ -965,7 +985,7 @@ export function UploadCoursesPage() {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-4 py-4">
+            <div className="space-y-4 py-4 min-w-0 max-w-full">
               <div className="space-y-2">
                 <Label htmlFor="folder-name">Folder Name</Label>
                 <Input
@@ -978,16 +998,16 @@ export function UploadCoursesPage() {
                 />
               </div>
 
-              <div className="rounded-xl bg-muted p-3 text-xs text-muted-foreground">
+              <div className="rounded-xl bg-muted p-3 text-xs text-muted-foreground min-w-0 max-w-full overflow-hidden">
                 <span className="font-medium text-foreground">Target path:</span>{" "}
-                <code className="font-mono">
+                <code className="font-mono break-all whitespace-normal">
                   {currentPrefix || "root/"}
                   {newFolderName || "new-folder"}/
                 </code>
               </div>
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-2">
               <Button type="button" variant="outline" onClick={() => setIsCreateFolderOpen(false)}>
                 Cancel
               </Button>
@@ -1001,22 +1021,25 @@ export function UploadCoursesPage() {
 
       {/* Upload Queue Modal */}
       <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
-        <DialogContent className="sm:max-w-xl max-h-[85vh] flex flex-col">
+        <DialogContent className="w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden sm:rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <UploadCloud className="size-5 text-primary" />
               Upload Queue ({uploadTasks.length} {uploadTasks.length === 1 ? "file" : "files"})
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="truncate">
               Target path: <code className="font-mono">{currentPrefix || "root/"}</code>
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1">
+          <div className="flex-1 overflow-y-auto space-y-3 py-3 pr-1 min-w-0 max-w-full">
             {uploadTasks.map((task) => (
-              <div key={task.id} className="rounded-xl border border-border bg-card p-3 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 min-w-0 max-w-[70%]">
+              <div
+                key={task.id}
+                className="rounded-xl border border-border bg-card p-3 space-y-2 min-w-0 max-w-full"
+              >
+                <div className="flex items-center justify-between text-xs gap-2">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
                     {getFileIcon(task.name.split(".").pop() || "", task.name.endsWith(".mp4"))}
                     <span className="font-semibold text-foreground truncate">{task.name}</span>
                   </div>
@@ -1047,7 +1070,7 @@ export function UploadCoursesPage() {
             ))}
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-2 border-t border-border">
             <Button
               type="button"
               variant="outline"
@@ -1088,23 +1111,25 @@ export function UploadCoursesPage() {
 
       {/* Video Preview Modal */}
       <Dialog open={Boolean(previewVideo)} onOpenChange={() => setPreviewVideo(null)}>
-        <DialogContent className="sm:max-w-3xl p-0 overflow-hidden bg-black/95 text-white">
-          <div className="relative aspect-video w-full bg-black">
+        <DialogContent className="w-full max-w-3xl p-0 overflow-hidden bg-black/95 text-white sm:rounded-2xl border border-border/40">
+          <div className="relative aspect-video w-full bg-black flex items-center justify-center">
             {previewVideo && (
               <video
+                key={previewVideo.url}
                 src={previewVideo.url}
                 controls
                 autoPlay
-                className="size-full object-contain"
+                playsInline
+                className="size-full max-h-[65vh] object-contain"
               />
             )}
           </div>
 
-          <div className="p-4 bg-card text-foreground flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div className="min-w-0">
+          <div className="p-4 bg-card text-foreground flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 min-w-0 max-w-full">
+            <div className="min-w-0 max-w-full flex-1">
               <h3 className="font-semibold text-sm truncate">{previewVideo?.title}</h3>
               <p className="text-xs text-muted-foreground font-mono truncate mt-0.5">
-                {previewVideo?.url}
+                {previewVideo?.publicUrl || previewVideo?.url}
               </p>
             </div>
 
@@ -1113,7 +1138,8 @@ export function UploadCoursesPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  if (previewVideo) handleCopyUrl(previewVideo.url, "preview");
+                  if (previewVideo)
+                    handleCopyUrl(previewVideo.publicUrl || previewVideo.url, "preview");
                 }}
                 className="gap-1.5 text-xs"
               >
@@ -1124,7 +1150,10 @@ export function UploadCoursesPage() {
                 size="sm"
                 onClick={() => {
                   if (previewVideo) {
-                    setAssignVideo({ url: previewVideo.url, name: previewVideo.title });
+                    setAssignVideo({
+                      url: previewVideo.publicUrl || previewVideo.url,
+                      name: previewVideo.title,
+                    });
                     setPreviewVideo(null);
                   }
                 }}
@@ -1140,10 +1169,10 @@ export function UploadCoursesPage() {
 
       {/* Assign Video to Lesson Modal */}
       <Dialog open={Boolean(assignVideo)} onOpenChange={() => setAssignVideo(null)}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="w-full max-w-lg overflow-hidden sm:rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Link2 className="size-5 text-primary" />
+              <Link2 className="size-5 text-primary shrink-0" />
               Attach Video to Lesson
             </DialogTitle>
             <DialogDescription>
@@ -1151,22 +1180,24 @@ export function UploadCoursesPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-3">
-            <div className="rounded-xl border border-border bg-muted/40 p-3">
+          <div className="space-y-4 py-3 min-w-0 max-w-full">
+            <div className="rounded-xl border border-border bg-muted/40 p-3.5 min-w-0 max-w-full overflow-hidden">
               <p className="text-xs font-semibold text-foreground">Selected Video:</p>
-              <p className="text-xs text-muted-foreground truncate mt-0.5">{assignVideo?.name}</p>
-              <p className="text-[11px] font-mono text-muted-foreground/80 truncate mt-1">
+              <p className="text-xs font-medium text-muted-foreground truncate mt-0.5">
+                {assignVideo?.name}
+              </p>
+              <p className="text-[11px] font-mono text-muted-foreground/80 break-all whitespace-normal select-all mt-1.5 bg-background/60 p-2 rounded-lg border border-border/50">
                 {assignVideo?.url}
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 min-w-0 max-w-full">
               <Label htmlFor="lesson-select">Choose Lesson</Label>
               <Select value={selectedLessonId} onValueChange={setSelectedLessonId}>
-                <SelectTrigger id="lesson-select" className="w-full text-xs">
+                <SelectTrigger id="lesson-select" className="w-full max-w-full text-xs min-w-0">
                   <SelectValue placeholder="Select target lesson…" />
                 </SelectTrigger>
-                <SelectContent className="max-h-72">
+                <SelectContent className="max-h-72 max-w-md">
                   {lessonOptions.map((lesson) => (
                     <SelectItem key={lesson.lessonId} value={lesson.lessonId} className="text-xs">
                       <span className="font-semibold text-primary/80 mr-1.5">
@@ -1180,7 +1211,7 @@ export function UploadCoursesPage() {
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-2 border-t border-border">
             <Button
               type="button"
               variant="outline"
@@ -1200,13 +1231,13 @@ export function UploadCoursesPage() {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={Boolean(deleteTarget)} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="w-full max-w-md overflow-hidden sm:rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
               <Trash2 className="size-5" />
               Confirm Deletion
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="break-words">
               Are you sure you want to delete <strong>"{deleteTarget?.name}"</strong>?
               {deleteTarget?.type === "folder" && (
                 <span className="block text-rose-500 mt-1 font-semibold">
@@ -1217,7 +1248,7 @@ export function UploadCoursesPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <DialogFooter>
+          <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => setDeleteTarget(null)}>
               Cancel
             </Button>
@@ -1230,7 +1261,7 @@ export function UploadCoursesPage() {
 
       {/* Cloudflare R2 Setup Guide Modal */}
       <Dialog open={isConfigGuideOpen} onOpenChange={setIsConfigGuideOpen}>
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="w-full max-w-xl overflow-hidden sm:rounded-2xl p-6">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Sparkles className="size-5 text-primary" />
@@ -1271,24 +1302,25 @@ export function UploadCoursesPage() {
 R2_ACCESS_KEY_ID="your_r2_access_key_id"
 R2_SECRET_ACCESS_KEY="your_r2_secret_access_key"
 R2_BUCKET_NAME="ybbindia-courses"
-R2_PUBLIC_DOMAIN="https://pub-xxxxxx.r2.dev" # (Optional public dev or custom domain)`}
+R2_PUBLIC_DOMAIN="https://pub-xxxxxx.r2.dev" # (Optional: your public dev or custom domain)`}
               </pre>
             </div>
 
             <div className="space-y-2">
               <h4 className="font-semibold text-foreground text-sm">
-                4. Enable Public Access or Custom Domain (Optional)
+                4. Enable Public Access or Custom Domain (Recommended for streaming)
               </h4>
               <p>
-                In your bucket settings, under <strong>Settings</strong> &rarr;{" "}
-                <strong>Public Access</strong>, you can enable the R2.dev subdomain or attach a
-                custom domain like <code className="font-mono">media.ybbindia.com</code> for
-                seamless student video streaming.
+                In your Cloudflare R2 bucket settings, under <strong>Settings</strong> &rarr;{" "}
+                <strong>Public Access</strong>, enable <strong>R2.dev subdomain</strong> (e.g.{" "}
+                <code className="font-mono">https://pub-xxx.r2.dev</code>) or connect your custom
+                domain (e.g. <code className="font-mono">https://media.ybbindia.com</code>) and set
+                it as <code className="font-mono">R2_PUBLIC_DOMAIN</code>.
               </p>
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="pt-2">
             <Button type="button" onClick={() => setIsConfigGuideOpen(false)}>
               Got it
             </Button>
