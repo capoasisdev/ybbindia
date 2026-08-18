@@ -20,6 +20,7 @@ import {
   Eye,
   ShieldCheck,
   BookMarked,
+  UploadCloud,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getAdminAccess } from "@/lib/admin.functions";
@@ -29,8 +30,14 @@ import { cn } from "@/lib/utils";
 
 // Admin-facing sidebar nav
 const ADMIN_NAV = [
+  { to: "/admin/upload-courses", search: {}, label: "Upload Courses", icon: UploadCloud },
   { to: "/admin/lessons", search: { tab: "lessons" }, label: "Edit Lessons", icon: BookOpen },
-  { to: "/admin/lessons", search: { tab: "assignments" }, label: "Edit Assignments", icon: FileCheck2 },
+  {
+    to: "/admin/lessons",
+    search: { tab: "assignments" },
+    label: "Edit Assignments",
+    icon: FileCheck2,
+  },
   { to: "/admin/lessons", search: { tab: "questions" }, label: "Question Bank", icon: HelpCircle },
   { to: "/admin/reviews", search: {}, label: "Submission Reviews", icon: ClipboardCheck },
   { to: "/admin/certificates", search: {}, label: "Certificate Approvals", icon: ScrollText },
@@ -78,7 +85,9 @@ function NavLink({
           : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
       )}
       activeProps={{
-        className: mobile ? "bg-secondary text-foreground" : "bg-sidebar-accent text-sidebar-foreground",
+        className: mobile
+          ? "bg-secondary text-foreground"
+          : "bg-sidebar-accent text-sidebar-foreground",
       }}
     >
       <item.icon className="size-4 shrink-0" />
@@ -130,7 +139,7 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
 
   // Pick the appropriate nav list
   const effectiveMode = !mounted || !isStaff ? "student" : viewMode;
-  const nav: typeof ADMIN_NAV[number][] | typeof STUDENT_NAV[number][] =
+  const nav: (typeof ADMIN_NAV)[number][] | (typeof STUDENT_NAV)[number][] =
     effectiveMode === "admin" ? (ADMIN_NAV as any) : (STUDENT_NAV as any);
 
   const modeToggleBtn = isStaff ? (
@@ -139,10 +148,10 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
       className={cn(
         "mt-2 flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-all",
         effectiveMode === "admin"
-          // In admin mode: subtle ghost — switching to student is a secondary action
-          ? "border border-sidebar-border text-sidebar-foreground/60 hover:border-sidebar-foreground/20 hover:text-sidebar-foreground hover:bg-sidebar-accent"
-          // In student mode: solid bright — switching back to admin is a primary action
-          : "bg-white/10 border border-white/20 text-white hover:bg-white/20",
+          ? // In admin mode: subtle ghost — switching to student is a secondary action
+            "border border-sidebar-border text-sidebar-foreground/60 hover:border-sidebar-foreground/20 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+          : // In student mode: solid bright — switching back to admin is a primary action
+            "bg-white/10 border border-white/20 text-white hover:bg-white/20",
       )}
     >
       {effectiveMode === "admin" ? (
@@ -206,13 +215,21 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         >
           <nav className="space-y-1">
             {(nav as any[]).map((item) => (
-              <NavLink key={`${item.to}-${item.label}`} item={item} mobile onClick={() => setOpen(false)} />
+              <NavLink
+                key={`${item.to}-${item.label}`}
+                item={item}
+                mobile
+                onClick={() => setOpen(false)}
+              />
             ))}
           </nav>
           <div className="mt-4 space-y-2">
             {isStaff && (
               <button
-                onClick={() => { toggleMode(); setOpen(false); }}
+                onClick={() => {
+                  toggleMode();
+                  setOpen(false);
+                }}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors",
                   effectiveMode === "admin"
@@ -221,9 +238,13 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
                 )}
               >
                 {effectiveMode === "admin" ? (
-                  <><Eye className="size-4" /> Switch to Student View</>
+                  <>
+                    <Eye className="size-4" /> Switch to Student View
+                  </>
                 ) : (
-                  <><ShieldCheck className="size-4" /> Switch to Admin Panel</>
+                  <>
+                    <ShieldCheck className="size-4" /> Switch to Admin Panel
+                  </>
                 )}
               </button>
             )}

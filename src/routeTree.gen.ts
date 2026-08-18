@@ -31,6 +31,7 @@ import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authenticated/admin/lessons'
 import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin/pricing'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin/reviews'
+import { Route as AuthenticatedAdminUploadCoursesRouteImport } from './routes/_authenticated/admin/upload-courses'
 import { Route as AuthenticatedLearnIndexRouteImport } from './routes/_authenticated/learn/index'
 import { Route as AuthenticatedLearnLessonIdRouteImport } from './routes/_authenticated/learn/$lessonId'
 import { Route as ApiPublicWebhooksRazorpayRouteImport } from './routes/api/public/webhooks/razorpay'
@@ -150,6 +151,12 @@ const AuthenticatedAdminReviewsRoute =
     path: '/admin/reviews',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminUploadCoursesRoute =
+  AuthenticatedAdminUploadCoursesRouteImport.update({
+    id: '/admin/upload-courses',
+    path: '/admin/upload-courses',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLearnIndexRoute = AuthenticatedLearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
@@ -190,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
   '/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
   '/learn/': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
@@ -216,6 +224,7 @@ export interface FileRoutesByTo {
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
   '/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
   '/learn': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
@@ -244,6 +253,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
+  '/_authenticated/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
   '/_authenticated/learn/$lessonId': typeof AuthenticatedLearnLessonIdRoute
   '/_authenticated/learn/': typeof AuthenticatedLearnIndexRoute
   '/api/public/webhooks/razorpay': typeof ApiPublicWebhooksRazorpayRoute
@@ -272,6 +282,7 @@ export interface FileRouteTypes {
     | '/admin/lessons'
     | '/admin/pricing'
     | '/admin/reviews'
+    | '/admin/upload-courses'
     | '/learn/$lessonId'
     | '/learn/'
     | '/api/public/webhooks/razorpay'
@@ -298,6 +309,7 @@ export interface FileRouteTypes {
     | '/admin/lessons'
     | '/admin/pricing'
     | '/admin/reviews'
+    | '/admin/upload-courses'
     | '/learn/$lessonId'
     | '/learn'
     | '/api/public/webhooks/razorpay'
@@ -325,6 +337,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/lessons'
     | '/_authenticated/admin/pricing'
     | '/_authenticated/admin/reviews'
+    | '/_authenticated/admin/upload-courses'
     | '/_authenticated/learn/$lessonId'
     | '/_authenticated/learn/'
     | '/api/public/webhooks/razorpay'
@@ -500,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminReviewsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/upload-courses': {
+      id: '/_authenticated/admin/upload-courses'
+      path: '/admin/upload-courses'
+      fullPath: '/admin/upload-courses'
+      preLoaderRoute: typeof AuthenticatedAdminUploadCoursesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/learn/': {
       id: '/_authenticated/learn/'
       path: '/learn'
@@ -537,6 +557,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminLessonsRoute: typeof AuthenticatedAdminLessonsRoute
   AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
+  AuthenticatedAdminUploadCoursesRoute: typeof AuthenticatedAdminUploadCoursesRoute
   AuthenticatedLearnLessonIdRoute: typeof AuthenticatedLearnLessonIdRoute
   AuthenticatedLearnIndexRoute: typeof AuthenticatedLearnIndexRoute
 }
@@ -554,6 +575,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminLessonsRoute: AuthenticatedAdminLessonsRoute,
   AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
   AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
+  AuthenticatedAdminUploadCoursesRoute: AuthenticatedAdminUploadCoursesRoute,
   AuthenticatedLearnLessonIdRoute: AuthenticatedLearnLessonIdRoute,
   AuthenticatedLearnIndexRoute: AuthenticatedLearnIndexRoute,
 }

@@ -16,6 +16,7 @@ dist-ssr
 .nitro
 .env
 .env.*
+!.env.example
 *.local
 
 # Wrangler / Cloudflare
