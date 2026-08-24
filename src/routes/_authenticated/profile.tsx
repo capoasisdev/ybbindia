@@ -137,6 +137,7 @@ function Page() {
     billing_state: null,
     billing_pincode: null,
     gst_number: null,
+    photograph_path: null,
   });
 
   // Sync form when profile loads
@@ -156,6 +157,7 @@ function Page() {
       billing_state: profile.billing_state ?? null,
       billing_pincode: profile.billing_pincode ?? null,
       gst_number: profile.gst_number ?? null,
+      photograph_path: profile.photograph_path ?? null,
     });
     setSynced(true);
   }
@@ -253,9 +255,17 @@ function Page() {
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             {/* Avatar */}
-            <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-accent text-white text-xl font-semibold select-none">
-              {initials}
-            </div>
+            {profile.photograph_path ? (
+              <img
+                src={profile.photograph_path}
+                alt={displayName}
+                className="size-16 shrink-0 rounded-2xl object-cover border border-border shadow-sm"
+              />
+            ) : (
+              <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-accent text-white text-xl font-semibold select-none">
+                {initials}
+              </div>
+            )}
             <div>
               <h1 className="text-2xl font-semibold">{displayName}</h1>
               <p className="mt-0.5 text-sm text-muted-foreground flex items-center gap-1.5">

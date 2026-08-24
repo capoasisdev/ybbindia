@@ -33,3 +33,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Supabase
+supabase/.temp/
+
+# App Android / Temporary files
+YBBApp/node_modules/
+YBBApp/dist/
+YBBApp/android/.gradle/
+YBBApp/android/build/
+YBBApp/android/app/build/
+YBBApp/android/local.properties
+Fix This/
+

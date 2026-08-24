@@ -18,6 +18,7 @@ export type MyProfile = {
   billing_state: string | null;
   billing_pincode: string | null;
   gst_number: string | null;
+  photograph_path: string | null;
   is_active: boolean;
   created_at: string;
 };
@@ -30,7 +31,7 @@ export const getMyProfile = createServerFn({ method: "GET" })
     const { data, error } = await supabase
       .from("learner_profiles")
       .select(
-        "id, full_name, email, mobile, city, state, organisation, profession, education, certificate_name, certificate_name_locked, billing_address, billing_city, billing_state, billing_pincode, gst_number, is_active, created_at",
+        "id, full_name, email, mobile, city, state, organisation, profession, education, certificate_name, certificate_name_locked, billing_address, billing_city, billing_state, billing_pincode, gst_number, photograph_path, is_active, created_at",
       )
       .eq("id", userId)
       .maybeSingle();
@@ -53,6 +54,7 @@ export type UpdateProfileInput = {
   billing_state?: string | null;
   billing_pincode?: string | null;
   gst_number?: string | null;
+  photograph_path?: string | null;
 };
 
 export const updateMyProfile = createServerFn({ method: "POST" })
@@ -83,11 +85,26 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         billing_state: data.billing_state ?? null,
         billing_pincode: data.billing_pincode ?? null,
         gst_number: data.gst_number ?? null,
+        photograph_path: data.photograph_path ?? null,
         updated_at: new Date().toISOString(),
         ...(existing?.certificate_name_locked ? {} : { certificate_name: data.certificate_name ?? null }),
       })
       .eq("id", userId);
 
     if (error) throw error;
+
+    try {
+      await supabase.auth.updateUser({
+        data: {
+          full_name: data.full_name,
+          name: data.full_name,
+          avatar_url: data.photograph_path ?? null,
+          picture: data.photograph_path ?? null,
+        },
+      });
+    } catch (authErr) {
+      console.warn("auth.updateUser note:", authErr);
+    }
+
     return { success: true };
   });

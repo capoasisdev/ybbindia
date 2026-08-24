@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=IBM+Plex+Mono:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #132242;
+  --ink-2: #1F3363;
+  --ink-soft: #5A6786;
+  --paper: #F6F1E6;
+  --paper-2: #EEE6D3;
+  --card: #FFFDF8;
+  --brass: #B4863A;
+  --brass-2: #8C6425;
+  --brass-light: #E7CE9C;
+  --forest: #1E4B3E;
+  --forest-light: #E4EEE8;
+  --brick: #9A4230;
+  --brick-light: #F3E1DB;
+  --line: #E1D8C2;
+  --line-ink: rgba(255, 255, 255, 0.14);
+  --text-muted: #7A7160;
+  --radius-frame: 38px;
+  --radius-screen: 28px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  font-family: 'Public Sans', sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* Safe area padding utilities for Android / iOS status bars */
+.safe-top {
+  padding-top: max(16px, env(safe-area-inset-top, 16px));
+}
+
+.safe-bottom {
+  padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+}
+
+
+/* Custom typography fonts */
+.font-serif {
+  font-family: 'Fraunces', serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.font-sans {
+  font-family: 'Public Sans', sans-serif;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(180, 134, 58, 0.2);
+  border-radius: 4px;
+}
+
+/* Brass seal */
+.seal {
+  border-radius: 50%;
+  border: 1.5px solid var(--brass-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.seal::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px dashed var(--brass-light);
+}
+
+.seal span {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: var(--brass-light);
+  letter-spacing: 0.02em;
+}
+
+/* Interactive button effects */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: 'Public Sans', sans-serif;
+  transition: all 0.15s ease;
+  user-select: none;
+  cursor: pointer;
+}
+
+.btn:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:active {
+  background: var(--ink-2);
+}
+
+.btn-brass {
+  background: var(--brass);
+  color: #2A1D07;
+}
+.btn-brass:active {
+  background: var(--brass-2);
+  color: #FFF;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.4px solid var(--line);
+  color: var(--ink);
+}
+
+.btn-ghost.on-dark {
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #EFE6D2;
+}
+
+/* Fields */
+.field {
+  border: 1.4px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field:focus-within {
+  border-color: var(--brass);
+  box-shadow: 0 0 0 2px rgba(180, 134, 58, 0.15);
+}
+
+.field label {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+/* Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.pill.active {
+  background: var(--forest-light);
+  color: var(--forest);
+}
+
+.pill.locked {
+  background: var(--paper-2);
+  color: var(--text-muted);
+}
+
+.pill.progress {
+  background: var(--brass-light);
+  color: var(--brass-2);
+}
+
+/* Dots */
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.dots i.on {
+  background: var(--brass-light);
+  width: 18px;
+  border-radius: 4px;
+}
+
+hr.hair {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideDownToast {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDownToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.shadow-lift {
+  box-shadow: 0 10px 30px -5px rgba(19, 34, 66, 0.08), 0 4px 12px -2px rgba(19, 34, 66, 0.04);
+}
+

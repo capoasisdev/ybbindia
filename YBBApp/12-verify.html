@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YBB App — Verify a Certificate</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&amp;family=Public+Sans:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background:#0E1730;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(180,134,58,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(30,75,62,0.16), transparent 45%);
+    padding:60px 20px;
+  }
+  .wrap{display:flex; flex-direction:column; align-items:center; gap:18px;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.1em;
+    color:#E7CE9C; text-transform:uppercase;
+  }
+:root{
+    --ink:#132242;
+    --ink-2:#1F3363;
+    --ink-soft:#5A6786;
+    --paper:#F6F1E6;
+    --paper-2:#EEE6D3;
+    --card:#FFFDF8;
+    --brass:#B4863A;
+    --brass-2:#8C6425;
+    --brass-light:#E7CE9C;
+    --forest:#1E4B3E;
+    --forest-light:#E4EEE8;
+    --brick:#9A4230;
+    --brick-light:#F3E1DB;
+    --line:#E1D8C2;
+    --line-ink:rgba(255,255,255,0.14);
+    --text-muted:#7A7160;
+    --radius-frame:38px;
+    --radius-screen:28px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#0E1730;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(180,134,58,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(30,75,62,0.16), transparent 45%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    padding:64px 32px 120px;
+  }
+  .intro{max-width:760px;margin:0 auto 72px;color:var(--paper);}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    font-size:11.5px;
+    color:var(--brass-light);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--brass-light);}
+  .intro h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1.08;
+    margin:18px 0 16px;
+    color:#FBF7EE;
+  }
+  .intro p{
+    font-size:15.5px;
+    line-height:1.65;
+    color:#BFC7DE;
+    max-width:600px;
+    margin:0;
+  }
+  .group{max-width:1400px;margin:0 auto 88px;}
+  .group-head{
+    display:flex; align-items:baseline; gap:16px; flex-wrap:wrap;
+    margin-bottom:30px; padding-bottom:16px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .group-head .idx{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--brass-light); font-size:13px;
+  }
+  .group-head h2{
+    font-family:'Fraunces', serif; font-weight:600; font-size:24px;
+    color:#FBF7EE; margin:0;
+  }
+  .group-head span.desc{color:#8D97B5; font-size:13.5px;}
+  .row{display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start;}
+  .cell{width:300px;}
+  .cell .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; color:var(--brass-light);
+    letter-spacing:0.04em;
+    margin-bottom:12px; display:flex; justify-content:space-between;
+  }
+  .cell .label b{color:#EFE6D2; font-family:'Public Sans',sans-serif; font-weight:600; letter-spacing:0;}
+
+  /* ---- phone frame ---- */
+  .frame{
+    width:300px; height:640px;
+    background:linear-gradient(160deg,#0E1424,#1B2440);
+    border-radius:var(--radius-frame);
+    padding:9px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .screen{
+    width:100%; height:100%;
+    background:var(--paper);
+    border-radius:var(--radius-screen);
+    overflow:hidden;
+    position:relative;
+    display:flex; flex-direction:column;
+    font-family:'Public Sans', sans-serif;
+  }
+  .screen.dark{background:var(--ink);}
+  .statusbar{
+    height:32px; flex:0 0 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    color:var(--ink);
+  }
+  .screen.dark .statusbar{color:#F3EEE1;}
+  .statusbar .icons{display:flex; gap:4px; align-items:center;}
+  .sig-bars{display:flex; gap:2px; align-items:flex-end;}
+  .sig-bars i{display:block; width:2.5px; background:currentColor; border-radius:1px;}
+  .sig-bars i:nth-child(1){height:4px;} .sig-bars i:nth-child(2){height:6px;}
+  .sig-bars i:nth-child(3){height:8px;} .sig-bars i:nth-child(4){height:10px;}
+  .batt{width:18px;height:9px;border:1px solid currentColor;border-radius:2px;position:relative;}
+  .batt::after{content:"";position:absolute;right:-3px;top:2.5px;width:2px;height:4px;background:currentColor;border-radius:0 1px 1px 0;}
+  .batt::before{content:"";position:absolute;inset:1.5px;background:currentColor;border-radius:1px;width:70%;}
+
+  .content{flex:1; overflow:hidden; position:relative;}
+  .topbar{
+    padding:14px 20px 12px; display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .topbar h3{font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0; flex:1;}
+  .topbar .back{width:20px;height:20px;}
+  .icon-btn{width:32px;height:32px;border-radius:50%;background:var(--paper-2);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+
+  /* tabbar */
+  .tabbar{
+    flex:0 0 62px; display:flex; border-top:1px solid var(--line);
+    background:var(--card);
+  }
+  .tabbar .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    font-size:10px; color:var(--text-muted); font-weight:600;
+  }
+  .tabbar .tab.active{color:var(--brass-2);}
+  .tabbar .tab svg{width:20px;height:20px;}
+
+  /* generic bits */
+  .seal{
+    width:74px;height:74px;border-radius:50%;
+    border:1.5px solid var(--brass-light);
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .seal::before{
+    content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed var(--brass-light);
+  }
+  .seal span{font-family:'Fraunces',serif; font-weight:600; font-size:16px; color:var(--brass-light); letter-spacing:0.02em;}
+  .btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    height:46px; border-radius:12px; font-weight:700; font-size:14px;
+    font-family:'Public Sans',sans-serif; cursor:default;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-brass{background:var(--brass); color:#2A1D07;}
+  .btn-ghost{background:transparent; border:1.4px solid var(--line); color:var(--ink);}
+  .btn-ghost.on-dark{border-color:rgba(255,255,255,0.28); color:#EFE6D2;}
+  .field{
+    border:1.4px solid var(--line); border-radius:12px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:2px; background:var(--card);
+  }
+  .field label{font-size:10.5px; color:var(--text-muted); font-weight:600; letter-spacing:.03em; text-transform:uppercase;}
+  .field .val{font-size:14px; color:var(--ink);}
+  .field .val.placeholder{color:#BDB6A2;}
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:100px;
+    font-size:10.5px; font-weight:700; letter-spacing:.02em;
+  }
+  .pill.active{background:var(--forest-light); color:var(--forest);}
+  .pill.locked{background:var(--paper-2); color:var(--text-muted);}
+  .pill.progress{background:var(--brass-light); color:var(--brass-2);}
+  .dots{display:flex; gap:6px; align-items:center; justify-content:center;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28); display:block;}
+  .dots i.on{background:var(--brass-light); width:18px; border-radius:4px;}
+  hr.hair{border:none; border-top:1px solid var(--line); margin:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag">YBB App &middot; Verify a Certificate</div>
+  <div class="frame"><div class="screen">
+<div class="statusbar"><span>9:41</span><div class="icons"><div class="sig-bars"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+<div class="topbar"><h3>Verify a Certificate</h3></div>
+<div class="content" style="padding:22px 20px;">
+<p style="font-size:12.5px;color:var(--text-muted);line-height:1.6;margin:0 0 16px;">Enter an ABB credential ID to confirm it was issued by Yoova Business Broking.</p>
+<div class="field" style="margin-bottom:14px;"><label>ABB Credential ID</label><div class="val" style="font-family:'IBM Plex Mono';">YBB-ABB-2026-0001</div></div>
+<div class="btn btn-primary" style="margin-bottom:24px;">Verify</div>
+<div style="border:1.4px solid var(--forest);background:var(--forest-light);border-radius:14px;padding:16px;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+<div style="width:22px;height:22px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;"><svg fill="none" height="11" viewbox="0 0 24 24" width="11"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"></path></svg></div>
+<span style="font-size:12.5px;font-weight:700;color:var(--forest);">This certificate is valid</span>
+</div>
+<div style="font-size:11.5px;color:#2C3E37;line-height:1.7;">
+<div><strong>Name:</strong> Rajesh Sharma</div>
+<div><strong>Programme:</strong> ABB Certification</div>
+<div><strong>Issued:</strong> 14 Aug 2026</div>
+<div><strong>Status:</strong> Active</div>
+</div>
+</div>
+</div>
+<div class="tabbar">
+<div class="tab"><svg fill="none" viewbox="0 0 24 24"><path d="M4 11l8-7 8 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path><path d="M6 10v9h12v-9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>Home</div>
+<div class="tab"><svg fill="none" viewbox="0 0 24 24"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5A1.5 1.5 0 014 18.5v-13z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.6"></path><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5a1.5 1.5 0 001.5-1.5v-13z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.6"></path></svg>Learn</div>
+<div class="tab active"><svg fill="none" viewbox="0 0 24 24"><path d="M12 3l7 3v6c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6l7-3z" stroke="currentColor" stroke-linejoin="round" stroke-width="1.6"></path><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6"></path></svg>Verify</div>
+<div class="tab"><svg fill="none" viewbox="0 0 24 24"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"></circle><path d="M5 20c1.2-4 4.2-6 7-6s5.8 2 7 6" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"></path></svg>Profile</div>
+</div>
+</div></div>
+</div>
+</body>
+</html>

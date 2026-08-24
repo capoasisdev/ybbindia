@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YBB - Authorised Business Broker</string>
+    <string name="title_activity_main">YBB - Authorised Business Broker</string>
+    <string name="package_name">com.ybbindia.app</string>
+    <string name="custom_url_scheme">com.ybbindia.app</string>
+    <string name="server_client_id">187533747492-ikc8l3uf1iq2htepn8iimno6gl19crff.apps.googleusercontent.com</string>
+</resources>

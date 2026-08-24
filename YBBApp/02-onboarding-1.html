@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>YBB App — Onboarding 1 of 3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&amp;family=Public+Sans:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    background:#0E1730;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(180,134,58,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(30,75,62,0.16), transparent 45%);
+    padding:60px 20px;
+  }
+  .wrap{display:flex; flex-direction:column; align-items:center; gap:18px;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:.1em;
+    color:#E7CE9C; text-transform:uppercase;
+  }
+:root{
+    --ink:#132242;
+    --ink-2:#1F3363;
+    --ink-soft:#5A6786;
+    --paper:#F6F1E6;
+    --paper-2:#EEE6D3;
+    --card:#FFFDF8;
+    --brass:#B4863A;
+    --brass-2:#8C6425;
+    --brass-light:#E7CE9C;
+    --forest:#1E4B3E;
+    --forest-light:#E4EEE8;
+    --brick:#9A4230;
+    --brick-light:#F3E1DB;
+    --line:#E1D8C2;
+    --line-ink:rgba(255,255,255,0.14);
+    --text-muted:#7A7160;
+    --radius-frame:38px;
+    --radius-screen:28px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#0E1730;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(180,134,58,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(30,75,62,0.16), transparent 45%);
+    font-family:'Public Sans', sans-serif;
+    color:var(--ink);
+    padding:64px 32px 120px;
+  }
+  .intro{max-width:760px;margin:0 auto 72px;color:var(--paper);}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    font-size:11.5px;
+    color:var(--brass-light);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--brass-light);}
+  .intro h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:44px;
+    line-height:1.08;
+    margin:18px 0 16px;
+    color:#FBF7EE;
+  }
+  .intro p{
+    font-size:15.5px;
+    line-height:1.65;
+    color:#BFC7DE;
+    max-width:600px;
+    margin:0;
+  }
+  .group{max-width:1400px;margin:0 auto 88px;}
+  .group-head{
+    display:flex; align-items:baseline; gap:16px; flex-wrap:wrap;
+    margin-bottom:30px; padding-bottom:16px;
+    border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .group-head .idx{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--brass-light); font-size:13px;
+  }
+  .group-head h2{
+    font-family:'Fraunces', serif; font-weight:600; font-size:24px;
+    color:#FBF7EE; margin:0;
+  }
+  .group-head span.desc{color:#8D97B5; font-size:13.5px;}
+  .row{display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start;}
+  .cell{width:300px;}
+  .cell .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px; color:var(--brass-light);
+    letter-spacing:0.04em;
+    margin-bottom:12px; display:flex; justify-content:space-between;
+  }
+  .cell .label b{color:#EFE6D2; font-family:'Public Sans',sans-serif; font-weight:600; letter-spacing:0;}
+
+  /* ---- phone frame ---- */
+  .frame{
+    width:300px; height:640px;
+    background:linear-gradient(160deg,#0E1424,#1B2440);
+    border-radius:var(--radius-frame);
+    padding:9px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .screen{
+    width:100%; height:100%;
+    background:var(--paper);
+    border-radius:var(--radius-screen);
+    overflow:hidden;
+    position:relative;
+    display:flex; flex-direction:column;
+    font-family:'Public Sans', sans-serif;
+  }
+  .screen.dark{background:var(--ink);}
+  .statusbar{
+    height:32px; flex:0 0 32px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 22px; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    color:var(--ink);
+  }
+  .screen.dark .statusbar{color:#F3EEE1;}
+  .statusbar .icons{display:flex; gap:4px; align-items:center;}
+  .sig-bars{display:flex; gap:2px; align-items:flex-end;}
+  .sig-bars i{display:block; width:2.5px; background:currentColor; border-radius:1px;}
+  .sig-bars i:nth-child(1){height:4px;} .sig-bars i:nth-child(2){height:6px;}
+  .sig-bars i:nth-child(3){height:8px;} .sig-bars i:nth-child(4){height:10px;}
+  .batt{width:18px;height:9px;border:1px solid currentColor;border-radius:2px;position:relative;}
+  .batt::after{content:"";position:absolute;right:-3px;top:2.5px;width:2px;height:4px;background:currentColor;border-radius:0 1px 1px 0;}
+  .batt::before{content:"";position:absolute;inset:1.5px;background:currentColor;border-radius:1px;width:70%;}
+
+  .content{flex:1; overflow:hidden; position:relative;}
+  .topbar{
+    padding:14px 20px 12px; display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .topbar h3{font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0; flex:1;}
+  .topbar .back{width:20px;height:20px;}
+  .icon-btn{width:32px;height:32px;border-radius:50%;background:var(--paper-2);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+
+  /* tabbar */
+  .tabbar{
+    flex:0 0 62px; display:flex; border-top:1px solid var(--line);
+    background:var(--card);
+  }
+  .tabbar .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    font-size:10px; color:var(--text-muted); font-weight:600;
+  }
+  .tabbar .tab.active{color:var(--brass-2);}
+  .tabbar .tab svg{width:20px;height:20px;}
+
+  /* generic bits */
+  .seal{
+    width:74px;height:74px;border-radius:50%;
+    border:1.5px solid var(--brass-light);
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .seal::before{
+    content:"";position:absolute;inset:6px;border-radius:50%;border:1px dashed var(--brass-light);
+  }
+  .seal span{font-family:'Fraunces',serif; font-weight:600; font-size:16px; color:var(--brass-light); letter-spacing:0.02em;}
+  .btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    height:46px; border-radius:12px; font-weight:700; font-size:14px;
+    font-family:'Public Sans',sans-serif; cursor:default;
+  }
+  .btn-primary{background:var(--ink); color:var(--paper);}
+  .btn-brass{background:var(--brass); color:#2A1D07;}
+  .btn-ghost{background:transparent; border:1.4px solid var(--line); color:var(--ink);}
+  .btn-ghost.on-dark{border-color:rgba(255,255,255,0.28); color:#EFE6D2;}
+  .field{
+    border:1.4px solid var(--line); border-radius:12px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:2px; background:var(--card);
+  }
+  .field label{font-size:10.5px; color:var(--text-muted); font-weight:600; letter-spacing:.03em; text-transform:uppercase;}
+  .field .val{font-size:14px; color:var(--ink);}
+  .field .val.placeholder{color:#BDB6A2;}
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:100px;
+    font-size:10.5px; font-weight:700; letter-spacing:.02em;
+  }
+  .pill.active{background:var(--forest-light); color:var(--forest);}
+  .pill.locked{background:var(--paper-2); color:var(--text-muted);}
+  .pill.progress{background:var(--brass-light); color:var(--brass-2);}
+  .dots{display:flex; gap:6px; align-items:center; justify-content:center;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.28); display:block;}
+  .dots i.on{background:var(--brass-light); width:18px; border-radius:4px;}
+  hr.hair{border:none; border-top:1px solid var(--line); margin:0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag">YBB App &middot; Onboarding 1 of 3</div>
+  <div class="frame"><div class="screen">
+<div class="statusbar"><span>9:41</span><div class="icons"><div class="sig-bars"><i></i><i></i><i></i><i></i></div><div class="batt"></div></div></div>
+<div class="content" style="display:flex;flex-direction:column;">
+<div style="flex:1;display:flex;align-items:center;justify-content:center;background:var(--paper-2);margin:20px 20px 0;border-radius:20px;">
+<svg fill="none" height="100" viewbox="0 0 120 100" width="120"><rect fill="#FFFDF8" height="60" rx="6" stroke="#B4863A" stroke-width="1.5" width="46" x="10" y="30"></rect><rect fill="#FFFDF8" height="76" rx="6" stroke="#132242" stroke-width="1.5" width="46" x="64" y="14"></rect><line stroke="#DDD3BE" stroke-width="2" x1="18" x2="48" y1="44" y2="44"></line><line stroke="#DDD3BE" stroke-width="2" x1="18" x2="40" y1="54" y2="54"></line><circle cx="87" cy="34" r="10" stroke="#B4863A" stroke-width="1.5"></circle><line stroke="#DDD3BE" stroke-width="2" x1="72" x2="102" y1="60" y2="60"></line><line stroke="#DDD3BE" stroke-width="2" x1="72" x2="96" y1="68" y2="68"></line></svg>
+</div>
+<div style="padding:26px 24px 20px;">
+<h1 style="font-family:'Fraunces';font-weight:600;font-size:23px;line-height:1.2;margin:0 0 10px;">Learn the business of business broking</h1>
+<p style="font-size:13.5px;color:var(--text-muted);line-height:1.55;margin:0 0 22px;">11 modules of structured video lessons — from finding sellers to closing the deal.</p>
+<div class="dots" style="justify-content:flex-start;margin-bottom:20px;"><i class="on" style="background:var(--brass-2);"></i><i style="background:var(--line);"></i><i style="background:var(--line);"></i></div>
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<span style="font-size:13px;color:var(--text-muted);font-weight:600;">Skip</span>
+<div class="btn btn-primary" style="width:110px;">Next →</div>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</body>
+</html>

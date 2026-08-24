@@ -114,13 +114,27 @@ export function isAutoApprove(settings: SettingsMap) {
   return readBool(settings, "certification_auto_approve");
 }
 
-/** Builds the next ABB ID from the configured format, e.g. YBB-ABB-2026-0007. */
-export function buildAbbId(settings: SettingsMap, sequence: number) {
-  const format = readString(settings, "abb_id_format") || "YBB-ABB-{YYYY}-{NNNN}";
+/** Builds a secure random 4-digit ABB ID from format, e.g. YBB-ABB-2026-1580. */
+export function buildAbbId(settings: SettingsMap, sequenceOrSeed?: number | string) {
+  const format = readString(settings, "abb_id_format") || "YBB-ABB-{YYYY}-{RAND4}";
   const year = String(new Date().getFullYear());
+  
+  let random4: string;
+  if (typeof sequenceOrSeed === "string" && sequenceOrSeed.length > 0) {
+    let hash = 0;
+    for (let i = 0; i < sequenceOrSeed.length; i++) {
+      hash = ((hash << 5) - hash) + sequenceOrSeed.charCodeAt(i);
+      hash |= 0;
+    }
+    random4 = String(Math.abs(hash) % 10000).padStart(4, "0");
+  } else {
+    random4 = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+  }
+
   return format
     .replace("{YYYY}", year)
-    .replace(/\{N+\}/, (token) => String(sequence).padStart(token.length - 2, "0"));
+    .replace("{RAND4}", random4)
+    .replace(/\{N+\}/, random4);
 }
 
 export function mapCertificate(row: any): CertificateRecord {
@@ -156,16 +170,24 @@ export async function issueCertificateFor(
     .eq("id", params.userId)
     .maybeSingle();
 
-  const { count } = await supabaseAdmin
-    .from("certificates")
-    .select("id", { count: "exact", head: true });
+  // Generate unique random 4-digit ABB ID
+  let abbId = buildAbbId(settings, params.userId);
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { data: duplicate } = await supabaseAdmin
+      .from("certificates")
+      .select("id")
+      .eq("abb_id", abbId)
+      .maybeSingle();
+    if (!duplicate) break;
+    abbId = buildAbbId(settings);
+  }
 
   const { data: inserted, error } = await supabaseAdmin
     .from("certificates")
     .insert({
       user_id: params.userId,
       course_id: params.courseId,
-      abb_id: buildAbbId(settings, (count ?? 0) + 1),
+      abb_id: abbId,
       learner_name: profile?.certificate_name || profile?.full_name || "ABB Learner",
       programme_name: readString(settings, "programme_name"),
       status: "active",
