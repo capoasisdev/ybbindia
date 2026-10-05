@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getAdminAccess } from "@/lib/admin.functions";
+import { getPublicSettings } from "@/lib/public.functions";
+import { readBool } from "@/domain/settings";
 import { Wordmark } from "@/components/site/Wordmark";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -62,6 +64,28 @@ type ViewMode = "admin" | "student";
 function getStoredViewMode(): ViewMode {
   if (typeof window === "undefined") return "admin";
   return (localStorage.getItem("abb_view_mode") as ViewMode) ?? "admin";
+}
+
+function SidebarNavSkeleton({ mobile }: { mobile?: boolean }) {
+  return (
+    <div className="space-y-1.5 animate-pulse">
+      {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <div
+          key={i}
+          className={cn(
+            "flex items-center gap-3 rounded-xl px-3.5 py-2.5",
+            mobile ? "bg-muted/40" : "bg-white/[0.06]",
+          )}
+        >
+          <div className={cn("size-4 rounded-md shrink-0", mobile ? "bg-muted-foreground/20" : "bg-white/20")} />
+          <div
+            className={cn("h-4 rounded-md", mobile ? "bg-muted-foreground/20" : "bg-white/20")}
+            style={{ width: `${55 + (i % 4) * 12}%` }}
+          />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function NavLink({
@@ -103,14 +127,22 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
   const [mounted, setMounted] = useState(false);
 
   const fetchAdminAccess = useServerFn(getAdminAccess);
-  const { data: access } = useQuery({
+  const { data: access, isLoading: isAccessLoading } = useQuery({
     queryKey: ["admin-access"],
     queryFn: () => fetchAdminAccess(),
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
 
+  const fetchSettings = useServerFn(getPublicSettings);
+  const { data: publicSettings, isLoading: isSettingsLoading } = useQuery({
+    queryKey: ["public-settings"],
+    queryFn: () => fetchSettings(),
+    staleTime: 5 * 60 * 1000,
+  });
+
   const isStaff = access?.isStaff || access?.isAdmin;
+  const assignmentsEnabled = readBool(publicSettings, "assignments_enabled");
 
   // Hydrate viewMode from localStorage (only after mount to avoid SSR mismatch)
   useEffect(() => {
@@ -137,10 +169,17 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
     navigate({ to: "/" });
   };
 
+  const isNavLoading = !mounted || isAccessLoading || isSettingsLoading;
+
+  // Filter student nav if assignments are disabled
+  const activeStudentNav = STUDENT_NAV.filter(
+    (item) => item.to !== "/assignments" || assignmentsEnabled,
+  );
+
   // Pick the appropriate nav list
   const effectiveMode = !mounted || !isStaff ? "student" : viewMode;
   const nav: (typeof ADMIN_NAV)[number][] | (typeof STUDENT_NAV)[number][] =
-    effectiveMode === "admin" ? (ADMIN_NAV as any) : (STUDENT_NAV as any);
+    effectiveMode === "admin" ? (ADMIN_NAV as any) : (activeStudentNav as any);
 
   const modeToggleBtn = isStaff ? (
     <button
@@ -175,9 +214,13 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
         <Wordmark tone="light" />
 
         <nav className="mt-10 flex-1 space-y-1">
-          {(nav as any[]).map((item) => (
-            <NavLink key={`${item.to}-${item.label}`} item={item} />
-          ))}
+          {isNavLoading ? (
+            <SidebarNavSkeleton />
+          ) : (
+            (nav as any[]).map((item) => (
+              <NavLink key={`${item.to}-${item.label}`} item={item} />
+            ))
+          )}
         </nav>
 
         <div className="space-y-1 pt-2 border-t border-sidebar-border">
@@ -214,14 +257,18 @@ export function AppShell({ title, children }: { title: string; children: ReactNo
           )}
         >
           <nav className="space-y-1">
-            {(nav as any[]).map((item) => (
-              <NavLink
-                key={`${item.to}-${item.label}`}
-                item={item}
-                mobile
-                onClick={() => setOpen(false)}
-              />
-            ))}
+            {isNavLoading ? (
+              <SidebarNavSkeleton mobile />
+            ) : (
+              (nav as any[]).map((item) => (
+                <NavLink
+                  key={`${item.to}-${item.label}`}
+                  item={item}
+                  mobile
+                  onClick={() => setOpen(false)}
+                />
+              ))
+            )}
           </nav>
           <div className="mt-4 space-y-2">
             {isStaff && (

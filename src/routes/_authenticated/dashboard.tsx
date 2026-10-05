@@ -14,6 +14,9 @@ import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { getLearnerOverview } from "@/lib/learner.functions";
+import { getPublicSettings } from "@/lib/public.functions";
+import { readBool } from "@/domain/settings";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -32,6 +35,15 @@ function DashboardPage() {
     queryKey: ["learner-overview"],
     queryFn: () => fetchOverview({}),
   });
+
+  const fetchSettings = useServerFn(getPublicSettings);
+  const { data: publicSettings } = useQuery({
+    queryKey: ["public-settings"],
+    queryFn: () => fetchSettings(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const assignmentsEnabled = readBool(publicSettings, "assignments_enabled");
 
   if (isLoading) {
     return (
@@ -101,19 +113,26 @@ function DashboardPage() {
               </div>
             </section>
 
-            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <section
+              className={cn(
+                "grid gap-4 sm:grid-cols-2",
+                assignmentsEnabled ? "lg:grid-cols-4" : "lg:grid-cols-3",
+              )}
+            >
               <Tile
                 to="/learn"
                 icon={BookOpen}
                 title="Lessons"
                 body="Watch and track your modules"
               />
-              <Tile
-                to="/assignments"
-                icon={FileCheck2}
-                title="Assignments"
-                body="Submit work and read feedback"
-              />
+              {assignmentsEnabled && (
+                <Tile
+                  to="/assignments"
+                  icon={FileCheck2}
+                  title="Assignments"
+                  body="Submit work and read feedback"
+                />
+              )}
               <Tile
                 to="/exam"
                 icon={GraduationCap}

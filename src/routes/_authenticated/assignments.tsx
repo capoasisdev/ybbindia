@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AlertCircle, CheckCircle2, Clock, Download, FileCheck2, Loader2, Upload } from "lucide-react";
@@ -36,13 +36,22 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 function Page() {
+  const navigate = useNavigate();
   const fetchAssignments = useServerFn(getLearnerAssignments);
   const { data, isLoading } = useQuery({
     queryKey: ["learner-assignments"],
     queryFn: () => fetchAssignments({}),
   });
 
-  if (isLoading) {
+  const assignmentsEnabled = data?.assignmentsEnabled ?? true;
+
+  useEffect(() => {
+    if (!isLoading && data && data.assignmentsEnabled === false) {
+      navigate({ to: "/dashboard", replace: true });
+    }
+  }, [isLoading, data, navigate]);
+
+  if (isLoading || (!isLoading && !assignmentsEnabled)) {
     return (
       <AppShell title="Assignments">
         <div className="flex min-h-[40vh] items-center justify-center">
@@ -98,8 +107,6 @@ function Page() {
     return a.title.localeCompare(b.title);
   });
 
-  const assignmentsEnabled = data.assignmentsEnabled ?? true;
-
   return (
     <AppShell title="Assignments">
       <div className="space-y-8">
@@ -109,18 +116,6 @@ function Page() {
             {data.submittedCount} of {total} submitted · {data.approvedCount} approved
           </p>
         </header>
-
-        {!assignmentsEnabled && (
-          <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-900">
-            <AlertCircle className="size-5 shrink-0 text-amber-600 mt-0.5" />
-            <div className="space-y-1">
-              <h3 className="font-semibold text-amber-950">Assignment Submissions Temporarily Paused</h3>
-              <p className="text-xs text-amber-800 leading-relaxed">
-                Assignment uploads are currently paused by administration. You are <strong>not required</strong> to submit or complete assignments to take the qualifying examination or receive your official certificate.
-              </p>
-            </div>
-          </div>
-        )}
 
         {total === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
