@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { getLessonPlayback, saveLessonProgress } from "@/lib/learn.functions";
+import { getPublicSettings } from "@/lib/public.functions";
+import { readBool } from "@/domain/settings";
 import { AssignmentCard } from "../assignments";
 import { type LearnerAssignment } from "@/lib/assignments.functions";
 
@@ -30,11 +32,20 @@ function Page() {
   const queryClient = useQueryClient();
   const fetchPlayback = useServerFn(getLessonPlayback);
   const persistProgress = useServerFn(saveLessonProgress);
+  const fetchSettings = useServerFn(getPublicSettings);
 
   const { data, isLoading } = useQuery({
     queryKey: ["lesson-playback", lessonId],
     queryFn: () => fetchPlayback({ data: { lessonId } }),
   });
+
+  const { data: publicSettings } = useQuery({
+    queryKey: ["public-settings"],
+    queryFn: () => fetchSettings(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const assignmentsEnabled = readBool(publicSettings, "assignments_enabled");
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const watchedRef = useRef<Set<number>>(new Set());
@@ -209,7 +220,7 @@ function Page() {
             </div>
           ) : null}
 
-          {lesson.assignment && (
+          {assignmentsEnabled && lesson.assignment && (
             <div className="mt-6 space-y-4">
               <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 Lesson assignment

@@ -226,7 +226,7 @@ export const getLessonPlayback = createServerFn({ method: "POST" })
 
     let videoUrl: string | null = null;
     if (!item.isLocked) {
-      const [lessonDetails, assignmentRes] = await Promise.all([
+      const [lessonDetails, assignmentRes, settingRes] = await Promise.all([
         supabase
           .from("lessons")
           .select("description, video_url, video_storage_path")
@@ -238,13 +238,22 @@ export const getLessonPlayback = createServerFn({ method: "POST" })
           .eq("lesson_id", item.id)
           .eq("is_published", true)
           .maybeSingle(),
+        supabase
+          .from("settings")
+          .select("value")
+          .eq("key", "assignments_enabled")
+          .maybeSingle(),
       ]);
 
       const row = lessonDetails.data;
       const assignmentData = assignmentRes.data;
+      const assignmentsEnabled =
+        settingRes.data?.value === undefined || settingRes.data?.value === null
+          ? true
+          : Boolean(settingRes.data.value);
 
       let assignment = null;
-      if (assignmentData) {
+      if (assignmentData && assignmentsEnabled) {
         const { data: submissions } = await supabase
           .from("submissions")
           .select(
