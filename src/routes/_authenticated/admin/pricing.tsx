@@ -45,6 +45,7 @@ function PricingPage() {
   const [paymentsTestMode, setPaymentsTestMode] = useState(true);
   const [examFreeAttempts, setExamFreeAttempts] = useState("2");
   const [examAttemptPriceRupees, setExamAttemptPriceRupees] = useState("500");
+  const [assignmentsEnabled, setAssignmentsEnabled] = useState(true);
 
   // Populate local state when query finishes loading
   useEffect(() => {
@@ -56,6 +57,7 @@ function PricingPage() {
       setPaymentsTestMode(currentSettings.paymentsTestMode);
       setExamFreeAttempts(currentSettings.examFreeAttempts.toString());
       setExamAttemptPriceRupees((currentSettings.examAttemptPricePaise / 100).toString());
+      setAssignmentsEnabled(currentSettings.assignmentsEnabled ?? true);
     }
   }, [currentSettings]);
 
@@ -63,11 +65,14 @@ function PricingPage() {
     mutationFn: (newSettings: AdminPricingSettings) =>
       savePricingSettings({ data: newSettings }),
     onSuccess: () => {
-      toast.success("Pricing configurations updated successfully.");
+      toast.success("Platform configurations updated successfully.");
       queryClient.invalidateQueries({ queryKey: ["admin-pricing-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-assignment-settings"] });
       // Invalidate public settings too so website/enrolment changes reflect instantly
       queryClient.invalidateQueries({ queryKey: ["public-settings"] });
       queryClient.invalidateQueries({ queryKey: ["exam-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["certificate-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["learner-assignments"] });
     },
     onError: (err: Error) => {
       toast.error(err.message || "Failed to update pricing settings.");
@@ -124,6 +129,7 @@ function PricingPage() {
       paymentsTestMode,
       examFreeAttempts: freeAttempts,
       examAttemptPricePaise,
+      assignmentsEnabled,
     });
   };
 
@@ -165,9 +171,9 @@ function PricingPage() {
         <p className="border-l-2 border-primary pl-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
           Admin console
         </p>
-        <h1 className="mt-3 text-3xl font-semibold">Pricing Controls</h1>
+        <h1 className="mt-3 text-3xl font-semibold">Pricing & System Controls</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Manage general pricing details, GST rate, student course access duration, and live checkout configurations.
+          Manage general pricing details, GST rate, student course access duration, live checkout configurations, and feature toggles.
         </p>
 
         {paymentsTestMode && (
@@ -182,7 +188,7 @@ function PricingPage() {
         <div className="mt-8 grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
           {/* Settings Form */}
           <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <h2 className="text-lg font-semibold">Pricing Configurations</h2>
+            <h2 className="text-lg font-semibold">Pricing & Feature Configurations</h2>
 
             <div className="space-y-4">
               <div>
@@ -309,6 +315,23 @@ function PricingPage() {
                 </div>
               </div>
 
+              {/* Assignments Toggle */}
+              <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/20 p-4 mt-2">
+                <div className="space-y-0.5">
+                  <Label htmlFor="assignmentsToggle" className="text-sm font-semibold">
+                    Assignment Uploads & Requirements
+                  </Label>
+                  <p className="text-xs text-muted-foreground max-w-md">
+                    When disabled, learners cannot upload assignments, and assignments are exempt/bypassed for exams & certificates.
+                  </p>
+                </div>
+                <Switch
+                  id="assignmentsToggle"
+                  checked={assignmentsEnabled}
+                  onCheckedChange={setAssignmentsEnabled}
+                />
+              </div>
+
               <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/20 p-4 mt-2">
                 <div className="space-y-0.5">
                   <Label htmlFor="testMode" className="text-sm font-semibold">
@@ -333,7 +356,7 @@ function PricingPage() {
                     <Loader2 className="size-4 animate-spin mr-2" /> Saving Changes...
                   </>
                 ) : (
-                  "Save Pricing Settings"
+                  "Save Platform Settings"
                 )}
               </Button>
             </div>

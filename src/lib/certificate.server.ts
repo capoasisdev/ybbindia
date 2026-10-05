@@ -15,6 +15,7 @@ export type CertificateRecord = {
 export type CertificateEligibility = {
   examPassed: boolean;
   assignmentsApproved: boolean;
+  assignmentsRequired?: boolean;
   lessonsComplete: boolean;
   eligible: boolean;
   reasons: string[];
@@ -44,8 +45,10 @@ export async function computeEligibility(
   supabase: any,
   userId: string,
   courseId: string,
+  settingsMap?: SettingsMap,
 ): Promise<CertificateEligibility> {
-  const [{ data: attempts }, { data: submissions }, { data: modules }, { data: rolesRes }] = await Promise.all([
+  const [settings, { data: attempts }, { data: submissions }, { data: modules }, { data: rolesRes }] = await Promise.all([
+    settingsMap ? Promise.resolve(settingsMap) : loadSettingsMap(supabase),
     supabase
       .from("exam_attempts")
       .select("is_passed")
@@ -58,6 +61,9 @@ export async function computeEligibility(
 
   const roles = (rolesRes ?? []).map((r: any) => r.role);
   const isStaff = roles.some((r: string) => ['super_admin', 'content_admin', 'reviewer', 'support_admin'].includes(r));
+
+  const assignmentsEnabled = readBool(settings, "assignments_enabled");
+  const requireAssignments = assignmentsEnabled && readBool(settings, "exam_require_assignments");
 
   const examPassed = isStaff ? true : (attempts ?? []).some((a: { is_passed: boolean | null }) => a.is_passed);
 
@@ -76,7 +82,7 @@ export async function computeEligibility(
       .filter((s: { status: string }) => s.status === "approved")
       .map((s: { assignment_id: string }) => s.assignment_id),
   );
-  const assignmentsApproved = isStaff ? true : compulsory.every((a: { id: string }) => approvedIds.has(a.id));
+  const assignmentsApproved = !requireAssignments || isStaff ? true : compulsory.every((a: { id: string }) => approvedIds.has(a.id));
 
   const { data: lessons } = moduleIds.length
     ? await supabase
@@ -98,12 +104,13 @@ export async function computeEligibility(
 
   const reasons: string[] = [];
   if (!lessonsComplete) reasons.push("All lessons must be completed.");
-  if (!assignmentsApproved) reasons.push("All compulsory assignments must be approved.");
+  if (requireAssignments && !assignmentsApproved) reasons.push("All compulsory assignments must be approved.");
   if (!examPassed) reasons.push("The final examination must be passed.");
 
   return {
     examPassed,
     assignmentsApproved,
+    assignmentsRequired: requireAssignments,
     lessonsComplete,
     eligible: reasons.length === 0,
     reasons,

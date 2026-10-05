@@ -516,8 +516,12 @@ function Page() {
                   label="Complete every published lesson in the curriculum"
                 />
                 <Gate
-                  done={!!data.eligibility?.assignmentsApproved}
-                  label="Submit and receive faculty approval on practical assignments"
+                  done={data.eligibility?.assignmentsRequired === false ? true : !!data.eligibility?.assignmentsApproved}
+                  label={
+                    data.eligibility?.assignmentsRequired === false
+                      ? "Submit practical assignments (Not required · Paused by administration)"
+                      : "Submit and receive faculty approval on practical assignments"
+                  }
                 />
                 <Gate
                   done={!!data.eligibility?.examPassed}

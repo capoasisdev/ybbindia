@@ -23,6 +23,7 @@ export const SETTING_DEFAULTS = {
   company_state: "",
   sequential_lessons: true,
   lesson_complete_watch_percent: 90,
+  assignments_enabled: true,
   exam_question_count: 50,
   exam_duration_minutes: 60,
   exam_pass_percent: 70,

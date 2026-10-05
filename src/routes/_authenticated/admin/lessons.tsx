@@ -12,6 +12,8 @@ import {
   FileCheck2,
   BookOpen,
   UploadCloud,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app/AppShell";
@@ -33,6 +35,8 @@ import {
   updateAdminAssignment,
   deleteAdminAssignment,
   type AdminAssignment,
+  getAdminAssignmentSettings,
+  updateAdminAssignmentSettings,
   getAdminQuestions,
   createAdminQuestion,
   updateAdminQuestion,
@@ -79,6 +83,9 @@ function Page() {
   const editAssignment = useServerFn(updateAdminAssignment);
   const removeAssignment = useServerFn(deleteAdminAssignment);
 
+  const fetchAssignmentSettings = useServerFn(getAdminAssignmentSettings);
+  const saveAssignmentSettings = useServerFn(updateAdminAssignmentSettings);
+
   const fetchQuestions = useServerFn(getAdminQuestions);
   const addQuestion = useServerFn(createAdminQuestion);
   const editQuestion = useServerFn(updateAdminQuestion);
@@ -123,6 +130,12 @@ function Page() {
   } = useQuery({
     queryKey: ["admin-course-content"],
     queryFn: () => fetchContent(),
+    retry: false,
+  });
+
+  const { data: assignmentSettings, isLoading: isAssignmentSettingsLoading } = useQuery({
+    queryKey: ["admin-assignment-settings"],
+    queryFn: () => fetchAssignmentSettings(),
     retry: false,
   });
 
@@ -490,9 +503,62 @@ function Page() {
 
         {/* Assignments Management */}
         {activeTab === "assignments" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Course assignments</h2>
+          <div className="space-y-6">
+            {/* Global Assignments Upload & Requirement Toggle */}
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold">Assignment Submissions & Requirements</h2>
+                    {assignmentSettings?.assignmentsEnabled ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                        <CheckCircle2 className="size-3.5" /> Enabled
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                        <AlertTriangle className="size-3.5" /> Temporarily Paused
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground max-w-2xl">
+                    When toggled <strong>OFF</strong>, learner assignment uploads are disabled, and assignment completion is <strong>not required</strong> to qualify for the examination or receive certificates.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-sm font-medium text-foreground">
+                    {assignmentSettings?.assignmentsEnabled ? "Submissions Active" : "Submissions Disabled"}
+                  </span>
+                  <Switch
+                    id="global-assignments-toggle"
+                    disabled={isAssignmentSettingsLoading || busy === "toggle-assignment-settings"}
+                    checked={assignmentSettings?.assignmentsEnabled ?? true}
+                    onCheckedChange={(enabled) =>
+                      run(
+                        "toggle-assignment-settings",
+                        "admin-assignment-settings",
+                        async () => {
+                          await saveAssignmentSettings({ data: { assignmentsEnabled: enabled } });
+                          queryClient.invalidateQueries({ queryKey: ["learner-assignments"] });
+                          queryClient.invalidateQueries({ queryKey: ["exam-overview"] });
+                          queryClient.invalidateQueries({ queryKey: ["certificate-overview"] });
+                          queryClient.invalidateQueries({ queryKey: ["public-settings"] });
+                          queryClient.invalidateQueries({ queryKey: ["admin-pricing-settings"] });
+                        },
+                        enabled
+                          ? "Assignments enabled: uploads are open and required for certification."
+                          : "Assignments disabled: uploads are paused and bypassed for certification.",
+                      )
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <div>
+                <h2 className="text-xl font-semibold">Course assignments</h2>
+                <p className="text-sm text-muted-foreground">Manage individual assignment briefs and instructions.</p>
+              </div>
               <Button size="sm" onClick={() => setShowAddAssignment(!showAddAssignment)}>
                 <Plus className="size-4" /> {showAddAssignment ? "Hide panel" : "Add assignment"}
               </Button>

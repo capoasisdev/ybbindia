@@ -83,6 +83,7 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
     gstRatePercent,
     currency,
     testMode,
+    assignmentsEnabled: readBool(settings, "assignments_enabled"),
   };
 
   const [enrolment, rolesRes] = await Promise.all([
@@ -104,6 +105,7 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
         lessonsTotal: 0,
         assignmentsApproved: 0,
         assignmentsTotal: 0,
+        assignmentsRequired: readBool(settings, "assignments_enabled") && readBool(settings, "exam_require_assignments"),
         attemptsUsed: 0,
         freeAttemptsCount,
         paidAttemptsCount: 0,
@@ -238,6 +240,8 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
   const nextAttemptAt =
     lastEnded && !passed ? new Date(lastEnded + config.waitHours * 3600_000).toISOString() : null;
 
+  const assignmentsRequired = readBool(settings, "assignments_enabled") && readBool(settings, "exam_require_assignments");
+
   let requiresPayment = false;
   const reasons: string[] = [];
 
@@ -245,7 +249,7 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
     if (readBool(settings, "exam_require_all_lessons") && lessonsCompleted < lessonsTotal) {
       reasons.push(`Complete all ${lessonsTotal} lessons (${lessonsCompleted} done).`);
     }
-    if (readBool(settings, "exam_require_assignments") && assignmentsApproved < compulsory.length) {
+    if (assignmentsRequired && assignmentsApproved < compulsory.length) {
       reasons.push(
         `All ${compulsory.length} compulsory assignments must be approved (${assignmentsApproved} approved).`,
       );
@@ -273,6 +277,7 @@ export async function buildOverview(supabase: any, userId: string): Promise<Exam
       lessonsTotal,
       assignmentsApproved,
       assignmentsTotal: compulsory.length,
+      assignmentsRequired,
       attemptsUsed,
       freeAttemptsCount,
       paidAttemptsCount,

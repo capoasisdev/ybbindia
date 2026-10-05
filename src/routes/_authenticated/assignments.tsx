@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { CheckCircle2, Clock, Download, FileCheck2, Loader2, Upload } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, Download, FileCheck2, Loader2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
@@ -98,6 +98,8 @@ function Page() {
     return a.title.localeCompare(b.title);
   });
 
+  const assignmentsEnabled = data.assignmentsEnabled ?? true;
+
   return (
     <AppShell title="Assignments">
       <div className="space-y-8">
@@ -107,6 +109,18 @@ function Page() {
             {data.submittedCount} of {total} submitted · {data.approvedCount} approved
           </p>
         </header>
+
+        {!assignmentsEnabled && (
+          <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-900">
+            <AlertCircle className="size-5 shrink-0 text-amber-600 mt-0.5" />
+            <div className="space-y-1">
+              <h3 className="font-semibold text-amber-950">Assignment Submissions Temporarily Paused</h3>
+              <p className="text-xs text-amber-800 leading-relaxed">
+                Assignment uploads are currently paused by administration. You are <strong>not required</strong> to submit or complete assignments to take the qualifying examination or receive your official certificate.
+              </p>
+            </div>
+          </div>
+        )}
 
         {total === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
@@ -141,7 +155,11 @@ function Page() {
                   <AccordionContent className="pt-2 pb-6">
                     <div className="space-y-5 pt-3">
                       {group.assignments.map((assignment) => (
-                        <AssignmentCard key={assignment.id} assignment={assignment} />
+                        <AssignmentCard
+                          key={assignment.id}
+                          assignment={assignment}
+                          assignmentsEnabled={assignmentsEnabled}
+                        />
                       ))}
                     </div>
                   </AccordionContent>
@@ -155,7 +173,13 @@ function Page() {
   );
 }
 
-export function AssignmentCard({ assignment }: { assignment: LearnerAssignment }) {
+export function AssignmentCard({
+  assignment,
+  assignmentsEnabled = true,
+}: {
+  assignment: LearnerAssignment;
+  assignmentsEnabled?: boolean;
+}) {
   const queryClient = useQueryClient();
   const submitFn = useServerFn(recordSubmission);
   const urlFn = useServerFn(getSubmissionUrl);
@@ -276,7 +300,14 @@ export function AssignmentCard({ assignment }: { assignment: LearnerAssignment }
         </ul>
       )}
 
-      {!approved && attemptsLeft > 0 && (
+      {!assignmentsEnabled && !approved && (
+        <div className="mt-5 rounded-xl border border-dashed border-amber-300/60 bg-amber-50/50 p-3.5 text-xs text-amber-800 flex items-center gap-2.5">
+          <AlertCircle className="size-4 shrink-0 text-amber-600" />
+          <span>Uploads paused by admin · Not required for exam or certification.</span>
+        </div>
+      )}
+
+      {assignmentsEnabled && !approved && attemptsLeft > 0 && (
         <div className="mt-5 space-y-3 border-t border-border pt-5">
           <label className="block text-sm font-medium">
             Upload your work
@@ -310,7 +341,7 @@ export function AssignmentCard({ assignment }: { assignment: LearnerAssignment }
         </p>
       )}
 
-      {!approved && attemptsLeft <= 0 && (
+      {assignmentsEnabled && !approved && attemptsLeft <= 0 && (
         <p className="mt-5 flex items-center gap-2 border-t border-border pt-5 text-sm text-muted-foreground">
           <FileCheck2 className="size-4" /> All attempts used — contact support if you need another.
         </p>

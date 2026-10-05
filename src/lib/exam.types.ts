@@ -28,6 +28,7 @@ export type ExamOverview = {
     gstRatePercent: number;
     currency: string;
     testMode: boolean;
+    assignmentsEnabled?: boolean;
   };
   eligibility: {
     canStart: boolean;
@@ -36,6 +37,7 @@ export type ExamOverview = {
     lessonsTotal: number;
     assignmentsApproved: number;
     assignmentsTotal: number;
+    assignmentsRequired?: boolean;
     attemptsUsed: number;
     freeAttemptsCount: number;
     paidAttemptsCount: number;

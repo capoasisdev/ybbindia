@@ -388,11 +388,25 @@ function Page() {
               value={eligibility.lessonsCompleted}
               total={eligibility.lessonsTotal}
             />
-            <Readiness
-              label="Compulsory assignments approved"
-              value={eligibility.assignmentsApproved}
-              total={eligibility.assignmentsTotal}
-            />
+            {eligibility.assignmentsRequired === false ? (
+              <div className="flex items-center justify-between text-sm py-1 border-b border-border/40 pb-3">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <span>Compulsory assignments</span>
+                  <span className="text-[11px] font-medium bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    Not Required · Paused
+                  </span>
+                </span>
+                <span className="text-xs font-semibold text-emerald-600">
+                  Bypassed
+                </span>
+              </div>
+            ) : (
+              <Readiness
+                label="Compulsory assignments approved"
+                value={eligibility.assignmentsApproved}
+                total={eligibility.assignmentsTotal}
+              />
+            )}
             <div className="flex flex-wrap items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
               <span>Free attempts included: <strong>{eligibility.freeAttemptsCount}</strong></span>
               <span>Paid attempts unlocked: <strong>{eligibility.paidAttemptsCount}</strong></span>

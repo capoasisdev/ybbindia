@@ -7,6 +7,7 @@ import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { AlertCircle } from "lucide-react";
 import {
   getAdminSubmissionUrl,
   listAdminSubmissions,
@@ -15,6 +16,7 @@ import {
   type AdminSubmission,
   type ReviewDecision,
 } from "@/lib/reviews.functions";
+import { getAdminAssignmentSettings } from "@/lib/admin.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin/reviews")({
@@ -63,12 +65,19 @@ function Page() {
   const fetchAudit = useServerFn(listAuditLogs);
   const fetchUrl = useServerFn(getAdminSubmissionUrl);
   const review = useServerFn(reviewSubmission);
+  const fetchAssignmentSettings = useServerFn(getAdminAssignmentSettings);
 
   const [status, setStatus] = useState<string>("submitted");
   const [search, setSearch] = useState("");
   const [latestOnly, setLatestOnly] = useState(true);
   const [auditSearch, setAuditSearch] = useState("");
   const [showAudit, setShowAudit] = useState(false);
+
+  const { data: assignmentSettings } = useQuery({
+    queryKey: ["admin-assignment-settings"],
+    queryFn: () => fetchAssignmentSettings(),
+    retry: false,
+  });
 
   const submissionsQuery = useQuery({
     queryKey: ["admin-submissions", status, search, latestOnly],
@@ -113,6 +122,18 @@ function Page() {
         Every learner submission with its full review history. Approve, reject or request a
         resubmission with written feedback — each decision is written to the audit trail.
       </p>
+
+      {assignmentSettings?.assignmentsEnabled === false && (
+        <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-sm text-amber-900">
+          <AlertCircle className="size-5 shrink-0 text-amber-600 mt-0.5" />
+          <div className="space-y-0.5">
+            <h3 className="font-semibold">Assignment Uploads are Temporarily Disabled</h3>
+            <p className="text-xs text-amber-800">
+              Learners cannot currently submit new files. Existing submissions can still be reviewed, but assignments are not blocking exam or certification eligibility.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
         {STATUS_FILTERS.map((filter) => (

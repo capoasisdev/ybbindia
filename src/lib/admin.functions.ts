@@ -580,6 +580,7 @@ export type AdminPricingSettings = {
   paymentsTestMode: boolean;
   examFreeAttempts: number;
   examAttemptPricePaise: number;
+  assignmentsEnabled: boolean;
 };
 
 export const getAdminPricingSettings = createServerFn({ method: "GET" })
@@ -599,6 +600,7 @@ export const getAdminPricingSettings = createServerFn({ method: "GET" })
         "payments_test_mode",
         "exam_free_attempts",
         "exam_attempt_price_paise",
+        "assignments_enabled",
       ]);
 
     if (error) throw new Error(error.message);
@@ -617,6 +619,7 @@ export const getAdminPricingSettings = createServerFn({ method: "GET" })
       paymentsTestMode: Boolean(settings.payments_test_mode ?? true),
       examFreeAttempts: Number(settings.exam_free_attempts ?? 2),
       examAttemptPricePaise: Number(settings.exam_attempt_price_paise ?? 50000),
+      assignmentsEnabled: settings.assignments_enabled === undefined ? true : Boolean(settings.assignments_enabled),
     };
   });
 
@@ -645,6 +648,9 @@ export const updateAdminPricingSettings = createServerFn({ method: "POST" })
       if (typeof data.examAttemptPricePaise !== "number" || data.examAttemptPricePaise < 0) {
         throw new Error("Invalid exam attempt price");
       }
+      if (typeof data.assignmentsEnabled !== "boolean") {
+        throw new Error("Invalid assignments enabled setting");
+      }
       return data;
     },
   )
@@ -663,11 +669,58 @@ export const updateAdminPricingSettings = createServerFn({ method: "POST" })
       { key: "payments_test_mode", value: data.paymentsTestMode, label: "Test mode payments", group_name: "commerce", is_public: false },
       { key: "exam_free_attempts", value: data.examFreeAttempts, label: "Free exam attempts", group_name: "exam", is_public: true },
       { key: "exam_attempt_price_paise", value: data.examAttemptPricePaise, label: "Re-exam attempt fee (paise)", group_name: "exam", is_public: true },
+      { key: "assignments_enabled", value: data.assignmentsEnabled, label: "Enable assignment submissions", group_name: "learning", is_public: true },
     ];
 
     const { error } = await supabaseAdmin.from("settings").upsert(updates, { onConflict: "key" });
     if (error) throw new Error(error.message);
 
     return { ok: true };
+  });
+
+export const getAdminAssignmentSettings = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ assignmentsEnabled: boolean }> => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+
+    const { data } = await supabase
+      .from("settings")
+      .select("value")
+      .eq("key", "assignments_enabled")
+      .maybeSingle();
+
+    return {
+      assignmentsEnabled: data?.value === undefined ? true : Boolean(data.value),
+    };
+  });
+
+export const updateAdminAssignmentSettings = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { assignmentsEnabled: boolean }) => {
+    if (typeof data.assignmentsEnabled !== "boolean") {
+      throw new Error("Invalid assignmentsEnabled value");
+    }
+    return data;
+  })
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    await assertAdmin(supabase, userId);
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("settings").upsert(
+      {
+        key: "assignments_enabled",
+        value: data.assignmentsEnabled,
+        label: "Enable assignment submissions",
+        description: "When disabled, assignment uploads are paused and assignments are not required for exam or certificate eligibility.",
+        group_name: "learning",
+        is_public: true,
+      },
+      { onConflict: "key" }
+    );
+
+    if (error) throw new Error(error.message);
+    return { ok: true, assignmentsEnabled: data.assignmentsEnabled };
   });
 

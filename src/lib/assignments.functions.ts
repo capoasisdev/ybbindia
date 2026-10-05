@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { readBool, type SettingsMap } from "@/domain/settings";
 
 export type AssignmentSubmission = {
   id: string;
@@ -31,6 +32,7 @@ export type LearnerAssignment = {
 
 export type AssignmentsOverview = {
   enrolled: boolean;
+  assignmentsEnabled: boolean;
   assignments: LearnerAssignment[];
   submittedCount: number;
   approvedCount: number;
@@ -42,7 +44,7 @@ export const getLearnerAssignments = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<AssignmentsOverview> => {
     const { supabase, userId } = context;
 
-    const [enrolmentRes, rolesRes] = await Promise.all([
+    const [enrolmentRes, rolesRes, settingsRes] = await Promise.all([
       supabase
         .from("enrolments")
         .select("id, course_id")
@@ -55,7 +57,14 @@ export const getLearnerAssignments = createServerFn({ method: "GET" })
         .from("user_roles")
         .select("role")
         .eq("user_id", userId),
+      supabase.from("settings").select("key, value"),
     ]);
+
+    const settingsMap: SettingsMap = {};
+    for (const row of settingsRes.data ?? []) {
+      settingsMap[row.key] = row.value;
+    }
+    const assignmentsEnabled = readBool(settingsMap, "assignments_enabled");
 
     const enrolment = enrolmentRes.data ?? null;
     const roles = (rolesRes.data ?? []).map((r: any) => r.role);
@@ -75,7 +84,7 @@ export const getLearnerAssignments = createServerFn({ method: "GET" })
     }
 
     if (!courseId) {
-      return { enrolled: false, assignments: [], submittedCount: 0, approvedCount: 0 };
+      return { enrolled: false, assignmentsEnabled, assignments: [], submittedCount: 0, approvedCount: 0 };
     }
 
     const [assignmentsRes, modulesRes, submissionsRes] = await Promise.all([
@@ -138,7 +147,7 @@ export const getLearnerAssignments = createServerFn({ method: "GET" })
       };
     });
 
-    return { enrolled: true, assignments, submittedCount, approvedCount };
+    return { enrolled: true, assignmentsEnabled, assignments, submittedCount, approvedCount };
   });
 
 /** Records an uploaded submission file against an assignment. */
@@ -155,6 +164,16 @@ export const recordSubmission = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    const { data: settingsData } = await supabase
+      .from("settings")
+      .select("key, value")
+      .eq("key", "assignments_enabled")
+      .maybeSingle();
+
+    if (settingsData && settingsData.value === false) {
+      throw new Error("Assignment submissions are currently paused by administration.");
+    }
 
     if (!data.storagePath.startsWith(`${userId}/`)) {
       throw new Error("Invalid upload path");
