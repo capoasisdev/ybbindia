@@ -28,6 +28,7 @@ import { Route as AuthenticatedResourcesRouteImport } from './routes/_authentica
 import { Route as AuthenticatedTicketsRouteImport } from './routes/_authenticated/tickets'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_authenticated/admin/certificates'
+import { Route as AuthenticatedAdminLearnersRouteImport } from './routes/_authenticated/admin/learners'
 import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authenticated/admin/lessons'
 import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin/pricing'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin/reviews'
@@ -133,6 +134,12 @@ const AuthenticatedAdminCertificatesRoute =
     path: '/admin/certificates',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminLearnersRoute =
+  AuthenticatedAdminLearnersRouteImport.update({
+    id: '/admin/learners',
+    path: '/admin/learners',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminLessonsRoute =
   AuthenticatedAdminLessonsRouteImport.update({
     id: '/admin/lessons',
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
+  '/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -221,6 +229,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
+  '/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -250,6 +259,7 @@ export interface FileRoutesById {
   '/_authenticated/tickets': typeof AuthenticatedTicketsRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/_authenticated/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
+  '/_authenticated/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/_authenticated/admin/lessons': typeof AuthenticatedAdminLessonsRoute
   '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/legal/$slug'
     | '/admin/certificates'
+    | '/admin/learners'
     | '/admin/lessons'
     | '/admin/pricing'
     | '/admin/reviews'
@@ -306,6 +317,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/legal/$slug'
     | '/admin/certificates'
+    | '/admin/learners'
     | '/admin/lessons'
     | '/admin/pricing'
     | '/admin/reviews'
@@ -334,6 +346,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tickets'
     | '/legal/$slug'
     | '/_authenticated/admin/certificates'
+    | '/_authenticated/admin/learners'
     | '/_authenticated/admin/lessons'
     | '/_authenticated/admin/pricing'
     | '/_authenticated/admin/reviews'
@@ -492,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminCertificatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/learners': {
+      id: '/_authenticated/admin/learners'
+      path: '/admin/learners'
+      fullPath: '/admin/learners'
+      preLoaderRoute: typeof AuthenticatedAdminLearnersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/lessons': {
       id: '/_authenticated/admin/lessons'
       path: '/admin/lessons'
@@ -554,6 +574,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
   AuthenticatedTicketsRoute: typeof AuthenticatedTicketsRoute
   AuthenticatedAdminCertificatesRoute: typeof AuthenticatedAdminCertificatesRoute
+  AuthenticatedAdminLearnersRoute: typeof AuthenticatedAdminLearnersRoute
   AuthenticatedAdminLessonsRoute: typeof AuthenticatedAdminLessonsRoute
   AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
@@ -572,6 +593,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
   AuthenticatedTicketsRoute: AuthenticatedTicketsRoute,
   AuthenticatedAdminCertificatesRoute: AuthenticatedAdminCertificatesRoute,
+  AuthenticatedAdminLearnersRoute: AuthenticatedAdminLearnersRoute,
   AuthenticatedAdminLessonsRoute: AuthenticatedAdminLessonsRoute,
   AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
   AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,

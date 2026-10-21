@@ -16,6 +16,7 @@ import {
   ScrollText,
   Settings2,
   UserRound,
+  Users,
   X,
   Eye,
   ShieldCheck,
@@ -32,6 +33,7 @@ import { cn } from "@/lib/utils";
 
 // Admin-facing sidebar nav
 const ADMIN_NAV = [
+  { to: "/admin/learners", search: {}, label: "Enrolled Learners", icon: Users },
   { to: "/admin/upload-courses", search: {}, label: "Upload Courses", icon: UploadCloud },
   { to: "/admin/lessons", search: { tab: "lessons" }, label: "Edit Lessons", icon: BookOpen },
   {
