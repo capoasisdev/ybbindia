@@ -62,7 +62,7 @@ export const getLearnerAssignments = createServerFn({ method: "GET" })
 
     const settingsMap: SettingsMap = {};
     for (const row of settingsRes.data ?? []) {
-      settingsMap[row.key] = row.value;
+      settingsMap[row.key] = row.value as SettingsMap[string];
     }
     const assignmentsEnabled = readBool(settingsMap, "assignments_enabled");
 
@@ -181,7 +181,7 @@ export const recordSubmission = createServerFn({ method: "POST" })
 
     const { data: assignment } = await supabase
       .from("assignments")
-      .select("id, max_attempts, max_file_size_mb, allowed_file_types")
+      .select("id, title, max_attempts, max_file_size_mb, allowed_file_types, lesson_id")
       .eq("id", data.assignmentId)
       .eq("is_published", true)
       .maybeSingle();
@@ -228,6 +228,73 @@ export const recordSubmission = createServerFn({ method: "POST" })
       is_latest: true,
     });
     if (error) throw new Error(error.message);
+
+    // Automated Notifications (Customer receipt + Admin pending review alert)
+    try {
+      const { sendNotification } = await import("@/lib/notifications.server");
+      const { data: profile } = await supabaseAdmin
+        .from("learner_profiles")
+        .select("full_name, email")
+        .eq("id", userId)
+        .maybeSingle();
+
+      const { data: lesson } = await supabaseAdmin
+        .from("lessons")
+        .select("title")
+        .eq("id", (assignment as any).lesson_id)
+        .maybeSingle();
+
+      const { data: adminSetting } = await supabaseAdmin
+        .from("settings")
+        .select("value")
+        .eq("key", "admin_notification_email")
+        .maybeSingle();
+
+      const learnerName = profile?.full_name || "Learner";
+      const learnerEmail = profile?.email;
+      const lessonTitle = lesson?.title || "Course Lesson";
+      const submittedAt = new Date().toLocaleString("en-IN", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      const notifVars = {
+        learner_name: learnerName,
+        learner_email: learnerEmail || "—",
+        assignment_title: assignment.title,
+        lesson_title: lessonTitle,
+        submitted_at: submittedAt,
+      };
+
+      if (learnerEmail) {
+        await sendNotification({
+          templateKey: "assignment_submitted_customer",
+          recipientEmail: learnerEmail,
+          recipientType: "customer",
+          variables: notifVars,
+          actorId: userId,
+          supabaseAdmin,
+          metadata: { assignmentId: data.assignmentId },
+        });
+      }
+
+      const adminEmail = (adminSetting?.value as string) || "info@ybbindia.com";
+      if (adminEmail) {
+        await sendNotification({
+          templateKey: "assignment_submitted_admin",
+          recipientEmail: adminEmail,
+          recipientType: "admin",
+          variables: notifVars,
+          actorId: userId,
+          supabaseAdmin,
+          metadata: { assignmentId: data.assignmentId },
+        });
+      }
+    } catch (notifErr) {
+      console.warn("[Notification] Assignment submission notification trigger failed gracefully:", notifErr);
+    }
 
     return { ok: true };
   });

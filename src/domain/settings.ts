@@ -43,6 +43,10 @@ export const SETTING_DEFAULTS = {
   certificate_validity_note: "This certificate does not expire.",
   programme_name: "ABB Certification Programme",
   support_email: "",
+  notifications_enabled: true,
+  admin_notification_email: "info@ybbindia.com",
+  notification_from_name: "Yoova Business Broking",
+  notification_from_email: "info@ybbindia.com",
   /**
    * When true, the checkout exposes a "Simulate successful payment" path that
    * fulfils the order without contacting Razorpay. Must be false at go-live.

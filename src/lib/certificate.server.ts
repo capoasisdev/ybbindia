@@ -206,5 +206,58 @@ export async function issueCertificateFor(
     .single();
 
   if (error) throw new Error(error.message);
+
+  // Automated Notifications (Customer congratulations + Admin certified broker alert)
+  try {
+    const { sendNotification } = await import("@/lib/notifications.server");
+    const { data: learnerProfile } = await supabaseAdmin
+      .from("learner_profiles")
+      .select("email, full_name, certificate_name")
+      .eq("id", params.userId)
+      .maybeSingle();
+
+    const learnerName = learnerProfile?.certificate_name || learnerProfile?.full_name || "Certified Broker";
+    const learnerEmail = learnerProfile?.email;
+    const issueDate = new Date().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    const notifVars = {
+      learner_name: learnerName,
+      learner_email: learnerEmail || "—",
+      abb_id: abbId,
+      issue_date: issueDate,
+    };
+
+    if (learnerEmail) {
+      await sendNotification({
+        templateKey: "certificate_issued_customer",
+        recipientEmail: learnerEmail,
+        recipientType: "customer",
+        variables: notifVars,
+        actorId: params.userId,
+        supabaseAdmin,
+        metadata: { certificateId: inserted.id, abbId },
+      });
+    }
+
+    const adminEmail = readString(settings, "admin_notification_email") || "info@ybbindia.com";
+    if (adminEmail) {
+      await sendNotification({
+        templateKey: "certificate_issued_admin",
+        recipientEmail: adminEmail,
+        recipientType: "admin",
+        variables: notifVars,
+        actorId: params.userId,
+        supabaseAdmin,
+        metadata: { certificateId: inserted.id, abbId },
+      });
+    }
+  } catch (notifErr) {
+    console.warn("[Notification] Certificate issuance notification trigger failed gracefully:", notifErr);
+  }
+
   return mapCertificate(inserted);
 }

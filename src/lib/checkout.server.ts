@@ -122,15 +122,18 @@ export async function markOrderPaid(supabaseAdmin: AdminClient, input: MarkPaidI
 
   const { data: existingInvoice } = await supabaseAdmin
     .from("invoices")
-    .select("id")
+    .select("id, invoice_number")
     .eq("order_id", order.id)
     .maybeSingle();
 
+  let invoiceNumber = existingInvoice?.invoice_number ?? null;
+
   if (!existingInvoice) {
+    invoiceNumber = await nextInvoiceNumber(supabaseAdmin, settings);
     await supabaseAdmin.from("invoices").insert({
       order_id: order.id,
       user_id: order.user_id,
-      invoice_number: await nextInvoiceNumber(supabaseAdmin, settings),
+      invoice_number: invoiceNumber,
       seller_snapshot: {
         legal_name: readSetting(settings, "company_legal_name"),
         address: readSetting(settings, "company_address"),
@@ -160,6 +163,66 @@ export async function markOrderPaid(supabaseAdmin: AdminClient, input: MarkPaidI
     entity_id: order.id,
     metadata: { gateway_payment_id: input.gatewayPaymentId } as never,
   });
+
+  // Automated Notifications (Customer confirmation + Admin new sale alert)
+  try {
+    const { sendNotification } = await import("@/lib/notifications.server");
+    const { data: profile } = await supabaseAdmin
+      .from("learner_profiles")
+      .select("full_name, email, mobile")
+      .eq("id", order.user_id)
+      .maybeSingle();
+
+    const learnerEmail = profile?.email || ((order.billing_snapshot as any)?.email as string);
+    const learnerName = profile?.full_name || ((order.billing_snapshot as any)?.full_name as string) || "Learner";
+    const learnerMobile = profile?.mobile || ((order.billing_snapshot as any)?.mobile as string) || "—";
+    const formattedAmount = `₹${(order.total_amount_paise / 100).toLocaleString("en-IN")}`;
+    const invoiceNum = invoiceNumber || "YBB/ABB/—";
+    const accessDays = readNumber(settings, "access_duration_days");
+    const validUntilDate = new Date(Date.now() + accessDays * 24 * 60 * 60 * 1000).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    const notifVars = {
+      learner_name: learnerName,
+      learner_email: learnerEmail,
+      learner_mobile: learnerMobile,
+      order_id: order.id.slice(0, 8).toUpperCase(),
+      amount: formattedAmount,
+      invoice_number: invoiceNum,
+      valid_until: validUntilDate,
+      date: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
+    };
+
+    if (learnerEmail) {
+      await sendNotification({
+        templateKey: "order_confirmed_customer",
+        recipientEmail: learnerEmail,
+        recipientType: "customer",
+        variables: notifVars,
+        actorId: order.user_id,
+        supabaseAdmin,
+        metadata: { orderId: order.id },
+      });
+    }
+
+    const adminEmail = String(readSetting(settings, "admin_notification_email") || "info@ybbindia.com");
+    if (adminEmail) {
+      await sendNotification({
+        templateKey: "order_created_admin",
+        recipientEmail: adminEmail,
+        recipientType: "admin",
+        variables: notifVars,
+        actorId: order.user_id,
+        supabaseAdmin,
+        metadata: { orderId: order.id },
+      });
+    }
+  } catch (notifErr) {
+    console.warn("[Notification] Order paid notification trigger failed gracefully:", notifErr);
+  }
 
   return { alreadyPaid: false, orderId: order.id };
 }

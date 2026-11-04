@@ -79,6 +79,45 @@ export const createSupportTicket = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
+    // Automated Notification (Admin new ticket alert)
+    try {
+      const { sendNotification } = await import("@/lib/notifications.server");
+      const { data: profile } = await supabaseAdmin
+        .from("learner_profiles")
+        .select("full_name, email")
+        .eq("id", userId)
+        .maybeSingle();
+
+      const { data: adminSetting } = await supabaseAdmin
+        .from("settings")
+        .select("value")
+        .eq("key", "admin_notification_email")
+        .maybeSingle();
+
+      const adminEmail = (adminSetting?.value as string) || "info@ybbindia.com";
+      if (adminEmail) {
+        await sendNotification({
+          templateKey: "ticket_created_admin",
+          recipientEmail: adminEmail,
+          recipientType: "admin",
+          variables: {
+            ticket_number: ticketNumber,
+            learner_name: profile?.full_name || "Learner",
+            learner_email: profile?.email || "—",
+            category: data.category,
+            priority: data.priority,
+            ticket_subject: data.subject,
+            ticket_description: data.description,
+          },
+          actorId: userId,
+          supabaseAdmin,
+          metadata: { ticketId: insertedData.id, ticketNumber },
+        });
+      }
+    } catch (notifErr) {
+      console.warn("[Notification] Ticket notification trigger failed gracefully:", notifErr);
+    }
+
     return {
       id: insertedData.id,
       ticketNumber: insertedData.ticket_number,

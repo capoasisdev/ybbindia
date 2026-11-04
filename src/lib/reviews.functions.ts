@@ -229,6 +229,48 @@ export const reviewSubmission = createServerFn({ method: "POST" })
       metadata: { score: data.score ?? null },
     });
 
+    // Automated Notification (Learner review result & feedback notes)
+    try {
+      const { sendNotification } = await import("@/lib/notifications.server");
+      const { data: subDetail } = await supabaseAdmin
+        .from("submissions")
+        .select("user_id, assignment_id, assignments(title)")
+        .eq("id", data.submissionId)
+        .maybeSingle();
+
+      if (subDetail?.user_id) {
+        const { data: profile } = await supabaseAdmin
+          .from("learner_profiles")
+          .select("full_name, email")
+          .eq("id", subDetail.user_id)
+          .maybeSingle();
+
+        const assignmentTitle = (subDetail.assignments as any)?.title || "Course Assignment";
+        const learnerName = profile?.full_name || "Learner";
+        const learnerEmail = profile?.email;
+        const reviewStatusFormatted = data.decision === "approved" ? "Approved" : "Requires Revisions";
+
+        if (learnerEmail) {
+          await sendNotification({
+            templateKey: "assignment_reviewed_customer",
+            recipientEmail: learnerEmail,
+            recipientType: "customer",
+            variables: {
+              learner_name: learnerName,
+              assignment_title: assignmentTitle,
+              review_status: reviewStatusFormatted,
+              reviewer_notes: data.feedback.trim() || "No additional comments provided.",
+            },
+            actorId: subDetail.user_id,
+            supabaseAdmin,
+            metadata: { submissionId: data.submissionId, decision: data.decision },
+          });
+        }
+      }
+    } catch (notifErr) {
+      console.warn("[Notification] Review notification trigger failed gracefully:", notifErr);
+    }
+
     return { ok: true };
   });
 

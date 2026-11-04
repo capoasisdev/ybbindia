@@ -22,6 +22,7 @@ import {
   ShieldCheck,
   BookMarked,
   UploadCloud,
+  Bell,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getAdminAccess } from "@/lib/admin.functions";
@@ -46,6 +47,7 @@ const ADMIN_NAV = [
   { to: "/admin/reviews", search: {}, label: "Submission Reviews", icon: ClipboardCheck },
   { to: "/admin/certificates", search: {}, label: "Certificate Approvals", icon: ScrollText },
   { to: "/admin/pricing", search: {}, label: "Pricing Controls", icon: Settings2 },
+  { to: "/admin/notifications", search: {}, label: "Notification Automations", icon: Bell },
   { to: "/profile", search: {}, label: "My Profile", icon: UserRound },
 ] as const;
 

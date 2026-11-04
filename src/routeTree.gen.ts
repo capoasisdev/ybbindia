@@ -30,6 +30,7 @@ import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as AuthenticatedAdminCertificatesRouteImport } from './routes/_authenticated/admin/certificates'
 import { Route as AuthenticatedAdminLearnersRouteImport } from './routes/_authenticated/admin/learners'
 import { Route as AuthenticatedAdminLessonsRouteImport } from './routes/_authenticated/admin/lessons'
+import { Route as AuthenticatedAdminNotificationsRouteImport } from './routes/_authenticated/admin/notifications'
 import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin/pricing'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin/reviews'
 import { Route as AuthenticatedAdminUploadCoursesRouteImport } from './routes/_authenticated/admin/upload-courses'
@@ -146,6 +147,12 @@ const AuthenticatedAdminLessonsRoute =
     path: '/admin/lessons',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminNotificationsRoute =
+  AuthenticatedAdminNotificationsRouteImport.update({
+    id: '/admin/notifications',
+    path: '/admin/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminPricingRoute =
   AuthenticatedAdminPricingRouteImport.update({
     id: '/admin/pricing',
@@ -203,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
@@ -231,6 +239,7 @@ export interface FileRoutesByTo {
   '/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
@@ -261,6 +270,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/certificates': typeof AuthenticatedAdminCertificatesRoute
   '/_authenticated/admin/learners': typeof AuthenticatedAdminLearnersRoute
   '/_authenticated/admin/lessons': typeof AuthenticatedAdminLessonsRoute
+  '/_authenticated/admin/notifications': typeof AuthenticatedAdminNotificationsRoute
   '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
   '/_authenticated/admin/upload-courses': typeof AuthenticatedAdminUploadCoursesRoute
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/admin/certificates'
     | '/admin/learners'
     | '/admin/lessons'
+    | '/admin/notifications'
     | '/admin/pricing'
     | '/admin/reviews'
     | '/admin/upload-courses'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/admin/certificates'
     | '/admin/learners'
     | '/admin/lessons'
+    | '/admin/notifications'
     | '/admin/pricing'
     | '/admin/reviews'
     | '/admin/upload-courses'
@@ -348,6 +360,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/certificates'
     | '/_authenticated/admin/learners'
     | '/_authenticated/admin/lessons'
+    | '/_authenticated/admin/notifications'
     | '/_authenticated/admin/pricing'
     | '/_authenticated/admin/reviews'
     | '/_authenticated/admin/upload-courses'
@@ -519,6 +532,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLessonsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/notifications': {
+      id: '/_authenticated/admin/notifications'
+      path: '/admin/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AuthenticatedAdminNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/pricing': {
       id: '/_authenticated/admin/pricing'
       path: '/admin/pricing'
@@ -576,6 +596,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminCertificatesRoute: typeof AuthenticatedAdminCertificatesRoute
   AuthenticatedAdminLearnersRoute: typeof AuthenticatedAdminLearnersRoute
   AuthenticatedAdminLessonsRoute: typeof AuthenticatedAdminLessonsRoute
+  AuthenticatedAdminNotificationsRoute: typeof AuthenticatedAdminNotificationsRoute
   AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
   AuthenticatedAdminUploadCoursesRoute: typeof AuthenticatedAdminUploadCoursesRoute
@@ -595,6 +616,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminCertificatesRoute: AuthenticatedAdminCertificatesRoute,
   AuthenticatedAdminLearnersRoute: AuthenticatedAdminLearnersRoute,
   AuthenticatedAdminLessonsRoute: AuthenticatedAdminLessonsRoute,
+  AuthenticatedAdminNotificationsRoute: AuthenticatedAdminNotificationsRoute,
   AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
   AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
   AuthenticatedAdminUploadCoursesRoute: AuthenticatedAdminUploadCoursesRoute,
