@@ -302,11 +302,6 @@ function SubmissionCard({
             >
               {formatStatus(submission.status)}
             </span>
-            {submission.isFinalProject && (
-              <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                Final project
-              </span>
-            )}
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             {submission.learnerName ?? "Unnamed learner"} · {submission.learnerEmail ?? "—"}

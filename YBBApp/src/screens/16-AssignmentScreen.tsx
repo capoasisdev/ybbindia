@@ -92,32 +92,9 @@ export const AssignmentScreen: React.FC = () => {
         allowedFileTypes: official.allowedFileTypes || ["pdf", "docx", "xlsx", "zip"],
         maxFileSizeMb: official.maxFileSizeMb || 10,
         maxAttempts: official.maxAttempts || 3,
-        isFinalProject: m.number === 12,
         submissions: localSubs as AppSubmission[],
       };
     });
-  });
-
-  // Add Capstone Deal Portfolio
-  const capstoneSubs = resolveSubmissionsForAssignment({
-    id: "asgn-final-capstone",
-    title: "Final project — end-to-end broking mandate",
-    position: 51,
-  });
-
-  fallbackAssignments.push({
-    id: "asgn-final-capstone",
-    moduleId: "mod-final",
-    moduleNumber: 12,
-    moduleTitle: "Final Capstone Deal Portfolio",
-    title: "Final project — end-to-end broking mandate",
-    instructions:
-      "Prepare a complete broking mandate for an SME of your choice: business profile, valuation, marketing plan, buyer shortlist, negotiation strategy and closing checklist. Upload one PDF (max 25 MB).",
-    allowedFileTypes: ["pdf", "docx"],
-    maxFileSizeMb: 25,
-    maxAttempts: 3,
-    isFinalProject: true,
-    submissions: capstoneSubs as AppSubmission[],
   });
 
   const [assignmentList, setAssignmentList] = useState<AppAssignmentItem[]>(fallbackAssignments);
@@ -167,11 +144,6 @@ export const AssignmentScreen: React.FC = () => {
   const isAssignmentUnlocked = (asgn: AppAssignmentItem): boolean => {
     if (!isEnrolled) return false;
 
-    // Capstone / Final project unlocks when all modules/lessons are complete
-    if (asgn.isFinalProject) {
-      return isAllLessonsCompleted;
-    }
-
     // Direct lesson ID match
     if (asgn.lessonId && completedLessonIds.has(asgn.lessonId)) {
       return true;
@@ -201,13 +173,8 @@ export const AssignmentScreen: React.FC = () => {
   // Group assignments by moduleTitle (Exact Website Architecture)
   const groupedModules: GroupedModuleAssignments[] = [];
   visibleAssignments.forEach((asgn) => {
-    const rawKey = asgn.isFinalProject
-      ? "Final Capstone Project"
-      : asgn.moduleTitle || "General Assignments";
-
-    const displayTitle = asgn.isFinalProject
-      ? "Final Capstone Deal Portfolio"
-      : rawKey.startsWith("Module")
+    const rawKey = asgn.moduleTitle || "General Assignments";
+    const displayTitle = rawKey.startsWith("Module")
       ? rawKey
       : `Module ${asgn.moduleNumber < 10 ? `0${asgn.moduleNumber}` : asgn.moduleNumber}: ${rawKey}`;
 
@@ -218,7 +185,7 @@ export const AssignmentScreen: React.FC = () => {
         moduleNumber: asgn.moduleNumber || 0,
         moduleTitle: rawKey,
         displayTitle,
-        isFinalProject: Boolean(asgn.isFinalProject),
+        isFinalProject: false,
         assignments: [],
       };
       groupedModules.push(group);
@@ -227,11 +194,7 @@ export const AssignmentScreen: React.FC = () => {
   });
 
   // Sort groups by module number
-  groupedModules.sort((a, b) => {
-    if (a.isFinalProject) return 1;
-    if (b.isFinalProject) return -1;
-    return a.moduleNumber - b.moduleNumber;
-  });
+  groupedModules.sort((a, b) => a.moduleNumber - b.moduleNumber);
 
   // Global Metrics
   const totalAssignments = visibleAssignments.length;
@@ -510,9 +473,7 @@ export const AssignmentScreen: React.FC = () => {
                           : "bg-[#EEE6D3] text-[#7A7160]"
                       }`}
                     >
-                      {group.isFinalProject
-                        ? "★"
-                        : group.moduleNumber < 10
+                      {group.moduleNumber < 10
                         ? `0${group.moduleNumber}`
                         : group.moduleNumber}
                     </div>
@@ -590,7 +551,7 @@ export const AssignmentScreen: React.FC = () => {
                             <div className="min-w-0 flex-1">
                               <div className="flex items-center gap-1.5 mb-1">
                                 <span className="text-[9.5px] font-bold uppercase tracking-wider text-[#8C6425] bg-[#E7CE9C]/30 border border-[#B4863A]/20 px-2 py-0.5 rounded-full">
-                                  {asgn.isFinalProject ? "Capstone Portfolio" : "Module Assignment"}
+                                  Module Assignment
                                 </span>
                               </div>
                               <h4 className="font-serif font-bold text-[15.5px] sm:text-[16.5px] text-[#132242] leading-tight">

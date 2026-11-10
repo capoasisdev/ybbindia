@@ -885,3 +885,4 @@ function ActiveTicketDetailView({
     </div>
   );
 }
+

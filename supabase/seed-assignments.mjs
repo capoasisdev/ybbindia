@@ -487,22 +487,6 @@ async function seed() {
       });
     }
 
-    // Also add the Final Project assignment
-    inserts.push({
-      course_id: courseId,
-      module_id: null,
-      lesson_id: null,
-      title: "Final project — end-to-end broking mandate",
-      instructions: "Prepare a complete broking mandate for an SME of your choice: business profile, valuation, marketing plan, buyer shortlist, negotiation strategy and closing checklist. Upload one PDF (max 25 MB).",
-      allowed_file_types: ["pdf"],
-      max_file_size_mb: 25,
-      max_attempts: 3,
-      is_compulsory: true,
-      is_final_project: true,
-      is_published: true,
-      position: 999
-    });
-
     console.log(`Inserting ${inserts.length} assignments...`);
     const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/assignments`, {
       method: "POST",

@@ -768,8 +768,6 @@ export const fetchRealAssignmentsFromSupabase = async (userId?: string) => {
           moduleNumber: mod?.position || asgn.position || 1,
           moduleTitle: mod?.title
             ? `Module ${mod.position || asgn.position}: ${mod.title}`
-            : asgn.is_final_project
-            ? "Final Capstone Project"
             : "General Assignment",
           title: asgn.title,
           instructions:

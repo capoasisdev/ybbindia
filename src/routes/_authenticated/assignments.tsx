@@ -83,9 +83,7 @@ function Page() {
   const groups: { title: string; assignments: LearnerAssignment[] }[] = [];
 
   data.assignments.forEach((assignment) => {
-    const key = assignment.isFinalProject
-      ? "Final Project"
-      : assignment.moduleTitle || "General Assignments";
+    const key = assignment.moduleTitle || "General Assignments";
 
     let group = groups.find((g) => g.title === key);
     if (!group) {
@@ -95,10 +93,8 @@ function Page() {
     group.assignments.push(assignment);
   });
 
-  // Sort groups: Modules in order, then Final Project
+  // Sort groups: Modules in order
   groups.sort((a, b) => {
-    if (a.title === "Final Project") return 1;
-    if (b.title === "Final Project") return -1;
     const matchA = a.title.match(/\d+/);
     const matchB = b.title.match(/\d+/);
     if (matchA && matchB) {
@@ -240,11 +236,6 @@ export function AssignmentCard({
           {assignment.moduleTitle && (
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               {assignment.moduleTitle}
-            </p>
-          )}
-          {assignment.isFinalProject && (
-            <p className="text-xs font-medium uppercase tracking-wide text-primary">
-              Final project
             </p>
           )}
           <h2 className="mt-1 text-lg font-semibold">{assignment.title}</h2>

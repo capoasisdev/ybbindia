@@ -97,32 +97,9 @@ export const AssignmentView: React.FC<AssignmentViewProps> = ({
         allowedFileTypes: official.allowedFileTypes || ["pdf", "docx", "xlsx", "zip"],
         maxFileSizeMb: official.maxFileSizeMb || 10,
         maxAttempts: official.maxAttempts || 3,
-        isFinalProject: m.number === 12,
         submissions: localSubs as SubmissionRecord[],
       };
     });
-  });
-
-  // Add Final Capstone Project
-  const capstoneSubs = resolveSubmissionsForAssignment({
-    id: "asgn-final-capstone",
-    title: "Final project — end-to-end broking mandate",
-    position: 51,
-  });
-
-  fallbackAssignments.push({
-    id: "asgn-final-capstone",
-    moduleId: "mod-final",
-    moduleNumber: 12,
-    moduleTitle: "Final Capstone Project",
-    title: "Final project — end-to-end broking mandate",
-    instructions:
-      "Prepare a complete broking mandate for an SME of your choice: business profile, valuation, marketing plan, buyer shortlist, negotiation strategy and closing checklist. Upload one PDF (max 25 MB).",
-    allowedFileTypes: ["pdf", "docx"],
-    maxFileSizeMb: 25,
-    maxAttempts: 3,
-    isFinalProject: true,
-    submissions: capstoneSubs as SubmissionRecord[],
   });
 
   const [assignmentList, setAssignmentList] = useState<AppAssignment[]>(fallbackAssignments);
@@ -364,7 +341,7 @@ export const AssignmentView: React.FC<AssignmentViewProps> = ({
                 ) : hasSubmitted ? (
                   <span className="text-[#B4863A] text-[12px]">●</span>
                 ) : null}
-                <span>{a.isFinalProject ? "Final Project" : `Mod ${a.moduleNumber}`}</span>
+                <span>Mod {a.moduleNumber}</span>
               </button>
             );
           })}
@@ -409,13 +386,8 @@ export const AssignmentView: React.FC<AssignmentViewProps> = ({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C6425] bg-[#E7CE9C]/30 border border-[#B4863A]/20 px-2.5 py-0.5 rounded-full">
-                    {asgn.isFinalProject ? "Final Project" : `Module ${asgn.moduleNumber}`}
+                    Module {asgn.moduleNumber}
                   </span>
-                  {asgn.isFinalProject && (
-                    <span className="text-[10px] font-bold text-[#1E4B3E] bg-[#E4EEE8] px-2 py-0.5 rounded-full">
-                      Capstone Deal Portfolio
-                    </span>
-                  )}
                 </div>
                 <h4 className="font-serif font-bold text-[17px] sm:text-[19px] text-[#132242] leading-tight">
                   {asgn.title}
