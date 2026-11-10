@@ -8,13 +8,13 @@ const STEPS = [
   },
   {
     icon: FileCheck,
-    title: "Complete the Practical Assignments",
-    body: "Submit the compulsory practical assignments connected with the lessons and modules.",
+    title: "Engage with Practical Exercises",
+    body: "Work through the deal exercises and transaction frameworks connected with each lesson.",
   },
   {
     icon: CheckSquare,
-    title: "Meet Assignment Requirements",
-    body: "Assignments must meet the review requirements communicated through the learner dashboard. A learner may be asked to revise and resubmit incomplete work.",
+    title: "Master Deal Frameworks",
+    body: "Review practical checklists, valuation templates, and broking mandates provided in the course resources.",
   },
   {
     icon: Clock,
@@ -36,18 +36,18 @@ const STEPS = [
 const HIGHLIGHTS = [
   {
     icon: ClipboardList,
-    label: "Practical assignments",
+    label: "Practical lesson exercises",
     body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
   },
   {
     icon: FileCheck2,
-    label: "Assignment review & feedback",
-    body: "Submitted assignments are reviewed. Learners receive structured feedback from the certification team.",
+    label: "Practical deal workbooks",
+    body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
   },
   {
     icon: RefreshCw,
-    label: "Resubmission where required",
-    body: "Incomplete or insufficient submissions must be revised and resubmitted before a learner can proceed.",
+    label: "Continuous revision & mastery",
+    body: "Reinforce learning with structured review materials and comprehensive lesson summaries.",
   },
   {
     icon: Shuffle,
@@ -114,7 +114,7 @@ export function CertificationStandardsSection() {
               Assessed, Not Merely Attended
             </h3>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              Learners must complete the prescribed assignments and demonstrate their understanding
+              Learners must complete all curriculum modules and demonstrate their understanding
               through a timed final examination.
             </p>
           </div>

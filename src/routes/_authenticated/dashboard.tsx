@@ -130,7 +130,7 @@ function DashboardPage() {
                   to="/assignments"
                   icon={FileCheck2}
                   title="Assignments"
-                  body="Submit work and read feedback"
+                  body="Explore practical exercises and workbooks"
                 />
               )}
               <Tile
@@ -147,7 +147,7 @@ function DashboardPage() {
             <GraduationCap className="mx-auto size-7 text-accent" />
             <h2 className="mt-4 text-xl font-semibold">You are not enrolled yet</h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-              Complete your enrolment to unlock all modules, assignments, the certification
+              Complete your enrolment to unlock all modules, practical resources, the certification
               examination and your ABB certificate.
             </p>
             <Button asChild className="mt-7 rounded-lg px-7">

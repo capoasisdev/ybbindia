@@ -519,8 +519,8 @@ function Page() {
                   done={data.eligibility?.assignmentsRequired === false ? true : !!data.eligibility?.assignmentsApproved}
                   label={
                     data.eligibility?.assignmentsRequired === false
-                      ? "Submit practical assignments (Not required · Paused by administration)"
-                      : "Submit and receive faculty approval on practical assignments"
+                      ? "Practical coursework (Self-paced study · Completed)"
+                      : "Complete all practical lesson exercises"
                   }
                 />
                 <Gate

@@ -3,18 +3,18 @@
 const HIGHLIGHTS = [
   {
     icon: ClipboardList,
-    label: "Practical assignments",
+    label: "Practical lesson exercises",
     body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
   },
   {
     icon: FileCheck2,
-    label: "Assignment review & feedback",
-    body: "Submitted assignments are reviewed. Learners receive structured feedback from the certification team.",
+    label: "Practical deal workbooks",
+    body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
   },
   {
     icon: RefreshCw,
-    label: "Resubmission where required",
-    body: "Incomplete or insufficient submissions must be revised and resubmitted before a learner can proceed.",
+    label: "Continuous revision & mastery",
+    body: "Reinforce learning with structured review materials and comprehensive lesson summaries.",
   },
   {
     icon: Shuffle,
@@ -45,7 +45,7 @@ export function AssessmentCredibilitySection() {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
           Watching the course videos alone does not automatically qualify a learner for the ABB
-          credential. Learners must complete the prescribed assignments and demonstrate their
+          credential. Learners must complete all curriculum modules and demonstrate their
           understanding through a timed final examination.
         </p>
       </div>

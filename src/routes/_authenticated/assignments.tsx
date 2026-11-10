@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/assignments")({
   head: () => ({
     meta: [
       { title: "Assignments | ABB Certification Programme" },
-      { name: "description", content: "Submit your assignments and read reviewer feedback." },
+      { name: "description", content: "Access practical lesson assignments and course exercises." },
       { name: "robots", content: "noindex" },
     ],
   }),

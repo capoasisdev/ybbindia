@@ -83,7 +83,7 @@ function AuthPage() {
             <span className="block text-sidebar-primary">the ABB credential.</span>
           </h1>
           <p className="mt-5 text-sm leading-relaxed text-sidebar-foreground/70">
-            Sign in to continue your lessons, submit assignments, take the certification examination
+            Sign in to continue your lessons, access course resources, take the certification examination
             and download your certificate.
           </p>
 

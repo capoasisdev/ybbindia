@@ -68,7 +68,7 @@ const JOURNEY = [
   {
     icon: FileCheck2,
     title: "Apply",
-    body: "Submit practical assignments that are reviewed and graded by YBB's certification reviewers.",
+    body: "Work through practical exercises, case studies, and deal workbooks connected to each module.",
   },
   {
     icon: GraduationCap,
