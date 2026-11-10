@@ -46,6 +46,7 @@ const ADMIN_NAV = [
   { to: "/admin/lessons", search: { tab: "questions" }, label: "Question Bank", icon: HelpCircle },
   { to: "/admin/reviews", search: {}, label: "Submission Reviews", icon: ClipboardCheck },
   { to: "/admin/certificates", search: {}, label: "Certificate Approvals", icon: ScrollText },
+  { to: "/admin/tickets", search: {}, label: "Support Tickets", icon: LifeBuoy },
   { to: "/admin/pricing", search: {}, label: "Pricing Controls", icon: Settings2 },
   { to: "/admin/notifications", search: {}, label: "Notification Automations", icon: Bell },
   { to: "/profile", search: {}, label: "My Profile", icon: UserRound },
