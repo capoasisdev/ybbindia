@@ -96,8 +96,8 @@ function AuthPage() {
               },
               {
                 icon: FileCheck2,
-                label: "Reviewer-graded assignments",
-                hint: "Practical, assessed work",
+                label: "Practical deal workbooks",
+                hint: "Templates, frameworks & exercises",
               },
               {
                 icon: BadgeCheck,
@@ -305,6 +305,19 @@ function SignUpForm({ redirectTo, onSignedIn }: { redirectTo: string; onSignedIn
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem("ybb_enrol_lead") || window.sessionStorage.getItem("ybb_enrol_lead");
+      if (!raw) return;
+      const lead = JSON.parse(raw) as { fullName?: string; email?: string; phone?: string };
+      if (lead.fullName) setFullName((prev) => prev || lead.fullName || "");
+      if (lead.email) setEmail((prev) => prev || lead.email || "");
+      if (lead.phone) setMobile((prev) => prev || lead.phone || "");
+    } catch {
+      // Ignore invalid or blocked storage
+    }
+  }, []);
 
   return (
     <form

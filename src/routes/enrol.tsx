@@ -1,14 +1,23 @@
-import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, CheckCircle2, Info, ShieldCheck } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { ArrowRight, CheckCircle2, Info, Loader2, ShieldCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
-import { getPublicPilotStats, getPublicSettings } from "@/lib/public.functions";
+import {
+  captureEnrolmentLead,
+  getPublicPilotStats,
+  getPublicSettings,
+} from "@/lib/public.functions";
+import { getStoredUtmParams } from "@/lib/meta-pixel";
 import { formatPaiseExact } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
+import { toast } from "sonner";
 
 const settingsQuery = queryOptions({
   queryKey: ["public-settings"],
@@ -46,12 +55,49 @@ export const Route = createFileRoute("/enrol")({
 });
 
 function EnrolPage() {
+  const navigate = useNavigate();
+  const saveLead = useServerFn(captureEnrolmentLead);
   const { data: settings } = useSuspenseQuery(settingsQuery);
   const { data: pilotStats } = useSuspenseQuery(pilotStatsQuery);
   const { user, loading } = useAuth();
 
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [updatesConsent, setUpdatesConsent] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedDisclosure, setAcceptedDisclosure] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw =
+        window.localStorage.getItem("ybb_enrol_lead") ||
+        window.sessionStorage.getItem("ybb_enrol_lead");
+      if (raw) {
+        const saved = JSON.parse(raw) as {
+          fullName?: string;
+          email?: string;
+          phone?: string;
+          updatesConsent?: boolean;
+        };
+        if (saved.fullName) setFullName((p) => p || saved.fullName || "");
+        if (saved.email) setEmail((p) => p || saved.email || "");
+        if (saved.phone) setPhone((p) => p || saved.phone || "");
+        if (typeof saved.updatesConsent === "boolean") setUpdatesConsent(saved.updatesConsent);
+      }
+    } catch {
+      // Ignore storage read error
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    const meta = (user.user_metadata ?? {}) as { full_name?: string; mobile?: string };
+    if (user.email) setEmail((p) => p || user.email || "");
+    if (meta.full_name) setFullName((p) => p || meta.full_name || "");
+    if (meta.mobile) setPhone((p) => p || meta.mobile || "");
+  }, [user]);
 
   const pricePaise = readNumber(settings, "course_price_paise");
   const accessDays = readNumber(settings, "access_duration_days");
@@ -60,7 +106,59 @@ function EnrolPage() {
   const pilotCap = pilotStats?.pilotCap ?? 100;
   const seatsRemaining = typeof paidCount === "number" ? Math.max(0, pilotCap - paidCount) : null;
 
-  const canProceed = acceptedTerms && acceptedDisclosure;
+  const hasValidContact =
+    fullName.trim().length >= 2 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
+    phone.replace(/\D/g, "").length >= 10;
+
+  const canProceed = acceptedTerms && acceptedDisclosure && hasValidContact && !submitting;
+
+  async function handleProceed(target: "checkout" | "signup" | "signin") {
+    if (!hasValidContact) {
+      toast.error("Please enter your full name, a valid email address, and a 10+ digit phone number.");
+      return;
+    }
+    if (!acceptedTerms || !acceptedDisclosure) {
+      toast.error("Please tick both declaration boxes before continuing.");
+      return;
+    }
+
+    setSubmitting(true);
+    const payload = {
+      fullName: fullName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      updatesConsent,
+    };
+
+    try {
+      const serialized = JSON.stringify(payload);
+      window.localStorage.setItem("ybb_enrol_lead", serialized);
+      window.sessionStorage.setItem("ybb_enrol_lead", serialized);
+    } catch {
+      // Ignore storage write error
+    }
+
+    try {
+      await saveLead({
+        data: {
+          ...payload,
+          utmParams: getStoredUtmParams(),
+          userId: user?.id ?? null,
+        },
+      });
+    } catch {
+      // Do not block checkout if background lead logging fails
+    } finally {
+      setSubmitting(false);
+    }
+
+    if (target === "checkout") {
+      navigate({ to: "/checkout" });
+    } else {
+      navigate({ to: "/auth", search: { mode: target, redirect: "/checkout" } });
+    }
+  }
 
   return (
     <SiteLayout>
@@ -134,8 +232,72 @@ function EnrolPage() {
               </div>
             </dl>
 
+            {/* Contact Details captured pre-payment */}
+            <div className="mt-6 space-y-3.5 border-t border-border pt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Your contact details
+              </p>
+              <div className="space-y-1.5">
+                <Label htmlFor="enrol-name" className="text-xs">
+                  Full name
+                </Label>
+                <Input
+                  id="enrol-name"
+                  required
+                  autoComplete="name"
+                  placeholder="Your full name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="enrol-email" className="text-xs">
+                  Email address
+                </Label>
+                <Input
+                  id="enrol-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="enrol-phone" className="text-xs">
+                  Phone / WhatsApp number
+                </Label>
+                <Input
+                  id="enrol-phone"
+                  type="tel"
+                  required
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="+91 98765 43210"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              <div className="flex items-start gap-3 pt-1">
+                <Checkbox
+                  id="updates-consent"
+                  checked={updatesConsent}
+                  onCheckedChange={(checked) => setUpdatesConsent(Boolean(checked))}
+                  className="mt-0.5"
+                />
+                <label
+                  htmlFor="updates-consent"
+                  className="cursor-pointer text-xs leading-relaxed text-muted-foreground"
+                >
+                  I agree to receive programme updates via WhatsApp and email from Yoova Business
+                  Broking.
+                </label>
+              </div>
+            </div>
+
             {/* Mandatory Checkboxes before payment */}
-            <div className="mt-7 space-y-4 border-t border-border pt-6">
+            <div className="mt-6 space-y-4 border-t border-border pt-6">
               <div className="flex items-start gap-3">
                 <Checkbox
                   id="accepted-terms"
@@ -177,35 +339,38 @@ function EnrolPage() {
 
             <div className="mt-7">
               {loading ? null : user ? (
-                <Button size="lg" className="w-full rounded-lg" disabled={!canProceed} asChild={canProceed}>
-                  {canProceed ? (
-                    <Link to="/checkout">
-                      Continue to checkout
-                      <ArrowRight className="size-4" />
-                    </Link>
-                  ) : (
-                    <span>Continue to checkout</span>
-                  )}
+                <Button
+                  type="button"
+                  size="lg"
+                  className="w-full rounded-lg"
+                  disabled={!canProceed}
+                  onClick={() => handleProceed("checkout")}
+                >
+                  {submitting && <Loader2 className="size-4 animate-spin" />}
+                  Continue to checkout
+                  <ArrowRight className="size-4" />
                 </Button>
               ) : (
                 <div className="space-y-3">
-                  <Button size="lg" className="w-full rounded-lg" disabled={!canProceed} asChild={canProceed}>
-                    {canProceed ? (
-                      <Link to="/auth" search={{ mode: "signup", redirect: "/checkout" }}>
-                        Create account to continue
-                      </Link>
-                    ) : (
-                      <span>Create account to continue</span>
-                    )}
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="w-full rounded-lg"
+                    disabled={!canProceed}
+                    onClick={() => handleProceed("signup")}
+                  >
+                    {submitting && <Loader2 className="size-4 animate-spin" />}
+                    Create account to continue
                   </Button>
-                  <Button size="lg" variant="outline" className="w-full rounded-lg" disabled={!canProceed} asChild={canProceed}>
-                    {canProceed ? (
-                      <Link to="/auth" search={{ mode: "signin", redirect: "/checkout" }}>
-                        I already have an account
-                      </Link>
-                    ) : (
-                      <span>I already have an account</span>
-                    )}
+                  <Button
+                    type="button"
+                    size="lg"
+                    variant="outline"
+                    className="w-full rounded-lg"
+                    disabled={!canProceed}
+                    onClick={() => handleProceed("signin")}
+                  >
+                    I already have an account
                   </Button>
                 </div>
               )}
@@ -213,7 +378,8 @@ function EnrolPage() {
 
             {!canProceed && (
               <p className="mt-3 text-center text-xs font-medium text-amber-600 dark:text-amber-400">
-                Please tick both declaration boxes above to proceed.
+                Please enter your name, email &amp; phone and tick both declaration boxes above to
+                proceed.
               </p>
             )}
 

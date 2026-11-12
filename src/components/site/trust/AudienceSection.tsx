@@ -2,6 +2,7 @@ import {
   Briefcase,
   Building2,
   Calculator,
+  GraduationCap,
   Scale,
   Users,
   TrendingUp,
@@ -12,6 +13,11 @@ const AUDIENCES = [
     icon: Briefcase,
     title: "Aspiring Business Brokers",
     body: "For individuals who want to build a professional career or independent practice in business broking.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Graduates and Early-Career Professionals",
+    body: "For commerce, management and finance graduates, and early-career professionals, who want a structured path into business broking.",
   },
   {
     icon: Building2,
@@ -48,12 +54,12 @@ export function AudienceSection() {
           Who Is This Programme For?
         </p>
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-          Designed for Professionals Who Want to Enter Business Broking
+          Designed for Anyone Who Wants to Enter Business Broking
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          The ABB Certification Programme is designed for professionals who want a structured
-          understanding of how businesses are identified, prepared, positioned and supported
-          through a sale or acquisition process.
+          The ABB Certification Programme is designed for learners and professionals who want a
+          structured understanding of how businesses are identified, prepared, positioned and
+          supported through a sale or acquisition process.
         </p>
       </div>
 

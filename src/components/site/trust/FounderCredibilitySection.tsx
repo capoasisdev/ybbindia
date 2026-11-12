@@ -148,9 +148,9 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
                   </h4>
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  As an entrepreneur, Kamlesh co-founded SaladO, building it from a home kitchen into one
-                  of India’s most recognised salad brands, with 50+ kitchens through a franchise model,
-                  and raising equity funding along the way. He also founded CapOasis Technology, an IT
+                  As an entrepreneur, Kamlesh co-founded SaladO, building it from a home kitchen into a
+                  well-known salad brand, with 50+ kitchens through a franchise model, and raising
+                  equity funding along the way. He also founded CapOasis Technology, an IT company
                   company focused on AI. Building his own ventures, through successes and setbacks, gave
                   him a first-hand understanding of what business owners go through, which is invaluable
                   when helping them sell, buy or bring in partners.
@@ -209,8 +209,8 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
                 </p>
                 <p className="font-medium text-foreground">
                   Kamlesh founded Yoova Business Broking with one clear mission: to bring structure to
-                  business broking in India, and to build the country’s first structured business broking
-                  company. This certification programme is the foundation of that mission, training
+                  business broking in India, and to build a structured business broking company for
+                  India. This certification programme is the foundation of that mission, training
                   professionals to approach business broking with the knowledge, discipline and ethics
                   the work deserves.
                 </p>

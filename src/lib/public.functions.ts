@@ -169,13 +169,13 @@ Email: info@ybbindia.com
 We may collect:
 • Name, email address, mobile number and city;
 • Account login details;
-• Course enrolment, progress, assignment submissions and examination results;
+• Course enrolment, progress and examination results;
 • Payment and transaction details. Payment-card or UPI details may be processed directly by our payment gateway and not stored by YBB;
 • Communications sent to us through email, forms, support requests or feedback;
 • Device, browser, IP address, cookies and website-usage information;
-• Information you voluntarily provide in assignments or learner submissions.
+• Information you voluntarily provide in learner forms or correspondence.
 
-Please do not include confidential client information, sensitive financial details or third-party personal data in assignments unless you are authorised to do so and it is necessary.
+Please do not include confidential client information, sensitive financial details or third-party personal data unless you are authorised to do so and it is necessary.
 
 ### 3. Why We Use Your Data
 We use personal data to:
@@ -274,7 +274,7 @@ Where a duplicate charge is verified, YBB will process the applicable refund thr
 Refunds will not be issued for:
 • Change of mind;
 • Lack of time or failure to use the programme;
-• Failure to complete lessons, assignments or examinations;
+• Failure to complete lessons or examinations;
 • Dissatisfaction based on personal expectations;
 • Lack of business results, deal closures, employment, income or certification outcome;
 • Technical issues caused by the learner’s device, internet connection, browser or incorrect email address;
@@ -536,3 +536,46 @@ export const getFreePreviewLesson = createServerFn({ method: "GET" }).handler(as
     videoUrl: data.video_url,
   };
 });
+
+/** Captures pre-payment learner contact & WhatsApp/email consent on /enrol. */
+export const captureEnrolmentLead = createServerFn({ method: "POST" })
+  .inputValidator(
+    (raw: {
+      fullName: string;
+      email: string;
+      phone: string;
+      updatesConsent: boolean;
+      utmParams?: Record<string, unknown> | null;
+      userId?: string | null;
+    }) => ({
+      fullName: String(raw?.fullName ?? "").trim().slice(0, 120),
+      email: String(raw?.email ?? "").trim().toLowerCase().slice(0, 180),
+      phone: String(raw?.phone ?? "").trim().slice(0, 32),
+      updatesConsent: Boolean(raw?.updatesConsent),
+      utmParams: raw?.utmParams ?? null,
+      userId: typeof raw?.userId === "string" && raw.userId.length <= 64 ? raw.userId : null,
+    }),
+  )
+  .handler(async ({ data }) => {
+    if (!data.fullName || !data.email || !data.phone) {
+      throw new Error("Please enter your full name, email address and phone number.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("audit_logs").insert({
+      actor_id: data.userId,
+      actor_email: data.email,
+      action: "enrolment_lead.captured",
+      entity_type: "enrolment_lead",
+      metadata: {
+        full_name: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        updates_consent: data.updatesConsent,
+        ...(data.utmParams ? { utm: data.utmParams } : {}),
+      } as never,
+    });
+    if (error) {
+      console.error("[enrol-lead] insert failed", error.message);
+    }
+    return { captured: true as const };
+  });

@@ -68,6 +68,19 @@ function CheckoutPage() {
     queryFn: () => fetchSummary(),
   });
 
+  function readUpdatesConsent(): boolean | undefined {
+    try {
+      const raw =
+        window.localStorage.getItem("ybb_enrol_lead") ||
+        window.sessionStorage.getItem("ybb_enrol_lead");
+      if (!raw) return undefined;
+      const parsed = JSON.parse(raw) as { updatesConsent?: boolean };
+      return typeof parsed.updatesConsent === "boolean" ? parsed.updatesConsent : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
   async function handleSimulate() {
     setBusy(true);
     try {
@@ -96,7 +109,8 @@ function CheckoutPage() {
       if (!ready || !window.Razorpay) throw new Error("Payment window could not be loaded.");
 
       const utmParams = getStoredUtmParams();
-      const order = await createOrder({ data: { utmParams } });
+      const updatesConsent = readUpdatesConsent();
+      const order = await createOrder({ data: { utmParams, updatesConsent } });
 
       const razorpay = new window.Razorpay({
         key: order.keyId,

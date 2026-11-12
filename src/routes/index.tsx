@@ -171,8 +171,8 @@ function ProgrammePage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sidebar-foreground/75 sm:text-lg">
-              The {programmeName} is YBB&apos;s end-to-end pathway for professionals who advise on
-              buying and selling businesses — structured training, assessed practice and a
+              The {programmeName} is YBB&apos;s end-to-end pathway for anyone who wants to learn how
+              businesses are bought and sold — structured training, practical deal workbooks and a
               credential that can be verified by anyone.
             </p>
 

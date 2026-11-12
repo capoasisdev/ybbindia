@@ -93,6 +93,7 @@ export const createEnrolmentOrder = createServerFn({ method: "POST" })
     z
       .object({
         utmParams: utmParamsSchema,
+        updatesConsent: z.boolean().optional(),
       })
       .optional().parse,
   )
@@ -145,6 +146,9 @@ export const createEnrolmentOrder = createServerFn({ method: "POST" })
           city: profile?.billing_city ?? null,
           state: buyerState,
           pincode: profile?.billing_pincode ?? null,
+          ...(typeof data?.updatesConsent === "boolean"
+            ? { updates_consent: data.updatesConsent }
+            : {}),
           ...(data?.utmParams ? { utm: data.utmParams } : {}),
         } as never,
       })
