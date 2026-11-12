@@ -99,9 +99,9 @@ export function WorkbookPreviewSection() {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
           The ABB Professional Workbook supports the complete learning journey with lesson notes,
-          practical exercises, structured assignments, assessment questions and learner
-          workspaces. It is designed to help learners move beyond passive video consumption and
-          apply business-broking concepts in a structured manner.
+          practical exercises, transaction templates, assessment practice and learner workspaces.
+          It is designed to help learners move beyond passive video consumption and apply
+          business-broking concepts in a structured manner.
         </p>
       </div>
 
@@ -200,7 +200,7 @@ export function WorkbookPreviewSection() {
               {[
                 "Available to enrolled learners",
                 "Aligned with all 11 programme modules",
-                "Includes practical exercises & assignments",
+                "Includes practical exercises & templates",
                 "Accessible during active course period",
               ].map((pt) => (
                 <li key={pt} className="flex items-center gap-2">

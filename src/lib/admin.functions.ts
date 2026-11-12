@@ -613,7 +613,7 @@ export const getAdminPricingSettings = createServerFn({ method: "GET" })
     // Default fallbacks matching SETTING_DEFAULTS from domain/settings
     return {
       coursePricePaise: Number(settings.course_price_paise ?? 1500000),
-      gstRatePercent: Number(settings.gst_rate_percent ?? 18),
+      gstRatePercent: Number(settings.gst_rate_percent ?? 0),
       currency: String(settings.currency ?? "INR"),
       accessDurationDays: Number(settings.access_duration_days ?? 365),
       paymentsTestMode: Boolean(settings.payments_test_mode ?? true),

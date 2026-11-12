@@ -130,28 +130,46 @@ export async function markOrderPaid(supabaseAdmin: AdminClient, input: MarkPaidI
 
   if (!existingInvoice) {
     invoiceNumber = await nextInvoiceNumber(supabaseAdmin, settings);
+    const hasTax = order.gst_rate_percent > 0;
+    const companyGstin = String(readSetting(settings, "company_gstin") || "").trim();
+    const companyCin = String(readSetting(settings, "company_cin") || "").trim();
+
+    const sellerSnapshot: Record<string, unknown> = {
+      legal_name: readSetting(settings, "company_legal_name"),
+      address: readSetting(settings, "company_address"),
+      state: readSetting(settings, "company_state"),
+      receipt_type: hasTax ? "tax_invoice" : "payment_receipt",
+      ...(companyCin ? { cin: companyCin } : {}),
+      ...(hasTax && companyGstin ? { gstin: companyGstin } : {}),
+    };
+
+    const rawBuyer = ((order.billing_snapshot as Record<string, unknown>) ?? {}) as Record<string, unknown>;
+    const buyerSnapshot = { ...rawBuyer };
+    if (!hasTax) {
+      delete buyerSnapshot.gst_number;
+    }
+
+    const lineItem: Record<string, unknown> = {
+      description: readSetting(settings, "programme_name"),
+      amount_paise: order.base_amount_paise,
+      discount_paise: order.discount_amount_paise,
+      ...(hasTax
+        ? {
+            gst_rate_percent: order.gst_rate_percent,
+            cgst_paise: order.cgst_paise,
+            sgst_paise: order.sgst_paise,
+            igst_paise: order.igst_paise,
+          }
+        : {}),
+    };
+
     await supabaseAdmin.from("invoices").insert({
       order_id: order.id,
       user_id: order.user_id,
       invoice_number: invoiceNumber,
-      seller_snapshot: {
-        legal_name: readSetting(settings, "company_legal_name"),
-        address: readSetting(settings, "company_address"),
-        gstin: readSetting(settings, "company_gstin"),
-        state: readSetting(settings, "company_state"),
-      } as never,
-      buyer_snapshot: order.billing_snapshot as never,
-      line_items: [
-        {
-          description: readSetting(settings, "programme_name"),
-          amount_paise: order.base_amount_paise,
-          discount_paise: order.discount_amount_paise,
-          gst_rate_percent: order.gst_rate_percent,
-          cgst_paise: order.cgst_paise,
-          sgst_paise: order.sgst_paise,
-          igst_paise: order.igst_paise,
-        },
-      ] as never,
+      seller_snapshot: sellerSnapshot as never,
+      buyer_snapshot: buyerSnapshot as never,
+      line_items: [lineItem] as never,
       total_paise: order.total_amount_paise,
     });
   }

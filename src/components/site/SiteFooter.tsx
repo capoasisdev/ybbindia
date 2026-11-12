@@ -1,7 +1,17 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Wordmark } from "./Wordmark";
+import { getPublicSettings } from "@/lib/public.functions";
+import { readString } from "@/domain/settings";
 
 export function SiteFooter() {
+  const { data: settings } = useQuery({
+    queryKey: ["public-settings"],
+    queryFn: () => getPublicSettings(),
+    staleTime: 60_000,
+  });
+  const companyCin = readString(settings, "company_cin").trim();
+
   return (
     <footer className="mt-24 border-t border-border bg-sidebar text-sidebar-foreground">
       <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
@@ -9,11 +19,12 @@ export function SiteFooter() {
           <Wordmark tone="light" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-sidebar-foreground/70">
             The Authorised Business Broker (ABB) certification programme — structured training,
-            assessed assignments and a verifiable credential for business broking professionals in
+            practical deal workbooks and a verifiable credential for business broking professionals in
             India.
           </p>
           <div className="mt-6 border-t border-sidebar-border pt-4 text-xs text-sidebar-foreground/65 leading-relaxed">
             <p className="font-semibold text-sidebar-foreground">Yoova Business Broking Pvt Ltd</p>
+            {companyCin && <p className="mt-1 font-mono text-sidebar-foreground/80">CIN: {companyCin}</p>}
             <p className="mt-1">
               E503, Samraat Tropicano, Serene Meadows, Gangapur Road, Nashik – 422013, Maharashtra, India
             </p>

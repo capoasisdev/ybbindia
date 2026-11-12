@@ -9,12 +9,12 @@ const PILLARS = [
   {
     icon: FileCheck2,
     title: "Practical Application",
-    body: "Every lesson is supported by a practical assignment designed to help learners apply the concepts to realistic business-broking situations.",
+    body: "Lessons are supported by structured deal workbooks, financial checklists and realistic case frameworks designed for business-broking situations.",
   },
   {
     icon: Award,
     title: "Assessed Certification",
-    body: "The ABB credential is not issued merely for watching videos. Learners must complete the prescribed assignments and clear the final examination.",
+    body: "The ABB credential is not issued merely for watching videos. Learners must complete the curriculum lessons and clear the timed, randomised final examination.",
   },
   {
     icon: ShieldCheck,

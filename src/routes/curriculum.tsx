@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowRight, ChevronDown, ChevronUp, Layers, PlayCircle, BookOpen, CheckCircle2, Search } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp, Info, Layers, PlayCircle, BookOpen, CheckCircle2, Search } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getPublicCourseOutline } from "@/lib/public.functions";
+import { trackViewContent } from "@/lib/meta-pixel";
 
 const outlineQuery = queryOptions({
   queryKey: ["public-outline"],
@@ -51,6 +52,13 @@ function CurriculumPage() {
   const { data: outline } = useSuspenseQuery(outlineQuery);
   const modules: CurriculumModule[] = (outline?.modules as CurriculumModule[]) ?? [];
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    trackViewContent({
+      contentName: outline?.course.title ?? "ABB Programme Curriculum",
+      currency: "INR",
+    });
+  }, [outline?.course.title]);
 
   // Default ALL modules expanded so all 50 lessons are immediately visible
   const [openMap, setOpenMap] = useState<Record<string, boolean>>(() => {
@@ -117,8 +125,17 @@ function CurriculumPage() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 border border-border shadow-xs">
               <CheckCircle2 className="size-4 text-success" />
-              Assessed Practical Workbooks
+              Practical Deal Workbooks
             </span>
+          </div>
+
+          <div className="mt-6 flex max-w-3xl items-start gap-3 rounded-2xl border border-border bg-card/85 px-5 py-4 text-xs leading-relaxed text-muted-foreground shadow-xs">
+            <Info className="mt-0.5 size-4 shrink-0 text-accent" />
+            <p>
+              Video lessons are presented by AI-generated presenters. All course content, frameworks
+              and case material are designed by Kamlesh Rohra, drawing on 20+ years of deal-making
+              experience.
+            </p>
           </div>
         </div>
       </section>

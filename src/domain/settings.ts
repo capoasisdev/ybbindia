@@ -12,12 +12,13 @@ export type SettingsMap = Record<string, SettingValue>;
 
 export const SETTING_DEFAULTS = {
   course_price_paise: 1_500_000,
-  gst_rate_percent: 18,
+  gst_rate_percent: 0,
   currency: "INR",
   access_duration_days: 365,
   invoice_prefix: "YBB/ABB/",
   invoice_next_number: 1,
-  company_legal_name: "Yoova Business Broking",
+  company_legal_name: "Yoova Business Broking Pvt Ltd",
+  company_cin: "U74901MH2025PTC444981",
   company_address: "",
   company_gstin: "",
   company_state: "",

@@ -1,4 +1,4 @@
-﻿import { CheckCircle2, ClipboardList, Clock, FileCheck2, RefreshCw, Shuffle } from "lucide-react";
+import { CheckCircle2, ClipboardList, Clock, FileCheck2, RefreshCw, Shuffle } from "lucide-react";
 
 const HIGHLIGHTS = [
   {

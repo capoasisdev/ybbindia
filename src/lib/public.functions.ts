@@ -496,3 +496,43 @@ export const getPublicCourseOutline = createServerFn({ method: "GET" }).handler(
 
   return { course: defaultCourse, modules: FULL_CURRICULUM_MODULES };
 });
+
+/** Real count of active paid enrolments for the pilot batch banner (never returns PII). */
+export const getPublicPilotStats = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { count, error } = await supabaseAdmin
+    .from("enrolments")
+    .select("id", { count: "exact", head: true })
+    .eq("source", "purchase")
+    .eq("is_active", true);
+
+  if (error) {
+    console.error("[pilot-stats] failed", error.message);
+    return { paidEnrolmentsCount: null as number | null, pilotCap: 100 };
+  }
+
+  return { paidEnrolmentsCount: count ?? 0, pilotCap: 100 };
+});
+
+/** Free preview video metadata for Lesson 1 on the homepage / curriculum page. */
+export const getFreePreviewLesson = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin
+    .from("lessons")
+    .select("id, title, video_url, is_published")
+    .eq("is_published", true)
+    .ilike("title", "Lesson 1:%")
+    .order("position", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data?.video_url) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    title: data.title,
+    videoUrl: data.video_url,
+  };
+});

@@ -29,14 +29,14 @@ const FAQS = [
       "Learners receive 365 days of programme access from the date access is activated.",
   },
   {
-    question: "Is the programme self-paced?",
+    question: "Who presents the video lessons?",
     answer:
-      "Yes. Learners can study at their own pace within the 365-day access period, subject to the programme’s assignment and certification requirements.",
+      "The lessons are delivered by AI-generated presenters, which lets us keep every module clear, consistent and easy to update. All content, frameworks and examples are designed by our founder, Kamlesh Rohra. Pilot learners can also book a 15-minute 1:1 call with Kamlesh after enrolling.",
   },
   {
-    question: "Are the assignments compulsory?",
+    question: "Is the programme self-paced?",
     answer:
-      "Yes. Practical assignments are an important part of the ABB certification process. Learners must complete the prescribed assignments and may be asked to revise incomplete submissions.",
+      "Yes. Learners can study at their own pace within the 365-day access period, subject to the programme’s curriculum completion and final examination requirements.",
   },
   {
     question: "How is the final examination conducted?",

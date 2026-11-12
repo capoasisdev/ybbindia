@@ -13,13 +13,13 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-export function FounderCredibilitySection() {
+export function FounderCredibilitySection({ companyCin }: { companyCin?: string }) {
   return (
     <section className="container-page py-20">
       {/* Section Header */}
       <div className="max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-          Meet Your Instructor
+          Meet the Founder
         </p>
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl text-foreground font-display">
           Built on 20+ Years of Deal-Making
@@ -40,7 +40,9 @@ export function FounderCredibilitySection() {
               />
               <div className="absolute bottom-3 left-3 right-3 rounded-xl bg-card/90 backdrop-blur-md px-3.5 py-2.5 border border-border/60 flex items-center gap-2">
                 <ShieldCheck className="size-4 text-accent shrink-0" />
-                <span className="text-xs font-medium text-foreground">Founder &amp; Instructor</span>
+                <span className="text-xs font-medium text-foreground">
+                  Founder &amp; Programme Designer
+                </span>
               </div>
             </div>
 
@@ -65,17 +67,18 @@ export function FounderCredibilitySection() {
               </span>
             </div>
 
-            {/* Instructor Expectation Quote Card */}
+            {/* Founder Expectation Quote Card */}
             <div className="rounded-2xl border border-accent/30 bg-accent/5 p-5 space-y-2.5">
               <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
                 <Sparkles className="size-3.5" />
-                <span>What to Expect from Him</span>
+                <span>How This Programme Was Built</span>
               </div>
               <p className="text-sm leading-relaxed text-foreground italic">
-                &ldquo;Kamlesh teaches the way deals actually happen, not just how textbooks describe
-                them. Expect practical frameworks, real-world scenarios, and honest lessons about what
-                goes right and wrong in a transaction, drawn from twenty years of sitting across the table
-                from investors, buyers, sellers and advisors.&rdquo;
+                &ldquo;Kamlesh designed this programme around the way deals actually happen, not
+                just how textbooks describe them. Expect practical frameworks, real-world scenarios
+                and honest lessons about what goes right and wrong in a transaction, drawn from
+                twenty years of sitting across the table from investors, buyers, sellers and
+                advisors.&rdquo;
               </p>
             </div>
           </div>
@@ -223,7 +226,7 @@ export function FounderCredibilitySection() {
                   <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
                     A verified marketplace where certified business brokers and professionals such as
                     CAs, CSs, lawyers, bankers and wealth managers collaborate on genuine deals. Learners
-                    who complete this programme will be eligible to participate.
+                    who complete this programme will be eligible to apply.
                   </p>
                 </div>
                 <a
@@ -232,7 +235,7 @@ export function FounderCredibilitySection() {
                   rel="noreferrer"
                   className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-secondary px-3.5 py-2 text-xs font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  <span>Pilot Phase</span>
+                  <span>Visit businessbroking.in</span>
                   <ArrowRight className="size-3" />
                 </a>
               </div>
@@ -252,6 +255,9 @@ export function FounderCredibilitySection() {
           <div>
             <p className="text-muted-foreground">Programme &amp; Certification Provider:</p>
             <p className="mt-1 font-semibold text-sm text-foreground">Yoova Business Broking Pvt Ltd</p>
+            {companyCin && (
+              <p className="mt-1.5 font-mono text-xs text-foreground/90">CIN: {companyCin}</p>
+            )}
             <p className="mt-3 text-muted-foreground flex items-center gap-1.5">
               <MapPin className="size-3.5 text-accent shrink-0" /> Registered / Business Address:
             </p>

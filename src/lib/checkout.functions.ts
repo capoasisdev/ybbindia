@@ -73,9 +73,30 @@ export type CreatedOrder = {
   prefill: { name: string; email: string; contact: string };
 };
 
+const utmParamsSchema = z
+  .object({
+    utm_source: z.string().max(250).optional(),
+    utm_medium: z.string().max(250).optional(),
+    utm_campaign: z.string().max(250).optional(),
+    utm_term: z.string().max(250).optional(),
+    utm_content: z.string().max(250).optional(),
+    fbclid: z.string().max(250).optional(),
+    landing_page: z.string().max(250).optional(),
+    captured_at: z.string().max(100).optional(),
+  })
+  .nullable()
+  .optional();
+
 export const createEnrolmentOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<CreatedOrder> => {
+  .inputValidator(
+    z
+      .object({
+        utmParams: utmParamsSchema,
+      })
+      .optional().parse,
+  )
+  .handler(async ({ data, context }): Promise<CreatedOrder> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { loadSettings, getPrimaryCourse, priceFor, hasActiveEnrolment } =
       await import("./checkout.server");
@@ -92,7 +113,7 @@ export const createEnrolmentOrder = createServerFn({ method: "POST" })
     const { data: profile } = await context.supabase
       .from("learner_profiles")
       .select(
-        "full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, gst_number, state",
+        "full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, state",
       )
       .eq("id", context.userId)
       .maybeSingle();
@@ -124,7 +145,7 @@ export const createEnrolmentOrder = createServerFn({ method: "POST" })
           city: profile?.billing_city ?? null,
           state: buyerState,
           pincode: profile?.billing_pincode ?? null,
-          gst_number: profile?.gst_number ?? null,
+          ...(data?.utmParams ? { utm: data.utmParams } : {}),
         } as never,
       })
       .select("id")
@@ -258,7 +279,14 @@ export const recordEnrolmentOrderFailure = createServerFn({ method: "POST" })
  */
 export const simulateEnrolmentPayment = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ status: "paid" }> => {
+  .inputValidator(
+    z
+      .object({
+        utmParams: utmParamsSchema,
+      })
+      .optional().parse,
+  )
+  .handler(async ({ data, context }): Promise<{ status: "paid"; orderId: string }> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { loadSettings, getPrimaryCourse, priceFor, hasActiveEnrolment, markOrderPaid } =
       await import("./checkout.server");
@@ -278,7 +306,7 @@ export const simulateEnrolmentPayment = createServerFn({ method: "POST" })
     const { data: profile } = await context.supabase
       .from("learner_profiles")
       .select(
-        "full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, gst_number, state",
+        "full_name, email, mobile, billing_address, billing_city, billing_state, billing_pincode, state",
       )
       .eq("id", context.userId)
       .maybeSingle();
@@ -312,7 +340,7 @@ export const simulateEnrolmentPayment = createServerFn({ method: "POST" })
           city: profile?.billing_city ?? null,
           state: buyerState,
           pincode: profile?.billing_pincode ?? null,
-          gst_number: profile?.gst_number ?? null,
+          ...(data?.utmParams ? { utm: data.utmParams } : {}),
           test_mode: true,
         } as never,
       })
@@ -333,5 +361,55 @@ export const simulateEnrolmentPayment = createServerFn({ method: "POST" })
       rawEvent: { simulated: true, at: new Date().toISOString() },
     });
 
-    return { status: "paid" };
+    return { status: "paid", orderId: order.id };
+  });
+
+export type PaidOrderReceipt = {
+  orderId: string;
+  status: string;
+  totalAmountPaise: number;
+  currency: string;
+  receiptNumber: string | null;
+  programmeName: string;
+  isTestMode: boolean;
+};
+
+export const getPaidOrderReceipt = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ orderId: z.string().uuid() }).parse)
+  .handler(async ({ data, context }): Promise<PaidOrderReceipt | null> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { loadSettings } = await import("./checkout.server");
+    const { readSetting } = await import("@/domain/settings");
+
+    const { data: order } = await supabaseAdmin
+      .from("orders")
+      .select("id, user_id, status, total_amount_paise, currency, billing_snapshot")
+      .eq("id", data.orderId)
+      .maybeSingle();
+
+    if (!order || order.user_id !== context.userId || order.status !== "paid") {
+      return null;
+    }
+
+    const [{ data: invoice }, settings] = await Promise.all([
+      supabaseAdmin
+        .from("invoices")
+        .select("invoice_number")
+        .eq("order_id", order.id)
+        .maybeSingle(),
+      loadSettings(supabaseAdmin),
+    ]);
+
+    const snap = order.billing_snapshot as Record<string, unknown> | null;
+
+    return {
+      orderId: order.id,
+      status: order.status,
+      totalAmountPaise: order.total_amount_paise,
+      currency: order.currency,
+      receiptNumber: invoice?.invoice_number ?? null,
+      programmeName: String(readSetting(settings, "programme_name")),
+      isTestMode: Boolean(snap?.test_mode),
+    };
   });

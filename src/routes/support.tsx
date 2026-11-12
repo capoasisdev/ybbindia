@@ -26,12 +26,12 @@ export const Route = createFileRoute("/support")({
       {
         name: "description",
         content:
-          "Get help with enrolment, payments, course access, assignments, the examination or your ABB certificate.",
+          "Get help with enrolment, payments, course access, the examination or your ABB certificate.",
       },
       { property: "og:title", content: "Support | ABB Certification Programme" },
       {
         property: "og:description",
-        content: "Help with enrolment, payments, course access, assignments and certification.",
+        content: "Help with enrolment, payments, course access and certification.",
       },
     ],
   }),
@@ -42,8 +42,7 @@ export const Route = createFileRoute("/support")({
 const LEARNER_SUPPORT_CATEGORIES = [
   "Course access & account activation",
   "Video playback & player support",
-  "Assignment submissions & practical reviews",
-  "Reviewer feedback & resubmissions",
+  "Workbooks & curriculum resources",
   "Examination results & retakes",
   "Certificate corrections & name updates",
   "Certificate verification queries",
@@ -52,6 +51,7 @@ const LEARNER_SUPPORT_CATEGORIES = [
 function SupportPage() {
   const { data: settings } = useSuspenseQuery(settingsQuery);
   const supportEmail = readString(settings, "support_email") || "info@ybbindia.com";
+  const companyCin = readString(settings, "company_cin").trim();
 
   return (
     <SiteLayout>
@@ -65,7 +65,7 @@ function SupportPage() {
         {/* Response time notice */}
         <div className="mt-8 flex items-center gap-3 rounded-xl border border-accent/30 bg-accent/10 p-4 text-sm text-foreground font-medium">
           <Clock className="size-5 shrink-0 text-accent" />
-          <span>We normally respond within two business days.</span>
+          <span>We normally respond within 24 hours.</span>
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2">
@@ -133,6 +133,9 @@ function SupportPage() {
             <div>
               <p className="text-muted-foreground">Programme & Certification Provider:</p>
               <p className="mt-1 font-semibold text-sm text-foreground">Yoova Business Broking Pvt Ltd</p>
+              {companyCin && (
+                <p className="mt-1.5 font-mono text-xs text-foreground/90">CIN: {companyCin}</p>
+              )}
               <p className="mt-3 text-muted-foreground flex items-center gap-1">
                 <MapPin className="size-3.5 text-accent shrink-0" /> Registered Office Address:
               </p>

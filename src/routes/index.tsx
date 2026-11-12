@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import {
@@ -5,14 +6,29 @@ import {
   BadgeCheck,
   FileCheck2,
   GraduationCap,
+  Info,
   PlayCircle,
+  Sparkles,
 } from "lucide-react";
 
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
-import { getPublicCourseOutline, getPublicSettings } from "@/lib/public.functions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  getFreePreviewLesson,
+  getPublicCourseOutline,
+  getPublicPilotStats,
+  getPublicSettings,
+} from "@/lib/public.functions";
 import { formatPaise } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
+import { trackViewContent } from "@/lib/meta-pixel";
 
 import { AudienceSection } from "@/components/site/trust/AudienceSection";
 import { LearningOutcomesSection } from "@/components/site/trust/LearningOutcomesSection";
@@ -33,6 +49,16 @@ const outlineQuery = queryOptions({
   queryFn: () => getPublicCourseOutline(),
 });
 
+const pilotStatsQuery = queryOptions({
+  queryKey: ["public-pilot-stats"],
+  queryFn: () => getPublicPilotStats(),
+});
+
+const previewLessonQuery = queryOptions({
+  queryKey: ["free-preview-lesson"],
+  queryFn: () => getFreePreviewLesson(),
+});
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -40,13 +66,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Become an Authorised Business Broker. Structured video training, assessed assignments, a timed and randomised final examination and a verifiable ABB certificate.",
+          "Become an Authorised Business Broker. Structured video training, practical deal workbooks, a timed and randomised final examination and a verifiable ABB certificate.",
       },
       { property: "og:title", content: "ABB Certification Programme | Yoova Business Broking" },
       {
         property: "og:description",
         content:
-          "Structured video training, assessed assignments and a verifiable ABB credential for business broking professionals.",
+          "Structured video training, practical deal workbooks and a verifiable ABB credential for business broking professionals.",
       },
     ],
   }),
@@ -54,6 +80,8 @@ export const Route = createFileRoute("/")({
     await Promise.all([
       context.queryClient.ensureQueryData(settingsQuery),
       context.queryClient.ensureQueryData(outlineQuery),
+      context.queryClient.ensureQueryData(pilotStatsQuery),
+      context.queryClient.ensureQueryData(previewLessonQuery),
     ]);
   },
   component: ProgrammePage,
@@ -85,6 +113,9 @@ const JOURNEY = [
 function ProgrammePage() {
   const { data: settings } = useSuspenseQuery(settingsQuery);
   const { data: outline } = useSuspenseQuery(outlineQuery);
+  const { data: pilotStats } = useSuspenseQuery(pilotStatsQuery);
+  const { data: previewLesson } = useSuspenseQuery(previewLessonQuery);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const pricePaise = readNumber(settings, "course_price_paise");
   const accessDays = readNumber(settings, "access_duration_days");
@@ -92,6 +123,19 @@ function ProgrammePage() {
   const examMinutes = readNumber(settings, "exam_duration_minutes");
   const examQuestions = readNumber(settings, "exam_question_count");
   const programmeName = readString(settings, "programme_name");
+  const companyCin = readString(settings, "company_cin").trim();
+
+  useEffect(() => {
+    trackViewContent({
+      contentName: programmeName || "ABB Certification Programme",
+      value: pricePaise / 100,
+      currency: "INR",
+    });
+  }, [programmeName, pricePaise]);
+
+  const paidCount = pilotStats?.paidEnrolmentsCount;
+  const pilotCap = pilotStats?.pilotCap ?? 100;
+  const seatsRemaining = typeof paidCount === "number" ? Math.max(0, pilotCap - paidCount) : null;
 
   const modules = outline?.modules ?? [];
 
@@ -176,24 +220,36 @@ function ProgrammePage() {
           {/* Price card */}
           <div className="lg:pl-6">
             <div className="rounded-3xl border border-sidebar-border bg-sidebar-accent/60 p-8 shadow-lift backdrop-blur">
+              <div className="mb-5 rounded-xl border border-sidebar-primary/35 bg-sidebar-primary/10 px-4 py-3 text-xs leading-relaxed text-sidebar-foreground/95">
+                <p className="font-semibold text-sidebar-primary">
+                  Pilot batch: ₹1,999 for the first 100 learners. The fee becomes ₹4,999 after 100
+                  enrolments. Pilot learners also get a 15-minute 1:1 call with the founder.
+                </p>
+                {typeof paidCount === "number" && seatsRemaining !== null && (
+                  <p className="mt-1.5 font-mono text-[11px] text-sidebar-foreground/80">
+                    {paidCount} / {pilotCap} pilot seats claimed · {seatsRemaining} remaining
+                  </p>
+                )}
+              </div>
+
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sidebar-primary">
                 Programme fee
               </p>
-              <p className="mt-4 font-display text-4xl font-semibold text-sidebar-foreground">
+              <p className="mt-3 font-display text-4xl font-semibold text-sidebar-foreground">
                 {formatPaise(pricePaise)}
               </p>
               <p className="mt-1 text-sm text-sidebar-foreground/65">
                 one-time payment
               </p>
 
-              <ul className="mt-8 space-y-3.5 text-sm text-sidebar-foreground/80">
+              <ul className="mt-7 space-y-3.5 text-sm text-sidebar-foreground/80">
                 {[
                   `${accessDays} days of full course access`,
-                  "All video lessons, workbooks and templates",
-                  "Reviewer-graded practical assignments",
+                  "All 50 video lessons, deal workbooks and templates",
+                  "Real-world transaction frameworks & case material",
                   `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
-                  "Payment receipt/invoice issued on payment",
+                  "Payment receipt issued on payment",
                 ].map((item) => (
                   <li key={item} className="flex gap-3">
                     <BadgeCheck className="mt-0.5 size-4 shrink-0 text-sidebar-primary" />
@@ -213,9 +269,13 @@ function ProgrammePage() {
                 </Link>
               </Button>
               <p className="mt-3 text-center text-xs text-sidebar-foreground/55">
-                Secure payment · Payment receipt/invoice · Instant access
+                Secure payment · Payment receipt · Instant access
               </p>
             </div>
+            <p className="mt-3 px-2 text-center text-[11px] leading-relaxed text-sidebar-foreground/65">
+              Private educational certification by Yoova Business Broking Pvt Ltd. Not a government
+              licence or regulatory approval. No guarantee of income or clients.
+            </p>
           </div>
         </div>
       </section>
@@ -267,13 +327,27 @@ function ProgrammePage() {
       {modules.length > 0 && (
         <section className="border-y border-border bg-secondary/50 py-20">
           <div className="container-page">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                Curriculum
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{outline?.course.title}</h2>
-              {outline?.course.subtitle && (
-                <p className="mt-4 text-muted-foreground">{outline.course.subtitle}</p>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                  Curriculum
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">{outline?.course.title}</h2>
+                {outline?.course.subtitle && (
+                  <p className="mt-4 text-muted-foreground">{outline.course.subtitle}</p>
+                )}
+              </div>
+              {previewLesson && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setPreviewOpen(true)}
+                  className="shrink-0 gap-2 rounded-lg border-accent/40 bg-card text-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  <PlayCircle className="size-4 text-accent" />
+                  Watch Lesson 1 Free Preview
+                </Button>
               )}
             </div>
 
@@ -307,8 +381,44 @@ function ProgrammePage() {
                 </p>
               </Link>
             </div>
+
+            <div className="mt-8 flex items-start gap-3 rounded-2xl border border-border bg-card/80 px-5 py-4 text-xs leading-relaxed text-muted-foreground">
+              <Info className="mt-0.5 size-4 shrink-0 text-accent" />
+              <p>
+                Video lessons are presented by AI-generated presenters. All course content,
+                frameworks and case material are designed by Kamlesh Rohra, drawing on 20+ years of
+                deal-making experience.
+              </p>
+            </div>
           </div>
         </section>
+      )}
+
+      {previewLesson && (
+        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+          <DialogContent className="sm:max-w-3xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Sparkles className="size-4 text-accent" />
+                Free Lesson Preview — {previewLesson.title}
+              </DialogTitle>
+              <DialogDescription>
+                Sample lesson from Module 1 of the Authorised Business Broker (ABB) Certification
+                Programme. Video lessons are presented by AI-generated presenters; all course
+                content is designed by Kamlesh Rohra.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="mt-2 overflow-hidden rounded-xl border border-border bg-black">
+              <video
+                src={previewLesson.videoUrl}
+                controls
+                playsInline
+                preload="metadata"
+                className="aspect-video w-full"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
 
       {/* 8. Certification standards */}
@@ -321,7 +431,7 @@ function ProgrammePage() {
       <CertificatePreviewSection />
 
       {/* 11. Founder and YBB credibility */}
-      <FounderCredibilitySection />
+      <FounderCredibilitySection companyCin={companyCin} />
 
       {/* 12. Learner Testimonials (Intentionally omitted until real cohort results are available) */}
 

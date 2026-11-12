@@ -6,13 +6,18 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/use-auth";
-import { getPublicSettings } from "@/lib/public.functions";
+import { getPublicPilotStats, getPublicSettings } from "@/lib/public.functions";
 import { formatPaiseExact } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
 
 const settingsQuery = queryOptions({
   queryKey: ["public-settings"],
   queryFn: () => getPublicSettings(),
+});
+
+const pilotStatsQuery = queryOptions({
+  queryKey: ["public-pilot-stats"],
+  queryFn: () => getPublicPilotStats(),
 });
 
 export const Route = createFileRoute("/enrol")({
@@ -31,12 +36,18 @@ export const Route = createFileRoute("/enrol")({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(settingsQuery),
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(settingsQuery),
+      context.queryClient.ensureQueryData(pilotStatsQuery),
+    ]);
+  },
   component: EnrolPage,
 });
 
 function EnrolPage() {
   const { data: settings } = useSuspenseQuery(settingsQuery);
+  const { data: pilotStats } = useSuspenseQuery(pilotStatsQuery);
   const { user, loading } = useAuth();
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -45,6 +56,9 @@ function EnrolPage() {
   const pricePaise = readNumber(settings, "course_price_paise");
   const accessDays = readNumber(settings, "access_duration_days");
   const programmeName = readString(settings, "programme_name");
+  const paidCount = pilotStats?.paidEnrolmentsCount;
+  const pilotCap = pilotStats?.pilotCap ?? 100;
+  const seatsRemaining = typeof paidCount === "number" ? Math.max(0, pilotCap - paidCount) : null;
 
   const canProceed = acceptedTerms && acceptedDisclosure;
 
@@ -67,7 +81,7 @@ function EnrolPage() {
               },
               {
                 title: "Confirm billing and certificate details",
-                body: "We use these for your payment receipt/invoice and the name printed on your certificate.",
+                body: "We use these for your payment receipt and the name printed on your certificate.",
               },
               {
                 title: "Pay the programme fee",
@@ -93,6 +107,18 @@ function EnrolPage() {
         <aside className="lg:sticky lg:top-28 lg:self-start space-y-6">
           {/* Order summary box */}
           <div className="rounded-2xl border border-border bg-card p-7 shadow-lift">
+            <div className="mb-5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-xs leading-relaxed text-foreground">
+              <p className="font-semibold text-accent">
+                Pilot batch: ₹1,999 for the first 100 learners. The fee becomes ₹4,999 after 100
+                enrolments. Pilot learners also get a 15-minute 1:1 call with the founder.
+              </p>
+              {typeof paidCount === "number" && seatsRemaining !== null && (
+                <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+                  {paidCount} / {pilotCap} pilot seats claimed · {seatsRemaining} remaining
+                </p>
+              )}
+            </div>
+
             <h2 className="font-display text-lg font-semibold">Order summary</h2>
 
             <dl className="mt-6 space-y-3 text-sm">
@@ -193,8 +219,12 @@ function EnrolPage() {
 
             <p className="mt-5 flex items-start gap-2 text-xs text-muted-foreground">
               <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
-              Payments are processed securely. A payment receipt/invoice is issued automatically once payment is
+              Payments are processed securely. A payment receipt is issued automatically once payment is
               confirmed.
+            </p>
+            <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+              Private educational certification by Yoova Business Broking Pvt Ltd. Not a government
+              licence or regulatory approval. No guarantee of income or clients.
             </p>
           </div>
 
@@ -208,7 +238,7 @@ function EnrolPage() {
                 "365 days of programme access",
                 "11 structured learning modules",
                 "50 video lessons",
-                "Practical assignments and reviewer feedback",
+                "Practical deal workbooks & frameworks",
                 "50-question final examination",
                 "70% minimum passing score",
                 "Unique and publicly verifiable ABB certificate",

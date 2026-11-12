@@ -733,15 +733,9 @@ function AdminLearnersPage() {
 
                   <div className="rounded-xl border border-border bg-card p-4 space-y-3">
                     <h3 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                      Billing Address & Tax Info
+                      Billing Details
                     </h3>
                     <dl className="space-y-2 text-xs">
-                      <div>
-                        <dt className="text-muted-foreground">GSTIN</dt>
-                        <dd className="font-mono mt-0.5">
-                          {activeLearnerDetails.profile.gstNumber || "Unregistered"}
-                        </dd>
-                      </div>
                       <div>
                         <dt className="text-muted-foreground">Address</dt>
                         <dd className="mt-0.5">

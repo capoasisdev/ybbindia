@@ -6,6 +6,7 @@ import { FlaskConical, Loader2, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { formatPaiseExact } from "@/domain/money";
+import { getStoredUtmParams, trackInitiateCheckout } from "@/lib/meta-pixel";
 import { toast } from "sonner";
 import {
   getCheckoutSummary,
@@ -70,9 +71,10 @@ function CheckoutPage() {
   async function handleSimulate() {
     setBusy(true);
     try {
-      await simulatePayment();
+      const utmParams = getStoredUtmParams();
+      const result = await simulatePayment({ data: { utmParams } });
       toast.success("Test payment recorded. You're enrolled!");
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/payment-success", search: { orderId: result.orderId } });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Test payment failed.");
     } finally {
@@ -82,11 +84,19 @@ function CheckoutPage() {
 
   async function handlePay() {
     setBusy(true);
+    if (summary) {
+      trackInitiateCheckout({
+        value: summary.totalAmountPaise / 100,
+        currency: summary.currency || "INR",
+        contentName: summary.courseTitle ?? "ABB Certification Programme",
+      });
+    }
     try {
       const ready = await loadRazorpayScript();
       if (!ready || !window.Razorpay) throw new Error("Payment window could not be loaded.");
 
-      const order = await createOrder();
+      const utmParams = getStoredUtmParams();
+      const order = await createOrder({ data: { utmParams } });
 
       const razorpay = new window.Razorpay({
         key: order.keyId,
@@ -129,7 +139,7 @@ function CheckoutPage() {
               },
             });
             toast.success("Payment confirmed. You're enrolled!");
-            navigate({ to: "/dashboard" });
+            navigate({ to: "/payment-success", search: { orderId: order.orderId } });
           } catch (error) {
             toast.error(
               error instanceof Error
@@ -221,7 +231,7 @@ function CheckoutPage() {
                     <div>
                       <p className="text-sm font-medium">Test mode is on</p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Simulate a successful payment to activate a real enrolment, payment receipt/invoice and
+                        Simulate a successful payment to activate a real enrolment, payment receipt and
                         365-day access — with no money moving. Turn test mode off before launch.
                       </p>
                     </div>
@@ -239,7 +249,7 @@ function CheckoutPage() {
 
               <p className="mt-6 flex items-start gap-2 text-xs text-muted-foreground">
                 <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
-                Payments are processed by Razorpay. A payment receipt/invoice is issued automatically once
+                Payments are processed by Razorpay. A payment receipt is issued automatically once
                 payment is confirmed.
               </p>
 
