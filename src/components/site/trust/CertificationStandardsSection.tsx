@@ -1,68 +1,20 @@
-import { Info, PlayCircle, FileCheck, CheckSquare, Clock, Award, ShieldCheck, ClipboardList, FileCheck2, RefreshCw, Shuffle, CheckCircle2 } from "lucide-react";
+import { Info, PlayCircle, BookOpen, Award } from "lucide-react";
 
 const STEPS = [
   {
     icon: PlayCircle,
     title: "Complete the Video Lessons",
-    body: "Study all lessons included in the 11-module ABB curriculum.",
+    body: "Study all lessons included in the 11-module ABB curriculum at your own pace.",
   },
   {
-    icon: FileCheck,
-    title: "Study the Deal Workbooks",
-    body: "Review the transaction frameworks, deal workbooks and financial checklists included with each lesson.",
-  },
-  {
-    icon: CheckSquare,
-    title: "Master Deal Frameworks",
-    body: "Review the checklists, valuation templates, and broking mandates provided in the course resources.",
-  },
-  {
-    icon: Clock,
-    title: "Clear the Final Examination",
-    body: "Complete a 50-question, 60-minute examination randomly generated from the ABB examination question bank.",
+    icon: BookOpen,
+    title: "Review the Deal Workbooks",
+    body: "Explore the transaction frameworks, deal workbooks and financial checklists included with each module.",
   },
   {
     icon: Award,
-    title: "Achieve the Pass Mark",
-    body: "A minimum score of 70% is required to clear the final examination.",
-  },
-  {
-    icon: ShieldCheck,
     title: "Receive the ABB Credential",
-    body: "After satisfying the programme requirements, the learner receives a certificate containing a unique ABB ID that can be verified publicly.",
-  },
-];
-
-const HIGHLIGHTS = [
-  {
-    icon: ClipboardList,
-    label: "Lesson workbooks & reference materials",
-    body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
-  },
-  {
-    icon: FileCheck2,
-    label: "Deal workbooks & transaction templates",
-    body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
-  },
-  {
-    icon: RefreshCw,
-    label: "Continuous revision & mastery",
-    body: "Reinforce learning with structured review materials and comprehensive lesson summaries.",
-  },
-  {
-    icon: Shuffle,
-    label: "Randomised final examination",
-    body: "Questions are drawn at random from the ABB question bank, ensuring no two examinations are identical.",
-  },
-  {
-    icon: CheckCircle2,
-    label: "50 questions · 60 minutes · 70% pass mark",
-    body: "Learners must score at least 70% in the timed, 50-question final examination to qualify for certification.",
-  },
-  {
-    icon: CheckCircle2,
-    label: "Unique & publicly verifiable certificate",
-    body: "Every successful learner receives a certificate with a unique ABB ID verifiable through the YBB website.",
+    body: "On completing all curriculum modules, the learner receives a certificate containing a unique ABB ID that can be verified publicly.",
   },
 ];
 
@@ -72,19 +24,17 @@ export function CertificationStandardsSection() {
       <div className="container-page">
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-            Certification Standards
+            How Certification Works
           </p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-            A Structured and Assessed Certification Pathway
+            Three Steps from Enrolment to Certificate
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            The ABB credential is awarded only after the learner completes the programme
-            requirements prescribed by Yoova Business Broking. Watching the course videos alone does
-            not qualify a learner for certification.
+            Complete the course and your ABB certificate is issued automatically — no exams, no submission deadlines.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
           {STEPS.map((step, index) => (
             <div
               key={step.title}
@@ -102,36 +52,6 @@ export function CertificationStandardsSection() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.body}</p>
             </div>
           ))}
-        </div>
-
-        {/* Assessment credibility sub-section — Assessed, Not Merely Attended */}
-        <div className="mt-16 border-t border-border pt-14">
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-              Assessment Credibility
-            </p>
-            <h3 className="mt-3 text-2xl font-semibold sm:text-3xl">
-              Assessed, Not Merely Attended
-            </h3>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-              Learners must complete all curriculum modules and demonstrate their understanding
-              through a timed final examination.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {HIGHLIGHTS.map((item) => (
-              <div
-                key={item.label}
-                className="rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:shadow-lift"
-              >
-                <div className="flex size-10 items-center justify-center rounded-xl bg-accent/15 text-accent">
-                  <item.icon className="size-5" />
-                </div>
-                <h4 className="mt-5 text-base font-semibold leading-snug">{item.label}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Mandatory Certification Disclosure Box */}

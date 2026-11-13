@@ -406,8 +406,6 @@ function EnrolPage() {
                 "50 video lessons",
                 "Course language: English",
                 "Deal workbooks & transaction frameworks",
-                "50-question final examination",
-                "70% minimum passing score",
                 "Unique and publicly verifiable ABB certificate",
                 "Certification issued by Yoova Business Broking Pvt Ltd",
                 "No refund after course access is activated",

@@ -1,15 +1,15 @@
-import { CheckCircle2, ClipboardList, Clock, FileCheck2, RefreshCw, Shuffle } from "lucide-react";
+import { CheckCircle2, BookOpen, FileCheck2, RefreshCw } from "lucide-react";
 
 const HIGHLIGHTS = [
   {
-    icon: ClipboardList,
+    icon: BookOpen,
     label: "Lesson workbooks & reference materials",
-    body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
+    body: "Linked to each programme lesson and designed to build real-world broking knowledge.",
   },
   {
     icon: FileCheck2,
     label: "Deal workbooks & transaction templates",
-    body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
+    body: "Actionable frameworks and transaction templates to apply concepts to real scenarios.",
   },
   {
     icon: RefreshCw,
@@ -17,19 +17,9 @@ const HIGHLIGHTS = [
     body: "Reinforce learning with structured review materials and comprehensive lesson summaries.",
   },
   {
-    icon: Shuffle,
-    label: "Randomised final examination",
-    body: "Questions are drawn at random from the ABB question bank, ensuring no two examinations are identical.",
-  },
-  {
-    icon: CheckCircle2,
-    label: "50 questions · 60 minutes · 70% pass mark",
-    body: "Learners must score at least 70% in the timed, 50-question final examination to qualify for certification.",
-  },
-  {
     icon: CheckCircle2,
     label: "Unique & publicly verifiable certificate",
-    body: "Every successful learner receives a certificate with a unique ABB ID verifiable through the YBB website.",
+    body: "Every learner who completes the programme receives a certificate with a unique ABB ID verifiable through the YBB website.",
   },
 ];
 
@@ -38,19 +28,18 @@ export function AssessmentCredibilitySection() {
     <section className="container-page py-20">
       <div className="max-w-3xl">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-          Assessment Rigour
+          What's Included
         </p>
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-          Assessed, Not Merely Attended
+          Everything You Need to Learn and Get Certified
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Watching the course videos alone does not automatically qualify a learner for the ABB
-          credential. Learners must complete all curriculum modules and demonstrate their
-          understanding through a timed final examination.
+          Your enrolment gives you full access to all 50 video lessons, deal workbooks and your ABB
+          certificate on completion — no exams or submission deadlines.
         </p>
       </div>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
         {HIGHLIGHTS.map((item) => (
           <div
             key={item.label}

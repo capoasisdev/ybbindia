@@ -99,7 +99,7 @@ export function WorkbookPreviewSection() {
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
           The ABB Professional Workbook supports the complete learning journey with lesson notes,
-          deal workbooks, transaction templates, examination practice and learner workspaces.
+          deal workbooks, transaction templates and learner workspaces.
           It is designed to help learners move beyond passive video consumption and apply
           business-broking concepts in a structured manner.
         </p>

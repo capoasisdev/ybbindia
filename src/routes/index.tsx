@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BadgeCheck,
   FileCheck2,
-  GraduationCap,
   Info,
   PlayCircle,
   Sparkles,
@@ -66,13 +65,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Become an Authorised Business Broker. Structured video training, practical deal workbooks, a timed and randomised final examination and a verifiable ABB certificate.",
+          "Become an Authorised Business Broker. Structured video training, deal workbooks and a verifiable ABB certificate — issued on course completion.",
       },
       { property: "og:title", content: "ABB Certification Programme | Yoova Business Broking" },
       {
         property: "og:description",
         content:
-          "Structured video training, practical deal workbooks and a verifiable ABB credential for business broking professionals.",
+          "Structured video training, deal workbooks and a verifiable ABB credential for business broking professionals.",
       },
     ],
   }),
@@ -95,18 +94,13 @@ const JOURNEY = [
   },
   {
     icon: FileCheck2,
-    title: "Apply",
-    body: "Study deal workbooks, transaction frameworks and case material connected to each module.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Qualify",
-    body: "Clear the timed final examination drawn at random from the ABB question bank.",
+    title: "Review",
+    body: "Explore deal workbooks, transaction frameworks and case studies included with each module.",
   },
   {
     icon: BadgeCheck,
     title: "Get certified",
-    body: "Receive your unique ABB ID and a certificate anyone can verify publicly.",
+    body: "Complete all modules and receive your unique ABB ID and a publicly verifiable certificate.",
   },
 ];
 
@@ -119,9 +113,6 @@ function ProgrammePage() {
 
   const pricePaise = readNumber(settings, "course_price_paise");
   const accessDays = readNumber(settings, "access_duration_days");
-  const passPercent = readNumber(settings, "exam_pass_percent");
-  const examMinutes = readNumber(settings, "exam_duration_minutes");
-  const examQuestions = readNumber(settings, "exam_question_count");
   const programmeName = readString(settings, "programme_name");
   const companyCin = readString(settings, "company_cin").trim();
 
@@ -201,7 +192,7 @@ function ProgrammePage() {
               {[
                 { label: "Modules", value: modules.length || "11" },
                 { label: "Access", value: `${accessDays} days` },
-                { label: "Pass mark", value: `${passPercent}%` },
+                { label: "Video Lessons", value: "50" },
               ].map((stat, i) => (
                 <div
                   key={stat.label}
@@ -248,7 +239,6 @@ function ProgrammePage() {
                   "All 50 video lessons, deal workbooks and templates",
                   "Transaction frameworks, case studies & deal templates",
                   "Course language: English",
-                  `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
                   "Payment receipt issued on payment",
                 ].map((item) => (

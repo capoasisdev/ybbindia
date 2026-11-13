@@ -41,27 +41,17 @@ const FAQS = [
   {
     question: "Is the programme self-paced?",
     answer:
-      "Yes. Learners can study at their own pace within the 365-day access period, subject to the programme’s curriculum completion and final examination requirements.",
+      "Yes. Learners can study at their own pace within the 365-day access period.",
   },
   {
-    question: "How is the final examination conducted?",
+    question: "How do I get certified?",
     answer:
-      "The final examination contains 50 multiple-choice questions randomly selected from the ABB question bank. Learners receive 60 minutes to complete the examination.",
-  },
-  {
-    question: "What is the passing score?",
-    answer:
-      "Learners must score at least 70% in the final examination and satisfy the other programme requirements to qualify for certification.",
-  },
-  {
-    question: "How is the examination delivered?",
-    answer:
-      "Learners access the examination through their learner dashboard. The examination contains 50 multiple-choice questions drawn randomly from the ABB question bank, with a 60-minute time limit.",
+      "Complete all 11 curriculum modules and your ABB certificate is issued automatically. There is no exam or submission deadline.",
   },
   {
     question: "Who issues the certificate?",
     answer:
-      "The ABB certificate is issued by Yoova Business Broking Pvt Ltd after the learner satisfies the programme’s certification requirements.",
+      "The ABB certificate is issued by Yoova Business Broking Pvt Ltd on completion of all programme modules.",
   },
   {
     question: "Is ABB a government licence?",
@@ -116,7 +106,7 @@ export function FaqSection() {
           </p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
           <p className="mt-3 text-muted-foreground">
-            Clear, transparent answers regarding enrolment, course structure, examinations and certification.
+            Clear, transparent answers regarding enrolment, course structure and certification.
           </p>
         </div>
 

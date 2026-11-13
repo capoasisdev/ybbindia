@@ -13,8 +13,8 @@ const PILLARS = [
   },
   {
     icon: Award,
-    title: "Assessed Certification",
-    body: "The ABB credential is not issued merely for watching videos. Learners must complete the curriculum lessons and clear the timed, randomised final examination.",
+    title: "Completion Certificate",
+    body: "Complete all 11 modules and your ABB certificate is issued automatically — no exams, no submission deadlines.",
   },
   {
     icon: ShieldCheck,
@@ -32,9 +32,8 @@ export function WhyYbbSection() {
         </p>
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">More Than Video Lessons</h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          The ABB programme combines structured learning, practical application, formal
-          assessment and public certificate verification. Learners must demonstrate participation
-          and understanding before receiving the ABB credential.
+          The ABB programme combines structured video lessons, real-world deal workbooks and
+          a publicly verifiable certificate issued on completion.
         </p>
       </div>
 
