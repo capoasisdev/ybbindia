@@ -519,8 +519,8 @@ function Page() {
                   done={data.eligibility?.assignmentsRequired === false ? true : !!data.eligibility?.assignmentsApproved}
                   label={
                     data.eligibility?.assignmentsRequired === false
-                      ? "Practical coursework (Self-paced study · Completed)"
-                      : "Complete all practical lesson exercises"
+                      ? "Curriculum modules (Self-paced study · Completed)"
+                      : "Complete all curriculum modules"
                   }
                 />
                 <Gate

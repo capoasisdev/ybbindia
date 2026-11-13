@@ -162,6 +162,25 @@ function EnrolPage() {
 
   return (
     <SiteLayout>
+      {/* Pilot Announcement Banner at Top of Enrol Page */}
+      <aside
+        aria-label="Pilot cohort offer"
+        className="border-b border-accent/40 bg-accent/15 px-4 py-2.5 text-center text-xs font-medium text-foreground sm:text-sm"
+      >
+        <div className="container-page flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          <span className="font-semibold text-accent">Pilot offer:</span>
+          <span>
+            ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that. Pilot learners also get
+            a 15-minute 1:1 call with the founder.
+          </span>
+          {typeof paidCount === "number" && seatsRemaining !== null && (
+            <span className="inline-flex items-center rounded-full bg-accent/25 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent">
+              {paidCount} / {pilotCap} claimed · {seatsRemaining} remaining
+            </span>
+          )}
+        </div>
+      </aside>
+
       <section className="container-page grid max-w-5xl gap-10 py-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Enrolment</p>
@@ -207,8 +226,8 @@ function EnrolPage() {
           <div className="rounded-2xl border border-border bg-card p-7 shadow-lift">
             <div className="mb-5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-xs leading-relaxed text-foreground">
               <p className="font-semibold text-accent">
-                Pilot batch: ₹1,999 for the first 100 learners. The fee becomes ₹4,999 after 100
-                enrolments. Pilot learners also get a 15-minute 1:1 call with the founder.
+                Pilot offer: ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that.
+                Pilot learners also get a 15-minute 1:1 call with the founder.
               </p>
               {typeof paidCount === "number" && seatsRemaining !== null && (
                 <p className="mt-1 font-mono text-[11px] text-muted-foreground">
@@ -406,6 +425,8 @@ function EnrolPage() {
                 "50 video lessons",
                 "Course language: English",
                 "Deal workbooks & transaction frameworks",
+                "50-question final examination",
+                "70% minimum passing score",
                 "Unique and publicly verifiable ABB certificate",
                 "Certification issued by Yoova Business Broking Pvt Ltd",
                 "No refund after course access is activated",

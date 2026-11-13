@@ -16,7 +16,7 @@ const FAQS = [
   {
     question: "Do I need previous business-broking experience?",
     answer:
-      "No previous business-broking experience is required. The programme begins with foundational concepts and progresses through practical transaction processes.",
+      "No previous business-broking experience is required. The programme begins with foundational concepts and progresses through transaction processes.",
   },
   {
     question: "How many modules and lessons are included?",
@@ -106,7 +106,7 @@ export function FaqSection() {
           </p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">Frequently Asked Questions</h2>
           <p className="mt-3 text-muted-foreground">
-            Clear, transparent answers regarding enrolment, course structure and certification.
+            Clear, transparent answers regarding enrolment, course structure, examinations and certification.
           </p>
         </div>
 

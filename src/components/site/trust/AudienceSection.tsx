@@ -10,14 +10,14 @@ import {
 
 const AUDIENCES = [
   {
-    icon: Briefcase,
-    title: "Aspiring Business Brokers",
-    body: "For individuals who want to build a professional career or independent practice in business broking.",
-  },
-  {
     icon: GraduationCap,
     title: "Graduates and Early-Career Professionals",
     body: "For commerce, management and finance graduates, and early-career professionals, who want a structured path into business broking.",
+  },
+  {
+    icon: Briefcase,
+    title: "Aspiring Business Brokers",
+    body: "For individuals who want to build a professional career or independent practice in business broking.",
   },
   {
     icon: Building2,
@@ -81,7 +81,7 @@ export function AudienceSection() {
       <div className="mt-10 rounded-2xl border border-border/80 bg-secondary/40 p-6 text-center">
         <p className="text-sm font-medium text-muted-foreground">
           No previous business-broking experience is required. The programme begins with the
-          fundamentals and progresses through practical transaction concepts.
+          fundamentals and progresses through real-world transaction concepts.
         </p>
       </div>
     </section>

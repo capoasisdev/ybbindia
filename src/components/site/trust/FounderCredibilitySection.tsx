@@ -67,18 +67,14 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
               </span>
             </div>
 
-            {/* Founder Expectation Quote Card */}
-            <div className="rounded-2xl border border-accent/30 bg-accent/5 p-5 space-y-2.5">
+            {/* AI Avatar Delivery Disclosure Card */}
+            <div className="rounded-2xl border border-accent/30 bg-accent/5 p-5 space-y-2">
               <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
                 <Sparkles className="size-3.5" />
-                <span>How This Programme Was Built</span>
+                <span>Course Delivery Disclosure</span>
               </div>
-              <p className="text-sm leading-relaxed text-foreground italic">
-                &ldquo;Kamlesh designed this programme around the way deals actually happen, not
-                just how textbooks describe them. Expect practical frameworks, real-world scenarios
-                and honest lessons about what goes right and wrong in a transaction, drawn from
-                twenty years of sitting across the table from investors, buyers, sellers and
-                advisors.&rdquo;
+              <p className="text-sm leading-relaxed text-foreground font-medium">
+                The course is designed by Kamlesh Rohra. Video lessons are presented by an AI avatar.
               </p>
             </div>
           </div>
@@ -255,9 +251,9 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
           <div>
             <p className="text-muted-foreground">Programme &amp; Certification Provider:</p>
             <p className="mt-1 font-semibold text-sm text-foreground">Yoova Business Broking Pvt Ltd</p>
-            {companyCin && (
-              <p className="mt-1.5 font-mono text-xs text-foreground/90">CIN: {companyCin}</p>
-            )}
+            <p className="mt-1.5 font-mono text-xs text-foreground/90">
+              CIN: {companyCin?.trim() || "U74901MH2025PTC444981"}
+            </p>
             <p className="mt-3 text-muted-foreground flex items-center gap-1.5">
               <MapPin className="size-3.5 text-accent shrink-0" /> Registered / Business Address:
             </p>

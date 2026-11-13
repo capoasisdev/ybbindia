@@ -19,12 +19,14 @@ export function SiteFooter() {
           <Wordmark tone="light" />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-sidebar-foreground/70">
             The Authorised Business Broker (ABB) certification programme — structured training,
-            practical deal workbooks and a verifiable credential for business broking professionals in
+            deal workbooks and a verifiable credential for business broking professionals in
             India.
           </p>
           <div className="mt-6 border-t border-sidebar-border pt-4 text-xs text-sidebar-foreground/65 leading-relaxed">
             <p className="font-semibold text-sidebar-foreground">Yoova Business Broking Pvt Ltd</p>
-            {companyCin && <p className="mt-1 font-mono text-sidebar-foreground/80">CIN: {companyCin}</p>}
+            <p className="mt-1 font-mono text-sidebar-foreground/80">
+              CIN: {companyCin?.trim() || "U74901MH2025PTC444981"}
+            </p>
             <p className="mt-1">
               E503, Samraat Tropicano, Serene Meadows, Gangapur Road, Nashik – 422013, Maharashtra, India
             </p>

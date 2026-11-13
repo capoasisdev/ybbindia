@@ -96,7 +96,7 @@ function AuthPage() {
               },
               {
                 icon: FileCheck2,
-                label: "Practical deal workbooks",
+                label: "Deal workbooks & templates",
                 hint: "Templates, frameworks & exercises",
               },
               {

@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BadgeCheck,
   FileCheck2,
+  GraduationCap,
   Info,
   PlayCircle,
   Sparkles,
@@ -65,7 +66,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Become an Authorised Business Broker. Structured video training, deal workbooks and a verifiable ABB certificate — issued on course completion.",
+          "Become an Authorised Business Broker. Structured video training, deal workbooks, a timed and randomised final examination and a verifiable ABB certificate.",
       },
       { property: "og:title", content: "ABB Certification Programme | Yoova Business Broking" },
       {
@@ -94,13 +95,18 @@ const JOURNEY = [
   },
   {
     icon: FileCheck2,
-    title: "Review",
-    body: "Explore deal workbooks, transaction frameworks and case studies included with each module.",
+    title: "Apply",
+    body: "Study deal workbooks, transaction frameworks and case material connected to each module.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Qualify",
+    body: "Clear the timed final examination drawn at random from the ABB question bank.",
   },
   {
     icon: BadgeCheck,
     title: "Get certified",
-    body: "Complete all modules and receive your unique ABB ID and a publicly verifiable certificate.",
+    body: "Receive your unique ABB ID and a certificate anyone can verify publicly.",
   },
 ];
 
@@ -113,6 +119,9 @@ function ProgrammePage() {
 
   const pricePaise = readNumber(settings, "course_price_paise");
   const accessDays = readNumber(settings, "access_duration_days");
+  const passPercent = readNumber(settings, "exam_pass_percent");
+  const examMinutes = readNumber(settings, "exam_duration_minutes");
+  const examQuestions = readNumber(settings, "exam_question_count");
   const programmeName = readString(settings, "programme_name");
   const companyCin = readString(settings, "company_cin").trim();
 
@@ -132,6 +141,25 @@ function ProgrammePage() {
 
   return (
     <SiteLayout>
+      {/* Pilot Announcement Banner at Top of Homepage */}
+      <aside
+        aria-label="Pilot cohort offer"
+        className="border-b border-accent/40 bg-accent/15 px-4 py-2.5 text-center text-xs font-medium text-foreground sm:text-sm"
+      >
+        <div className="container-page flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+          <span className="font-semibold text-accent">Pilot offer:</span>
+          <span>
+            ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that. Pilot learners also get
+            a 15-minute 1:1 call with the founder.
+          </span>
+          {typeof paidCount === "number" && seatsRemaining !== null && (
+            <span className="inline-flex items-center rounded-full bg-accent/25 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent">
+              {paidCount} / {pilotCap} claimed · {seatsRemaining} remaining
+            </span>
+          )}
+        </div>
+      </aside>
+
       {/* 1 & 2. Hero & Programme Fee & Statistics */}
       <section className="relative overflow-hidden border-b border-border bg-sidebar text-sidebar-foreground">
         <div
@@ -163,7 +191,7 @@ function ProgrammePage() {
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sidebar-foreground/75 sm:text-lg">
               The {programmeName} is YBB&apos;s end-to-end pathway for anyone who wants to learn how
-              businesses are bought and sold — structured training, practical deal workbooks and a
+              businesses are bought and sold — structured training, deal workbooks and a
               credential that can be verified by anyone.
             </p>
 
@@ -192,7 +220,7 @@ function ProgrammePage() {
               {[
                 { label: "Modules", value: modules.length || "11" },
                 { label: "Access", value: `${accessDays} days` },
-                { label: "Video Lessons", value: "50" },
+                { label: "Pass mark", value: `${passPercent}%` },
               ].map((stat, i) => (
                 <div
                   key={stat.label}
@@ -213,8 +241,8 @@ function ProgrammePage() {
             <div className="rounded-3xl border border-sidebar-border bg-sidebar-accent/60 p-8 shadow-lift backdrop-blur">
               <div className="mb-5 rounded-xl border border-sidebar-primary/35 bg-sidebar-primary/10 px-4 py-3 text-xs leading-relaxed text-sidebar-foreground/95">
                 <p className="font-semibold text-sidebar-primary">
-                  Pilot batch: ₹1,999 for the first 100 learners. The fee becomes ₹4,999 after 100
-                  enrolments. Pilot learners also get a 15-minute 1:1 call with the founder.
+                  Pilot offer: ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that.
+                  Pilot learners also get a 15-minute 1:1 call with the founder.
                 </p>
                 {typeof paidCount === "number" && seatsRemaining !== null && (
                   <p className="mt-1.5 font-mono text-[11px] text-sidebar-foreground/80">
@@ -239,6 +267,7 @@ function ProgrammePage() {
                   "All 50 video lessons, deal workbooks and templates",
                   "Transaction frameworks, case studies & deal templates",
                   "Course language: English",
+                  `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
                   "Payment receipt issued on payment",
                 ].map((item) => (

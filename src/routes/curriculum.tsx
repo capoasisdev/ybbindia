@@ -25,7 +25,7 @@ export const Route = createFileRoute("/curriculum")({
       { property: "og:title", content: "Curriculum | ABB Certification Programme" },
       {
         property: "og:description",
-        content: "Explore all 50 practical lessons across 11 modules in the ABB certification programme.",
+        content: "Explore all 50 video lessons across 11 modules in the ABB certification programme.",
       },
     ],
   }),
@@ -111,7 +111,7 @@ function CurriculumPage() {
           </h1>
           <p className="mt-4 max-w-2xl text-base text-muted-foreground leading-relaxed">
             {outline?.course.description ??
-              "A structured, 11-module certification covering the complete business broking lifecycle in India across 50 practical, video-linked lessons."}
+              "A structured, 11-module certification covering the complete business broking lifecycle in India across 50 video lessons."}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4 text-xs font-medium text-foreground/80">
@@ -121,11 +121,11 @@ function CurriculumPage() {
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 border border-border shadow-xs">
               <PlayCircle className="size-4 text-accent" />
-              <strong>{totalLessons || 50}</strong> Practical Lessons
+              <strong>{totalLessons || 50}</strong> Video Lessons
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 border border-border shadow-xs">
               <CheckCircle2 className="size-4 text-success" />
-              Practical Deal Workbooks
+              Deal Workbooks &amp; Frameworks
             </span>
           </div>
 
@@ -145,7 +145,7 @@ function CurriculumPage() {
           <div>
             <h2 className="text-xl font-semibold">Module Breakdown</h2>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Explore all 50 practical lessons across 11 modules. Click any module to expand or collapse.
+              Explore all 50 video lessons across 11 modules. Click any module to expand or collapse.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -260,7 +260,7 @@ function CurriculumPage() {
         <div className="mt-14 rounded-3xl bg-primary px-8 py-12 text-primary-foreground">
           <h2 className="text-2xl font-semibold sm:text-3xl">Enrol and start today</h2>
           <p className="mt-3 max-w-xl text-primary-foreground/75">
-            Get immediate access to all 11 modules, 50 practical lessons, the workbook library, and the certification pathway.
+            Get immediate access to all 11 modules, 50 video lessons, the workbook library, and the certification pathway.
           </p>
           <Button size="lg" variant="secondary" asChild className="mt-7 rounded-lg px-7">
             <Link to="/enrol">

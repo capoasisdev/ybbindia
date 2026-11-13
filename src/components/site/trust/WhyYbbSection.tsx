@@ -4,17 +4,17 @@ const PILLARS = [
   {
     icon: BookOpen,
     title: "Structured Curriculum",
-    body: "A complete 11-module learning pathway covering the foundations, processes, ethics and practical responsibilities of business broking.",
+    body: "A complete 11-module learning pathway covering the foundations, processes, ethics and professional responsibilities of business broking.",
   },
   {
     icon: FileCheck2,
-    title: "Practical Application",
+    title: "Applied Learning",
     body: "Lessons are supported by structured deal workbooks, financial checklists and realistic case frameworks designed for business-broking situations.",
   },
   {
     icon: Award,
-    title: "Completion Certificate",
-    body: "Complete all 11 modules and your ABB certificate is issued automatically — no exams, no submission deadlines.",
+    title: "Assessed Certification",
+    body: "The ABB credential is not issued merely for watching videos. Learners must complete the curriculum lessons and clear the timed, randomised final examination.",
   },
   {
     icon: ShieldCheck,
@@ -32,8 +32,9 @@ export function WhyYbbSection() {
         </p>
         <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">More Than Video Lessons</h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          The ABB programme combines structured video lessons, real-world deal workbooks and
-          a publicly verifiable certificate issued on completion.
+          The ABB programme combines structured learning, deal workbooks, formal
+          assessment and public certificate verification. Learners must demonstrate participation
+          and understanding before receiving the ABB credential.
         </p>
       </div>
 
