@@ -253,7 +253,6 @@ function ProgrammePage() {
                 {[
                   `${accessDays} days of full course access`,
                   "All 50 video lessons, deal workbooks and templates",
-                  "Transaction frameworks, case studies & deal templates",
                   "Course language: English",
                   `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
