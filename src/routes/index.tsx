@@ -96,7 +96,7 @@ const JOURNEY = [
   {
     icon: FileCheck2,
     title: "Apply",
-    body: "Work through practical exercises, case studies, and deal workbooks connected to each module.",
+    body: "Study deal workbooks, transaction frameworks and case material connected to each module.",
   },
   {
     icon: GraduationCap,
@@ -246,7 +246,8 @@ function ProgrammePage() {
                 {[
                   `${accessDays} days of full course access`,
                   "All 50 video lessons, deal workbooks and templates",
-                  "Real-world transaction frameworks & case material",
+                  "Transaction frameworks, case studies & deal templates",
+                  "Course language: English",
                   `${examQuestions}-question, ${examMinutes}-minute final examination`,
                   "Unique ABB ID and publicly verifiable certificate",
                   "Payment receipt issued on payment",

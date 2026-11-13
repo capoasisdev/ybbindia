@@ -3,12 +3,12 @@ import { CheckCircle2, ClipboardList, Clock, FileCheck2, RefreshCw, Shuffle } fr
 const HIGHLIGHTS = [
   {
     icon: ClipboardList,
-    label: "Practical lesson exercises",
+    label: "Lesson workbooks & reference materials",
     body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
   },
   {
     icon: FileCheck2,
-    label: "Practical deal workbooks",
+    label: "Deal workbooks & transaction templates",
     body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
   },
   {

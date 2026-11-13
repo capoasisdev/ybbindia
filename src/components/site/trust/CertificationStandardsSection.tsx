@@ -8,13 +8,13 @@ const STEPS = [
   },
   {
     icon: FileCheck,
-    title: "Engage with Practical Exercises",
-    body: "Work through the deal exercises and transaction frameworks connected with each lesson.",
+    title: "Study the Deal Workbooks",
+    body: "Review the transaction frameworks, deal workbooks and financial checklists included with each lesson.",
   },
   {
     icon: CheckSquare,
     title: "Master Deal Frameworks",
-    body: "Review practical checklists, valuation templates, and broking mandates provided in the course resources.",
+    body: "Review the checklists, valuation templates, and broking mandates provided in the course resources.",
   },
   {
     icon: Clock,
@@ -36,12 +36,12 @@ const STEPS = [
 const HIGHLIGHTS = [
   {
     icon: ClipboardList,
-    label: "Practical lesson exercises",
+    label: "Lesson workbooks & reference materials",
     body: "Linked to each programme lesson and designed to build real-world broking capabilities.",
   },
   {
     icon: FileCheck2,
-    label: "Practical deal workbooks",
+    label: "Deal workbooks & transaction templates",
     body: "Actionable frameworks and transaction templates to apply theoretical concepts to live scenarios.",
   },
   {

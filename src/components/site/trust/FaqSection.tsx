@@ -34,6 +34,11 @@ const FAQS = [
       "The lessons are delivered by AI-generated presenters, which lets us keep every module clear, consistent and easy to update. All content, frameworks and examples are designed by our founder, Kamlesh Rohra. Pilot learners can also book a 15-minute 1:1 call with Kamlesh after enrolling.",
   },
   {
+    question: "What language is the course in?",
+    answer:
+      "All video lessons and course materials are in English.",
+  },
+  {
     question: "Is the programme self-paced?",
     answer:
       "Yes. Learners can study at their own pace within the 365-day access period, subject to the programme’s curriculum completion and final examination requirements.",

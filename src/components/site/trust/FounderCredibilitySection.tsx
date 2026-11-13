@@ -41,7 +41,7 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
               <div className="absolute bottom-3 left-3 right-3 rounded-xl bg-card/90 backdrop-blur-md px-3.5 py-2.5 border border-border/60 flex items-center gap-2">
                 <ShieldCheck className="size-4 text-accent shrink-0" />
                 <span className="text-xs font-medium text-foreground">
-                  Founder &amp; Programme Designer
+                  Founder, Course Designer
                 </span>
               </div>
             </div>

@@ -27,7 +27,7 @@ export function LearningOutcomesSection() {
             What You Will Learn
           </p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
-            Build Practical Business Broking Capabilities
+            Build Professional Business Broking Capabilities
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             By completing the ABB Certification Programme, learners will develop a structured
