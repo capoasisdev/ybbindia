@@ -153,7 +153,7 @@ function ProgrammePage() {
             a 15-minute 1:1 call with the founder.
           </span>
           {typeof paidCount === "number" && seatsRemaining !== null && (
-            <span className="inline-flex items-center rounded-full bg-accent/25 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-accent">
+            <span className="inline-flex items-center rounded-full bg-foreground px-2.5 py-0.5 font-mono text-[11px] font-semibold text-background shadow-xs">
               {paidCount} / {pilotCap} claimed · {seatsRemaining} remaining
             </span>
           )}
