@@ -168,14 +168,14 @@ function EnrolPage() {
         className="border-b border-accent/40 bg-accent/15 px-4 py-2.5 text-center text-xs font-medium text-foreground sm:text-sm"
       >
         <div className="container-page flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-          <span className="font-semibold text-accent">Pilot offer:</span>
+          <span className="font-bold text-foreground">Pilot offer:</span>
           <span>
             ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that. Pilot learners also get
             a 15-minute 1:1 call with the founder.
           </span>
           {typeof paidCount === "number" && seatsRemaining !== null && (
-            <span className="inline-flex items-center rounded-full bg-foreground px-2.5 py-0.5 font-mono text-[11px] font-semibold text-background shadow-xs">
-              {paidCount} / {pilotCap} claimed · {seatsRemaining} remaining
+            <span className="font-mono text-xs font-semibold text-foreground">
+              ({paidCount} / {pilotCap} claimed · {seatsRemaining} remaining)
             </span>
           )}
         </div>
