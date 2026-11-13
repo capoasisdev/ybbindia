@@ -95,8 +95,8 @@ const JOURNEY = [
   },
   {
     icon: FileCheck2,
-    title: "Apply",
-    body: "Study deal workbooks, transaction frameworks and case material connected to each module.",
+    title: "Study",
+    body: "Study transaction frameworks, deal workbooks and case material connected to each module.",
   },
   {
     icon: GraduationCap,

@@ -97,7 +97,7 @@ function AuthPage() {
               {
                 icon: FileCheck2,
                 label: "Deal workbooks & templates",
-                hint: "Templates, frameworks & exercises",
+                hint: "Templates, frameworks & case material",
               },
               {
                 icon: BadgeCheck,

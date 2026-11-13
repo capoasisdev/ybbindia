@@ -32,7 +32,7 @@ const WORKBOOK_ITEMS = [
   },
   {
     id: "valuation",
-    title: "Business-Valuation Exercise",
+    title: "Business-Valuation Workbook",
     module: "Module 05",
     description:
       "Deal workbooks on Seller's Discretionary Earnings (SDE), EBITDA add-backs and asset vs stock deal adjustments.",

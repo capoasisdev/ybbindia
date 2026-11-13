@@ -491,7 +491,7 @@ export const getPublicCourseOutline = createServerFn({ method: "GET" }).handler(
     slug: "abb-certification-programme",
     subtitle: "Master business broking, valuation, deal structuring, and transaction execution in India.",
     description:
-      "A comprehensive professional certification covering the entire transaction lifecycle across 11 modules and 50 practical lessons.",
+      "A comprehensive professional certification covering the entire transaction lifecycle across 11 modules and 50 video lessons.",
   };
 
   return { course: defaultCourse, modules: FULL_CURRICULUM_MODULES };
