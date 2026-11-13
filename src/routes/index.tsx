@@ -239,18 +239,6 @@ function ProgrammePage() {
           {/* Price card */}
           <div className="lg:pl-6">
             <div className="rounded-3xl border border-sidebar-border bg-sidebar-accent/60 p-8 shadow-lift backdrop-blur">
-              <div className="mb-5 rounded-xl border border-sidebar-primary/35 bg-sidebar-primary/10 px-4 py-3 text-xs leading-relaxed text-sidebar-foreground/95">
-                <p className="font-semibold text-sidebar-primary">
-                  Pilot offer: ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that.
-                  Pilot learners also get a 15-minute 1:1 call with the founder.
-                </p>
-                {typeof paidCount === "number" && seatsRemaining !== null && (
-                  <p className="mt-1.5 font-mono text-[11px] text-sidebar-foreground/80">
-                    {paidCount} / {pilotCap} pilot seats claimed · {seatsRemaining} remaining
-                  </p>
-                )}
-              </div>
-
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sidebar-primary">
                 Programme fee
               </p>
