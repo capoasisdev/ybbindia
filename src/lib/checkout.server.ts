@@ -242,6 +242,23 @@ export async function markOrderPaid(supabaseAdmin: AdminClient, input: MarkPaidI
     console.warn("[Notification] Order paid notification trigger failed gracefully:", notifErr);
   }
 
+  // Meta Conversions API (server-side Purchase event with event_id matching browser pixel)
+  try {
+    const { sendMetaCapiPurchase } = await import("@/lib/meta-capi.server");
+    const rawBuyer = ((order.billing_snapshot as Record<string, unknown>) ?? {}) as Record<string, unknown>;
+    const utm = (rawBuyer.utm as Record<string, unknown>) ?? {};
+    await sendMetaCapiPurchase({
+      orderId: order.id,
+      value: order.total_amount_paise / 100,
+      currency: order.currency || "INR",
+      email: (rawBuyer.email as string) || undefined,
+      phone: (rawBuyer.mobile as string) || (rawBuyer.phone as string) || undefined,
+      fbc: (utm.fbclid as string) || undefined,
+    });
+  } catch (capiErr) {
+    console.warn("[Meta CAPI] Server purchase trigger failed gracefully:", capiErr);
+  }
+
   return { alreadyPaid: false, orderId: order.id };
 }
 

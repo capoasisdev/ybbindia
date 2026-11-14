@@ -1,4 +1,4 @@
-export const META_PIXEL_ID = "1379767294032071";
+export const META_PIXEL_ID = "2109163349962981";
 
 const UTM_STORAGE_KEY = "ybb_utm_params";
 const UTM_COOKIE_NAME = "ybb_utm_params";

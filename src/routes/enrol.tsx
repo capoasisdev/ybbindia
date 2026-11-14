@@ -14,7 +14,7 @@ import {
   getPublicPilotStats,
   getPublicSettings,
 } from "@/lib/public.functions";
-import { getStoredUtmParams } from "@/lib/meta-pixel";
+import { getStoredUtmParams, trackInitiateCheckout } from "@/lib/meta-pixel";
 import { formatPaiseExact } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
 import { toast } from "sonner";
@@ -153,6 +153,16 @@ function EnrolPage() {
       setSubmitting(false);
     }
 
+    try {
+      trackInitiateCheckout({
+        value: pricePaise / 100,
+        currency: "INR",
+        contentName: programmeName || "ABB Certification Programme",
+      });
+    } catch {
+      // Ignore client tracking error
+    }
+
     if (target === "checkout") {
       navigate({ to: "/checkout" });
     } else {
@@ -167,17 +177,16 @@ function EnrolPage() {
         aria-label="Pilot cohort offer"
         className="border-b border-accent/40 bg-accent/15 px-4 py-2.5 text-center text-xs font-medium text-foreground sm:text-sm"
       >
-        <div className="container-page flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-          <span className="font-bold text-foreground">Pilot offer:</span>
-          <span>
-            ₹1,999 for the first 100 learners. Fee becomes ₹4,999 after that. Pilot learners also get
-            a 15-minute 1:1 call with the founder.
+        <div className="container-page flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-foreground">
+          <span className="font-bold">Pilot batch: {pilotCap} learners.</span>
+          <span className="font-semibold">
+            {typeof paidCount === "number" && seatsRemaining !== null
+              ? `${paidCount} joined · ${seatsRemaining} seats left at ₹1,999.`
+              : "15 joined · 85 seats left at ₹1,999."}
           </span>
-          {typeof paidCount === "number" && seatsRemaining !== null && (
-            <span className="font-mono text-xs font-semibold text-foreground">
-              ({paidCount} / {pilotCap} claimed · {seatsRemaining} remaining)
-            </span>
-          )}
+          <span>
+            Fee becomes ₹4,999 after that. Pilot learners also get a 15-minute 1:1 call with the founder.
+          </span>
         </div>
       </aside>
 

@@ -147,7 +147,7 @@ export function FounderCredibilitySection({ companyCin }: { companyCin?: string 
                   As an entrepreneur, Kamlesh co-founded SaladO, building it from a home kitchen into a
                   well-known salad brand, with 50+ kitchens through a franchise model, and raising
                   equity funding along the way. He also founded CapOasis Technology, an IT company
-                  company focused on AI. Building his own ventures, through successes and setbacks, gave
+                  focused on AI. Building his own ventures, through successes and setbacks, gave
                   him a first-hand understanding of what business owners go through, which is invaluable
                   when helping them sell, buy or bring in partners.
                 </p>
