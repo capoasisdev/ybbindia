@@ -538,6 +538,53 @@ export const getFreePreviewLesson = createServerFn({ method: "GET" }).handler(as
 });
 
 /** Captures pre-payment learner contact & WhatsApp/email consent on /enrol. */
+const CRM_WEBHOOK_URL =
+  "https://xrnawvpypkggpjervppb.supabase.co/functions/v1/website-webhook?form_id=wf_b8ysxrq_mwj0ax41";
+
+async function forwardLeadToCrm(lead: {
+  fullName: string;
+  email: string;
+  phone: string;
+  updatesConsent: boolean;
+  utmParams?: Record<string, unknown> | null;
+}) {
+  try {
+    const payload: Record<string, unknown> = {
+      site_domain: "ybbindia.com",
+      name: lead.fullName,
+      full_name: lead.fullName,
+      email: lead.email,
+      phone: lead.phone,
+      mobile: lead.phone,
+      updates_consent: lead.updatesConsent,
+    };
+
+    if (lead.utmParams && typeof lead.utmParams === "object") {
+      for (const [key, val] of Object.entries(lead.utmParams)) {
+        if (val !== undefined && val !== null) {
+          payload[key] = String(val);
+        }
+      }
+    }
+
+    const res = await fetch(CRM_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const body = await res.text().catch(() => "");
+    if (!res.ok) {
+      console.warn("[crm-webhook] CRM responded with status", res.status, body);
+    } else {
+      console.info("[crm-webhook] lead forwarded successfully", body);
+    }
+  } catch (err) {
+    console.warn("[crm-webhook] failed to forward lead to CRM", err instanceof Error ? err.message : err);
+  }
+}
+
 export const captureEnrolmentLead = createServerFn({ method: "POST" })
   .inputValidator(
     (raw: {
@@ -560,6 +607,11 @@ export const captureEnrolmentLead = createServerFn({ method: "POST" })
     if (!data.fullName || !data.email || !data.phone) {
       throw new Error("Please enter your full name, email address and phone number.");
     }
+
+    // 1. Forward lead to CRM webhook asynchronously
+    await forwardLeadToCrm(data);
+
+    // 2. Persist in local audit logs as backup
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.from("audit_logs").insert({
       actor_id: data.userId,

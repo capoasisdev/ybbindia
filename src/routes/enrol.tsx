@@ -89,6 +89,20 @@ function EnrolPage() {
     } catch {
       // Ignore storage read error
     }
+
+    // Verify connection to CRM webhook on page visit
+    try {
+      fetch(
+        "https://xrnawvpypkggpjervppb.supabase.co/functions/v1/website-webhook?form_id=wf_b8ysxrq_mwj0ax41&ping=true",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ site_domain: window.location.hostname }),
+        },
+      ).catch(() => {});
+    } catch {
+      // Ignore background ping error
+    }
   }, []);
 
   useEffect(() => {
