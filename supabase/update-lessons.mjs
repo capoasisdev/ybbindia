@@ -37,11 +37,8 @@ const lessonsData = [
     title: "Business Life Cycle",
     description: "Identify the key stages of a business life cycle and how growth stage affects sale readiness and buyer interest."
   },
-  {
-    num: 8,
-    title: "Why Owners Sell Businesses",
-    description: "Understand the financial, personal and strategic reasons why business owners decide to sell."
-  },
+  // Note: Lesson 8 ("Why Owners Sell Businesses") was not recorded as a video by the instructor.
+  // The course skips from Lesson 7 directly to Lesson 9 (Module 3).
   {
     num: 9,
     title: "Code of Conduct for Business Brokers",
@@ -257,7 +254,7 @@ const lessonsData = [
 async function update() {
   try {
     // 1. Get lessons
-    const lessonsRes = await fetch(`${SUPABASE_URL}/rest/v1/lessons?select=id,title`, {
+    const lessonsRes = await fetch(`${SUPABASE_URL}/rest/v1/lessons?select=id,title,video_url`, {
       headers: {
         "apikey": SUPABASE_KEY,
         "Authorization": `Bearer ${SUPABASE_KEY}`
@@ -268,13 +265,12 @@ async function update() {
 
     let updatedCount = 0;
     for (const lData of lessonsData) {
-      // Find the corresponding lesson
-      // Lessons in DB are named like "Module X - Lesson Y"
-      const lessonPattern1 = `Lesson ${lData.num}`;
-      const lessonPattern2 = `Lesson${lData.num}`;
+      // Find the corresponding lesson by matching video filename in video_url
+      const regex = new RegExp(`\\bLesson\\s*${lData.num}\\b`, "i");
       const matchedLesson = lessons.find(l => {
-        const title = l.title || "";
-        return title.includes(lessonPattern1) || title.replace(/\s+/g, '').includes(lessonPattern2);
+        if (!l.video_url) return false;
+        const decoded = decodeURIComponent(l.video_url);
+        return regex.test(decoded);
       });
 
       if (!matchedLesson) {

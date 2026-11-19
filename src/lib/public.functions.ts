@@ -314,7 +314,6 @@ export const FULL_CURRICULUM_MODULES = [
       { id: "l5", position: 1, title: "Business & Revenue Model Classification", lessonNumber: 5 },
       { id: "l6", position: 2, title: "SME, Startup & Corporate Differences", lessonNumber: 6 },
       { id: "l7", position: 3, title: "Business Life-Cycle Assessment", lessonNumber: 7 },
-      { id: "l8", position: 4, title: "Understanding Seller Motivations", lessonNumber: 8 },
     ],
   },
   {
