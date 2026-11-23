@@ -71,7 +71,7 @@ const WORKBOOK_ITEMS = [
   },
   {
     id: "career-plan",
-    title: "90-Day ABB Career Plan",
+    title: "Ethics & Career Development",
     module: "Module 11",
     description:
       "Step-by-step roadmap for establishing an independent broking practice or expanding an advisory firm.",

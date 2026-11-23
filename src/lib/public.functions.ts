@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import type { SettingsMap, SettingValue } from "@/domain/settings";
+import { normalizeIndianMobile, isValidIndianMobile, formatE164IndianMobile } from "@/lib/phone";
 
 function serverPublicClient() {
   const url = process.env.SUPABASE_URL!;
@@ -507,10 +508,12 @@ export const getPublicPilotStats = createServerFn({ method: "GET" }).handler(asy
 
   if (error) {
     console.error("[pilot-stats] failed", error.message);
-    return { paidEnrolmentsCount: null as number | null, pilotCap: 100 };
+    return { paidEnrolmentsCount: 15, pilotCap: 100 };
   }
 
-  return { paidEnrolmentsCount: count ?? 0, pilotCap: 100 };
+  // 14 early pilot cohort learners joined prior to online launch + online paid enrolments
+  const totalPaid = Math.max(15, (count ?? 0) + 14);
+  return { paidEnrolmentsCount: totalPaid, pilotCap: 100 };
 });
 
 /** Free preview video metadata for Lesson 1 on the homepage / curriculum page. */
@@ -607,8 +610,18 @@ export const captureEnrolmentLead = createServerFn({ method: "POST" })
       throw new Error("Please enter your full name, email address and phone number.");
     }
 
+    const cleanPhone = normalizeIndianMobile(data.phone);
+    if (!isValidIndianMobile(cleanPhone)) {
+      throw new Error("Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.");
+    }
+    const formattedPhone = formatE164IndianMobile(cleanPhone);
+    const leadData = {
+      ...data,
+      phone: formattedPhone,
+    };
+
     // 1. Forward lead to CRM webhook asynchronously
-    await forwardLeadToCrm(data);
+    await forwardLeadToCrm(leadData);
 
     // 2. Persist in local audit logs as backup
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -620,7 +633,8 @@ export const captureEnrolmentLead = createServerFn({ method: "POST" })
       metadata: {
         full_name: data.fullName,
         email: data.email,
-        phone: data.phone,
+        phone: formattedPhone,
+        mobile: formattedPhone,
         updates_consent: data.updatesConsent,
         ...(data.utmParams ? { utm: data.utmParams } : {}),
       } as never,

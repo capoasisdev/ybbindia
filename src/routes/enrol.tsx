@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowRight, CheckCircle2, Info, Loader2, ShieldCheck } from "lucide-react";
+import { ArrowRight, AlertCircle, CheckCircle2, Info, Loader2, ShieldCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,6 +15,12 @@ import {
   getPublicSettings,
 } from "@/lib/public.functions";
 import { getStoredUtmParams, trackInitiateCheckout } from "@/lib/meta-pixel";
+import {
+  normalizeIndianMobile,
+  isValidIndianMobile,
+  formatE164IndianMobile,
+  getIndianMobileValidationError,
+} from "@/lib/phone";
 import { formatPaiseExact } from "@/domain/money";
 import { readNumber, readString } from "@/domain/settings";
 import { toast } from "sonner";
@@ -64,6 +70,7 @@ function EnrolPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const [updatesConsent, setUpdatesConsent] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedDisclosure, setAcceptedDisclosure] = useState(false);
@@ -83,7 +90,7 @@ function EnrolPage() {
         };
         if (saved.fullName) setFullName((p) => p || saved.fullName || "");
         if (saved.email) setEmail((p) => p || saved.email || "");
-        if (saved.phone) setPhone((p) => p || saved.phone || "");
+        if (saved.phone) setPhone((p) => p || normalizeIndianMobile(saved.phone) || "");
         if (typeof saved.updatesConsent === "boolean") setUpdatesConsent(saved.updatesConsent);
       }
     } catch {
@@ -110,7 +117,7 @@ function EnrolPage() {
     const meta = (user.user_metadata ?? {}) as { full_name?: string; mobile?: string };
     if (user.email) setEmail((p) => p || user.email || "");
     if (meta.full_name) setFullName((p) => p || meta.full_name || "");
-    if (meta.mobile) setPhone((p) => p || meta.mobile || "");
+    if (meta.mobile) setPhone((p) => p || normalizeIndianMobile(meta.mobile) || "");
   }, [user]);
 
   const pricePaise = readNumber(settings, "course_price_paise");
@@ -120,16 +127,24 @@ function EnrolPage() {
   const pilotCap = pilotStats?.pilotCap ?? 100;
   const seatsRemaining = typeof paidCount === "number" ? Math.max(0, pilotCap - paidCount) : null;
 
+  const isPhoneValid = isValidIndianMobile(phone);
+  const phoneError = getIndianMobileValidationError(phone, phoneTouched);
+
   const hasValidContact =
     fullName.trim().length >= 2 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) &&
-    phone.replace(/\D/g, "").length >= 10;
+    isPhoneValid;
 
   const canProceed = acceptedTerms && acceptedDisclosure && hasValidContact && !submitting;
 
   async function handleProceed(target: "checkout" | "signup" | "signin") {
+    setPhoneTouched(true);
+    if (!isPhoneValid) {
+      toast.error("Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.");
+      return;
+    }
     if (!hasValidContact) {
-      toast.error("Please enter your full name, a valid email address, and a 10+ digit phone number.");
+      toast.error("Please enter your full name and a valid email address.");
       return;
     }
     if (!acceptedTerms || !acceptedDisclosure) {
@@ -138,10 +153,11 @@ function EnrolPage() {
     }
 
     setSubmitting(true);
+    const formattedPhone = formatE164IndianMobile(phone);
     const payload = {
       fullName: fullName.trim(),
       email: email.trim(),
-      phone: phone.trim(),
+      phone: formattedPhone,
       updatesConsent,
     };
 
@@ -295,19 +311,52 @@ function EnrolPage() {
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="enrol-phone" className="text-xs">
-                  Phone / WhatsApp number
-                </Label>
-                <Input
-                  id="enrol-phone"
-                  type="tel"
-                  required
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="+91 98765 43210"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="enrol-phone" className="text-xs">
+                    Phone / WhatsApp number
+                  </Label>
+                  <span className="text-[10px] text-muted-foreground font-mono">
+                    {phone.length}/10 digits
+                  </span>
+                </div>
+                <div
+                  className={`flex rounded-lg border bg-background shadow-xs transition-colors overflow-hidden focus-within:ring-2 ${
+                    phoneError
+                      ? "border-destructive focus-within:ring-destructive/30"
+                      : "border-input focus-within:border-accent focus-within:ring-accent/30"
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5 border-r border-input bg-muted/60 px-3 py-2 text-xs font-semibold text-foreground select-none shrink-0">
+                    <span role="img" aria-label="India flag">🇮🇳</span>
+                    <span>+91</span>
+                  </div>
+                  <Input
+                    id="enrol-phone"
+                    type="tel"
+                    required
+                    inputMode="numeric"
+                    autoComplete="tel-national"
+                    placeholder="98765 43210"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(normalizeIndianMobile(e.target.value));
+                      if (!phoneTouched) setPhoneTouched(true);
+                    }}
+                    onBlur={() => setPhoneTouched(true)}
+                    className="border-0 shadow-none focus-visible:ring-0 rounded-none h-10 px-3 text-sm"
+                    maxLength={14}
+                  />
+                </div>
+                {phoneError ? (
+                  <p className="flex items-center gap-1 text-[11px] font-medium text-destructive mt-1">
+                    <AlertCircle className="size-3 shrink-0" />
+                    {phoneError}
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-muted-foreground">
+                    10-digit Indian mobile number (starting with 6, 7, 8 or 9).
+                  </p>
+                )}
               </div>
               <div className="flex items-start gap-3 pt-1">
                 <Checkbox

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { formatE164IndianMobile } from "@/lib/phone";
 
 /**
  * Client-callable checkout API. Every handler is a thin wrapper: shared logic
@@ -182,7 +183,7 @@ export const createEnrolmentOrder = createServerFn({ method: "POST" })
       prefill: {
         name: profile?.full_name ?? "",
         email: profile?.email ?? "",
-        contact: profile?.mobile ?? "",
+        contact: formatE164IndianMobile(profile?.mobile) || (profile?.mobile ?? ""),
       },
     };
   });

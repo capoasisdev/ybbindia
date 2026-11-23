@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { BadgeCheck, FileCheck2, Loader2, PlayCircle, ShieldCheck } from "lucide-react";
+import { AlertCircle, BadgeCheck, FileCheck2, Loader2, PlayCircle, ShieldCheck } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -10,6 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  normalizeIndianMobile,
+  isValidIndianMobile,
+  formatE164IndianMobile,
+  getIndianMobileValidationError,
+} from "@/lib/phone";
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -303,8 +309,11 @@ function SignUpForm({ redirectTo, onSignedIn }: { redirectTo: string; onSignedIn
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
+  const [mobileTouched, setMobileTouched] = useState(false);
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
+
+  const mobileError = getIndianMobileValidationError(mobile, mobileTouched);
 
   useEffect(() => {
     try {
@@ -313,7 +322,7 @@ function SignUpForm({ redirectTo, onSignedIn }: { redirectTo: string; onSignedIn
       const lead = JSON.parse(raw) as { fullName?: string; email?: string; phone?: string };
       if (lead.fullName) setFullName((prev) => prev || lead.fullName || "");
       if (lead.email) setEmail((prev) => prev || lead.email || "");
-      if (lead.phone) setMobile((prev) => prev || lead.phone || "");
+      if (lead.phone) setMobile((prev) => prev || normalizeIndianMobile(lead.phone) || "");
     } catch {
       // Ignore invalid or blocked storage
     }
@@ -324,17 +333,23 @@ function SignUpForm({ redirectTo, onSignedIn }: { redirectTo: string; onSignedIn
       className="space-y-5"
       onSubmit={async (event) => {
         event.preventDefault();
+        setMobileTouched(true);
+        if (!isValidIndianMobile(mobile)) {
+          toast.error("Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9.");
+          return;
+        }
         if (password.length < 8) {
           toast.error("Password must be at least 8 characters.");
           return;
         }
         setBusy(true);
+        const formattedMobile = formatE164IndianMobile(mobile);
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}${redirectTo}`,
-            data: { full_name: fullName, mobile },
+            data: { full_name: fullName, mobile: formattedMobile },
           },
         });
         setBusy(false);
@@ -380,18 +395,50 @@ function SignUpForm({ redirectTo, onSignedIn }: { redirectTo: string; onSignedIn
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="signup-mobile">Mobile number</Label>
-        <Input
-          id="signup-mobile"
-          type="tel"
-          required
-          inputMode="tel"
-          autoComplete="tel"
-          value={mobile}
-          onChange={(event) => setMobile(event.target.value)}
-          placeholder="+91 98765 43210"
-          className="h-11"
-        />
+        <div className="flex items-center justify-between">
+          <Label htmlFor="signup-mobile">Mobile number</Label>
+          <span className="text-[10px] text-muted-foreground font-mono">
+            {mobile.length}/10 digits
+          </span>
+        </div>
+        <div
+          className={`flex rounded-md border bg-background shadow-xs transition-colors overflow-hidden focus-within:ring-2 ${
+            mobileError
+              ? "border-destructive focus-within:ring-destructive/30"
+              : "border-input focus-within:border-primary focus-within:ring-primary/20"
+          }`}
+        >
+          <div className="flex items-center gap-1.5 border-r border-input bg-muted/60 px-3 py-2 text-xs font-semibold text-foreground select-none shrink-0">
+            <span role="img" aria-label="India flag">🇮🇳</span>
+            <span>+91</span>
+          </div>
+          <Input
+            id="signup-mobile"
+            type="tel"
+            required
+            inputMode="numeric"
+            autoComplete="tel-national"
+            value={mobile}
+            onChange={(event) => {
+              setMobile(normalizeIndianMobile(event.target.value));
+              if (!mobileTouched) setMobileTouched(true);
+            }}
+            onBlur={() => setMobileTouched(true)}
+            placeholder="98765 43210"
+            className="border-0 shadow-none focus-visible:ring-0 rounded-none h-11 px-3"
+            maxLength={14}
+          />
+        </div>
+        {mobileError ? (
+          <p className="flex items-center gap-1 text-[11px] font-medium text-destructive mt-1">
+            <AlertCircle className="size-3 shrink-0" />
+            {mobileError}
+          </p>
+        ) : (
+          <p className="text-[11px] text-muted-foreground">
+            10-digit Indian mobile number (starting with 6, 7, 8 or 9).
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="signup-password">Password</Label>

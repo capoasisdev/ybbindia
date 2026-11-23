@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { FlaskConical, Loader2, ShieldCheck } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, FlaskConical, Loader2, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/app/AppShell";
 import { Button } from "@/components/ui/button";
 import { formatPaiseExact } from "@/domain/money";
@@ -62,6 +62,10 @@ function CheckoutPage() {
   const recordOrderFailure = useServerFn(recordEnrolmentOrderFailure);
   const simulatePayment = useServerFn(simulateEnrolmentPayment);
   const [busy, setBusy] = useState(false);
+  const [paymentNotice, setPaymentNotice] = useState<{
+    type: "cancelled" | "failed";
+    message: string;
+  } | null>(null);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["checkout-summary"],
@@ -124,6 +128,11 @@ function CheckoutPage() {
         modal: {
           ondismiss: async () => {
             setBusy(false);
+            setPaymentNotice({
+              type: "cancelled",
+              message:
+                "Payment popup was closed. You have not been charged. Click below to try again whenever you are ready.",
+            });
             try {
               await recordOrderFailure({
                 data: {
@@ -171,6 +180,10 @@ function CheckoutPage() {
           setBusy(false);
           const err = (response as { error?: { description?: string; code?: string; metadata?: { payment_id?: string } } })?.error;
           const description = err?.description || "Payment was cancelled or failed.";
+          setPaymentNotice({
+            type: "failed",
+            message: `Payment failed: ${description}. You can retry with UPI (GPay/PhonePe/Paytm), another card, or Net Banking.`,
+          });
           try {
             await recordOrderFailure({
               data: {
@@ -220,10 +233,40 @@ function CheckoutPage() {
             </div>
           ) : (
             <>
+              {paymentNotice ? (
+                <div
+                  className={`mt-6 rounded-xl border p-4 text-sm ${
+                    paymentNotice.type === "failed"
+                      ? "border-destructive/40 bg-destructive/10 text-destructive"
+                      : "border-warning/40 bg-warning/10 text-foreground"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="mt-0.5 size-4 shrink-0" />
+                    <div>
+                      <p className="font-semibold">
+                        {paymentNotice.type === "failed" ? "Payment Not Completed" : "Payment Cancelled"}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {paymentNotice.message}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
               <dl className="mt-6 space-y-3 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">{summary.courseTitle}</dt>
                   <dd className="font-medium">{formatPaiseExact(summary.totalAmountPaise)}</dd>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5 font-medium text-foreground">
+                    <Clock className="size-3.5 text-accent" /> Full 365 Days Access
+                  </span>
+                  <span className="rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] font-semibold text-accent-foreground">
+                    Instant Activation
+                  </span>
                 </div>
                 <div className="mt-4 flex justify-between border-t border-border pt-4 text-base">
                   <dt className="font-semibold">Total payable</dt>
@@ -233,10 +276,51 @@ function CheckoutPage() {
                 </div>
               </dl>
 
-              <Button className="mt-8 w-full" onClick={handlePay} disabled={busy}>
+              {/* Inclusions summary */}
+              <div className="mt-6 rounded-xl border border-border bg-muted/30 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  What’s Included in Your Programme Access
+                </p>
+                <ul className="mt-3 space-y-2 text-xs text-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-success" />
+                    <span><strong>50 Masterclass Video Lessons</strong> across 11 modules</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-success" />
+                    <span><strong>5 Deal Workbooks & Templates</strong> (VDR checklist, valuation models)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-success" />
+                    <span><strong>Verifiable Certificate</strong> with unique credential ID & QR</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-success" />
+                    <span><strong>365 Days Access</strong> on mobile and desktop</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="size-3.5 shrink-0 text-success" />
+                    <span><strong>15-Minute 1:1 Founder Welcome Session</strong> (Pilot cohort benefit)</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Button className="mt-6 w-full" onClick={handlePay} disabled={busy}>
                 {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-                {busy ? "Opening secure payment…" : "Pay securely with Razorpay"}
+                {busy
+                  ? "Opening secure payment…"
+                  : paymentNotice
+                    ? "Try Payment Again"
+                    : "Pay securely with Razorpay"}
               </Button>
+
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                <span className="font-medium text-foreground">UPI (GPay · PhonePe · Paytm)</span>
+                <span>•</span>
+                <span>Cards & Net Banking</span>
+                <span>•</span>
+                <span>256-bit Encrypted</span>
+              </div>
 
               {summary.testMode ? (
                 <div className="mt-6 rounded-xl border border-dashed border-warning/60 bg-warning/5 p-5">
